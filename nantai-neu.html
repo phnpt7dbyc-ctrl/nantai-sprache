@@ -14,14 +14,18 @@
       --text: #f5f1ff;
       --muted: #b9aecb;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
+      padding-left: 230px;
       background: var(--bg);
       color: var(--text);
       font-family: system-ui, sans-serif;
       min-height: 100vh;
     }
+
     header {
       display: flex;
       align-items: center;
@@ -30,6 +34,7 @@
       border-bottom: 1px solid #30263e;
       background: var(--panel);
     }
+
     .logo {
       width: 44px;
       height: 44px;
@@ -39,24 +44,75 @@
       border-radius: 14px;
       font-size: 24px;
     }
+
     h1 { margin: 0; font-size: 23px; }
     header p { margin: 3px 0 0; color: var(--muted); }
+
+    #seitenleiste {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 220px;
+      padding: 20px 12px;
+      overflow-y: auto;
+      background: #15121f;
+      border-right: 1px solid #30283f;
+      z-index: 1000;
+    }
+
+    #seitenleiste h2 {
+      color: #a78bfa;
+      font-size: 20px;
+      margin: 0 0 8px;
+    }
+
+    #seitenleiste p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #seitenleiste button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 9px;
+      border: 1px solid #6d5a91;
+      border-radius: 8px;
+      background: #302442;
+      color: white;
+      font-size: 14px;
+      text-align: left;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+    }
+
+    #seitenleiste button:hover { background: #493562; }
+
+    #seitenleiste button.aktiv {
+      background: #493562;
+      border-color: #a78bfa;
+    }
+
     main {
       width: min(900px, 100%);
       margin: auto;
       padding: 20px;
     }
+
     #status {
       color: var(--muted);
       font-size: 13px;
       margin: 0 0 14px;
     }
+
     #chat {
       min-height: 45vh;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
+
     .message {
       padding: 14px 16px;
       border-radius: 16px;
@@ -65,18 +121,22 @@
       overflow-wrap: anywhere;
       line-height: 1.5;
     }
+
     .user {
       background: #302044;
       align-self: flex-end;
       max-width: 90%;
     }
+
     .assistant { align-self: stretch; }
+
     .tools {
       display: flex;
       flex-wrap: wrap;
       gap: 9px;
       margin: 18px 0;
     }
+
     button {
       border: 0;
       border-radius: 12px;
@@ -86,14 +146,17 @@
       font-size: 15px;
       cursor: pointer;
     }
+
     button.secondary { background: #292235; }
     button:disabled { opacity: .5; }
+
     .composer {
       position: sticky;
       bottom: 0;
       background: var(--bg);
       padding: 12px 0 18px;
     }
+
     textarea, input {
       width: 100%;
       border: 1px solid #453653;
@@ -103,73 +166,38 @@
       padding: 14px;
       font: inherit;
     }
+
     textarea { min-height: 90px; resize: vertical; }
     .row { display: flex; gap: 9px; margin-top: 9px; }
     .row button { flex: 1; }
     #bildVorschau { max-width: 100%; border-radius: 14px; margin-top: 12px; }
     .hidden { display: none; }
-    /* NantAI: linke Seitenleiste */
-body {
-  padding-left: 230px;
-}
 
-#seitenleiste {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 210px;
-  padding: 20px 10px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  background: #15121f;
-  border-right: 1px solid #30283f;
-  z-index: 1000;
-}
+    @media (max-width: 600px) {
+      body { padding-left: 0; }
 
-#seitenleiste h2 {
-  color: #a78bfa;
-  font-size: 20px;
-  margin-top: 0;
-}
+      #seitenleiste {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: 260px;
+        border-right: none;
+        border-bottom: 1px solid #30283f;
+      }
 
-@media (max-width: 600px) {
-  body {
-    padding-left: 0;
-  }
-
-  #seitenleiste {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid #30283f;
-  }
-}
-#seitenleiste button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #6d5a91;
-  border-radius: 8px;
-  background: #302442;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-#seitenleiste button:hover {
-  background: #493562;
-}
-
-#chatliste {
-  margin-top: 15px;
-  color: #d6cbe8;
-  font-size: 14px;
-}
+      main { padding: 14px; }
+    }
   </style>
 </head>
 <body>
+
+  <aside id="seitenleiste">
+    <h2>✦ NantAI</h2>
+    <p>Deine Chats</p>
+    <button type="button" onclick="neuerChat()">＋ Neuer Chat</button>
+    <div id="chatliste"></div>
+  </aside>
+
   <header>
     <div class="logo">✦</div>
     <div>
@@ -177,22 +205,14 @@ body {
       <p>Dein persönlicher KI-Assistent</p>
     </div>
   </header>
-<aside id="seitenleiste">
-  <h2>NantAI</h2>
-  <p>Deine Chats</p>
-  <button type="button" onclick="neuerChat()">＋ Neuer Chat</button>
-  <div id="chatliste"></div>
-</aside>
+
   <main>
     <p id="status">NantAI ist bereit.</p>
-    <section id="chat" aria-live="polite">
-      <div class="message assistant">
-        Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?
-      </div>
-    </section>
+
+    <section id="chat" aria-live="polite"></section>
 
     <div class="tools">
-      <button class="secondary" id="spracheButton" onclick="spracheStarten()">🎙️ Sprache</button>
+      <button class="secondary" onclick="spracheStarten()">🎙️ Sprache</button>
       <button class="secondary" onclick="spracheStoppen()">Stopp</button>
       <button class="secondary" onclick="bildModus()">🖼️ Bild erzeugen</button>
     </div>
@@ -210,7 +230,7 @@ body {
       <textarea id="nachricht" placeholder="Schreibe eine Nachricht …"></textarea>
       <div class="row">
         <button onclick="nachrichtSenden()">Senden ➤</button>
-   <button class="secondary" onclick="spracheStarten()">🎤 Jetzt sprechen</button>
+        <button class="secondary" onclick="spracheStarten()">🎤 Jetzt sprechen</button>
       </div>
     </div>
   </main>
@@ -219,146 +239,243 @@ body {
     const BACKEND =
       'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
 
-function nachrichtAnzeigen(text, klasse) {
-  const element = document.createElement('div');
-  element.className = 'message ' + klasse;
-  element.textContent = text;
+    let nantaiChats = [];
+    let nantaiAktiverChatId = null;
+    let erkennung = null;
 
-  document.getElementById('chat').appendChild(element);
-  element.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
-  chatVerlaufSpeichern();
-}
-let nantaiChats = [];
-let nantaiAktiverChatId = null;
-
-function chatVerlaufSpeichern() {
-  const chat = nantaiChats.find(
-    eintrag => eintrag.id === nantaiAktiverChatId
-  );
-  if (!chat) return;
-
-  chat.nachrichten = Array.from(
-    document.querySelectorAll('#chat .message')
-  ).map(element => ({
-    text: element.textContent,
-    klasse: element.classList.contains('user') ? 'user' : 'assistant'
-  }));
-
-  const ersteNachricht = chat.nachrichten.find(
-    nachricht => nachricht.klasse === 'user'
-  );
-  if (ersteNachricht) {
-    chat.titel = ersteNachricht.text.slice(0, 35);
-  }
-
-  try {
-    localStorage.setItem('nantai_chats', JSON.stringify(nantaiChats));
-    localStorage.setItem('nantai_aktiver_chat', nantaiAktiverChatId);
-  } catch (fehler) {
-    console.warn('Chats konnten nicht gespeichert werden.', fehler);
-  }
-
-  chatListeAktualisieren();
-}
-
-function chatNachrichtenAnzeigen(nachrichten) {
-  const chat = document.getElementById('chat');
-  chat.replaceChildren();
-
-  nachrichten.forEach(nachricht => {
-    const element = document.createElement('div');
-    element.className = 'message ' +
-      (nachricht.klasse === 'user' ? 'user' : 'assistant');
-    element.textContent = nachricht.text;
-    chat.appendChild(element);
-  });
-}
-
-function chatListeAktualisieren() {
-  const liste = document.getElementById('chatliste');
-  if (!liste) return;
-
-  liste.replaceChildren();
-
-  nantaiChats.forEach(eintrag => {
-    const knopf = document.createElement('button');
-    knopf.type = 'button';
-    knopf.textContent = eintrag.titel || 'Neuer Chat';
-    knopf.onclick = () => chatWechseln(eintrag.id);
-    liste.appendChild(knopf);
-  });
-}
-
-function chatWechseln(id) {
-  chatVerlaufSpeichern();
-  nantaiAktiverChatId = id;
-
-  const ausgewaehlt = nantaiChats.find(eintrag => eintrag.id === id);
-  if (ausgewaehlt) {
-    chatNachrichtenAnzeigen(ausgewaehlt.nachrichten || []);
-    chatListeAktualisieren();
-  }
-}
-
-function chatVerlaufLaden() {
-  try {
-    const gespeichert = localStorage.getItem('nantai_chats');
-
-    if (gespeichert) {
-      const daten = JSON.parse(gespeichert);
-      if (Array.isArray(daten)) nantaiChats = daten;
+    function neueId() {
+      return String(Date.now()) + '-' +
+        Math.random().toString(36).slice(2, 8);
     }
 
-    // Vorhandenen Einzel-Chat übernehmen, falls noch keine Chatliste existiert.
-    if (nantaiChats.length === 0) {
-      const alt = localStorage.getItem('nantai_chatverlauf');
-      const nachrichten = alt ? JSON.parse(alt) : [];
-
-      nantaiChats = [{
-        id: String(Date.now()),
-        titel: 'Bisheriger Chat',
-        nachrichten: Array.isArray(nachrichten) ? nachrichten : []
+    function begruessungsNachricht() {
+      return [{
+        text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?',
+        klasse: 'assistant'
       }];
     }
 
-    nantaiAktiverChatId =
-      localStorage.getItem('nantai_aktiver_chat');
-
-    if (!nantaiChats.some(eintrag => eintrag.id === nantaiAktiverChatId)) {
-      nantaiAktiverChatId = nantaiChats[0].id;
+    function chatNachrichtenAktuell() {
+      return Array.from(
+        document.querySelectorAll('#chat .message')
+      ).map(element => ({
+        text: element.textContent,
+        klasse: element.classList.contains('user') ? 'user' : 'assistant'
+      }));
     }
 
-    const aktiv = nantaiChats.find(
-      eintrag => eintrag.id === nantaiAktiverChatId
-    );
+    function chatVerlaufSpeichern() {
+      const eintrag = nantaiChats.find(
+        chat => chat.id === nantaiAktiverChatId
+      );
 
-    chatNachrichtenAnzeigen(aktiv.nachrichten || []);
-    chatListeAktualisieren();
-    chatVerlaufSpeichern();
-  } catch (fehler) {
-    console.warn('Chatverlauf konnte nicht geladen werden.', fehler);
-  }
-}
+      if (!eintrag) return;
 
-function neuerChat() {
-  chatVerlaufSpeichern();
+      eintrag.nachrichten = chatNachrichtenAktuell();
 
-  const neuerEintrag = {
-    id: String(Date.now()),
-    titel: 'Neuer Chat',
-    nachrichten: [{
-      text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?',
-      klasse: 'assistant'
-    }]
-  };
+      const ersteNachricht = eintrag.nachrichten.find(
+        nachricht => nachricht.klasse === 'user'
+      );
 
-  nantaiChats.unshift(neuerEintrag);
-  nantaiAktiverChatId = neuerEintrag.id;
+      if (ersteNachricht) {
+        eintrag.titel = ersteNachricht.text.slice(0, 35);
+      }
 
-  chatNachrichtenAnzeigen(neuerEintrag.nachrichten);
-  chatVerlaufSpeichern();
-}
+      try {
+        localStorage.setItem('nantai_chats', JSON.stringify(nantaiChats));
+        localStorage.setItem('nantai_aktiver_chat', nantaiAktiverChatId);
+      } catch (fehler) {
+        console.warn('Chats konnten nicht gespeichert werden.', fehler);
+      }
+
+      chatListeAktualisieren();
+    }
+
+    function chatNachrichtenAnzeigen(nachrichten) {
+      const chat = document.getElementById('chat');
+      chat.replaceChildren();
+
+      nachrichten.forEach(nachricht => {
+        const element = document.createElement('div');
+        element.className = 'message ' +
+          (nachricht.klasse === 'user' ? 'user' : 'assistant');
+        element.textContent = nachricht.text;
+        chat.appendChild(element);
+
+        if (nachricht.klasse !== 'user' &&
+            nachricht.text.startsWith('Hallo! Ich bin NantAI.')) {
+          return;
+        }
+      });
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function nachrichtAnzeigen(text, klasse) {
+      const element = document.createElement('div');
+      element.className = 'message ' + klasse;
+      element.textContent = text;
+
+      document.getElementById('chat').appendChild(element);
+      element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+      chatVerlaufSpeichern();
+    }
+
+    function chatListeAktualisieren() {
+      const liste = document.getElementById('chatliste');
+      if (!liste) return;
+
+      liste.replaceChildren();
+
+      nantaiChats.forEach(eintrag => {
+        const knopf = document.createElement('button');
+        knopf.type = 'button';
+        knopf.textContent = eintrag.titel || 'Neuer Chat';
+
+        if (eintrag.id === nantaiAktiverChatId) {
+          knopf.classList.add('aktiv');
+        }
+
+        knopf.onclick = () => chatWechseln(eintrag.id);
+        liste.appendChild(knopf);
+      });
+    }
+
+    function chatWechseln(id) {
+      chatVerlaufSpeichern();
+
+      const eintrag = nantaiChats.find(chat => chat.id === id);
+      if (!eintrag) return;
+
+      nantaiAktiverChatId = id;
+      chatNachrichtenAnzeigen(eintrag.nachrichten || []);
+      chatListeAktualisieren();
+
+      try {
+        localStorage.setItem('nantai_aktiver_chat', id);
+      } catch (fehler) {
+        console.warn('Aktiver Chat konnte nicht gespeichert werden.', fehler);
+      }
+    }
+
+    function chatVerlaufLaden() {
+      try {
+        const gespeichert = localStorage.getItem('nantai_chats');
+
+        if (gespeichert) {
+          const daten = JSON.parse(gespeichert);
+          if (Array.isArray(daten)) nantaiChats = daten;
+        }
+
+        // Alte Einzel-Chat-Speicherung übernehmen.
+        if (nantaiChats.length === 0) {
+          const alt = localStorage.getItem('nantai_chatverlauf');
+          let nachrichten = [];
+
+          if (alt) {
+            const datenAlt = JSON.parse(alt);
+            if (Array.isArray(datenAlt)) nachrichten = datenAlt;
+          }
+
+          nantaiChats = [{
+            id: neueId(),
+            titel: 'Bisheriger Chat',
+            nachrichten: nachrichten.length ? nachrichten : begruessungsNachricht()
+          }];
+        }
+
+        nantaiAktiverChatId = localStorage.getItem('nantai_aktiver_chat');
+
+        if (!nantaiChats.some(chat => chat.id === nantaiAktiverChatId)) {
+          nantaiAktiverChatId = nantaiChats[0].id;
+        }
+
+        const aktiv = nantaiChats.find(
+          chat => chat.id === nantaiAktiverChatId
+        );
+
+        chatNachrichtenAnzeigen(
+          aktiv && Array.isArray(aktiv.nachrichten)
+            ? aktiv.nachrichten
+            : begruessungsNachricht()
+        );
+
+        chatListeAktualisieren();
+        chatVerlaufSpeichern();
+      } catch (fehler) {
+        console.warn('Chatverlauf konnte nicht geladen werden.', fehler);
+
+        if (nantaiChats.length === 0) {
+          const chat = {
+            id: neueId(),
+            titel: 'Neuer Chat',
+            nachrichten: begruessungsNachricht()
+          };
+
+          nantaiChats.push(chat);
+          nantaiAktiverChatId = chat.id;
+          chatNachrichtenAnzeigen(chat.nachrichten);
+          chatListeAktualisieren();
+        }
+      }
+    }
+
+    function neuerChat() {
+      chatVerlaufSpeichern();
+
+      const eintrag = {
+        id: neueId(),
+        titel: 'Neuer Chat',
+        nachrichten: begruessungsNachricht()
+      };
+
+      nantaiChats.unshift(eintrag);
+      nantaiAktiverChatId = eintrag.id;
+
+      chatNachrichtenAnzeigen(eintrag.nachrichten);
+      chatVerlaufSpeichern();
+    }
+
+    function jsonpAnfrage(parameter) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'nantaiCallback_' +
+          Date.now() + '_' + Math.random().toString(36).slice(2);
+
+        const script = document.createElement('script');
+        const url = new URL(BACKEND);
+
+        Object.entries(parameter).forEach(([schluessel, wert]) => {
+          url.searchParams.set(schluessel, wert);
+        });
+
+        url.searchParams.set('callback', callbackName);
+
+        const timeout = setTimeout(() => {
+          aufraeumen();
+          reject(new Error('Zeitüberschreitung bei der Verbindung.'));
+        }, 60000);
+
+        function aufraeumen() {
+          clearTimeout(timeout);
+          delete window[callbackName];
+          script.remove();
+        }
+
+        window[callbackName] = daten => {
+          aufraeumen();
+          resolve(daten);
+        };
+
+        script.onerror = () => {
+          aufraeumen();
+          reject(new Error('Backend konnte nicht erreicht werden.'));
+        };
+
+        script.src = url.toString();
+        document.head.appendChild(script);
+      });
+    }
 
     async function nachrichtSenden() {
       const feld = document.getElementById('nachricht');
@@ -374,14 +491,21 @@ function neuerChat() {
           aktion: 'chat',
           nachricht: text
         });
-        if (!daten.erfolg) throw new Error(daten.fehler || 'Unbekannter Fehler');
-     nachrichtAnzeigen(daten.antwort, 'assistant');
-const vorleseKnopf = nantaiVorleseKnopf(daten.antwort);
-document.getElementById('chat').appendChild(vorleseKnopf);
+
+        if (!daten.erfolg) {
+          throw new Error(daten.fehler || 'Unbekannter Fehler');
+        }
+
+        nachrichtAnzeigen(daten.antwort, 'assistant');
+
+        const vorleseKnopf = nantaiVorleseKnopf(daten.antwort);
+        document.getElementById('chat').appendChild(vorleseKnopf);
+
         document.getElementById('status').textContent = 'Antwort erhalten.';
       } catch (fehler) {
         nachrichtAnzeigen('Fehler: ' + fehler.message, 'assistant');
-        document.getElementById('status').textContent = 'Verbindung fehlgeschlagen.';
+        document.getElementById('status').textContent =
+          'Verbindung fehlgeschlagen.';
       }
     }
 
@@ -391,40 +515,51 @@ document.getElementById('chat').appendChild(vorleseKnopf);
 
     async function bildErzeugen() {
       const prompt = document.getElementById('bildPrompt').value.trim();
+
       if (!prompt) {
-        document.getElementById('status').textContent = 'Bitte beschreibe das Bild.';
+        document.getElementById('status').textContent =
+          'Bitte beschreibe das Bild.';
         return;
       }
+
       document.getElementById('status').textContent = 'Bild wird erstellt …';
-      document.getElementById('bildErgebnis').textContent = '';
+      document.getElementById('bildErgebnis').replaceChildren();
 
       try {
         const daten = await jsonpAnfrage({
           aktion: 'bild',
-          prompt
+          prompt: prompt
         });
-        if (!daten.erfolg) throw new Error(daten.fehler || 'Bild konnte nicht erstellt werden.');
+
+        if (!daten.erfolg) {
+          throw new Error(daten.fehler || 'Bild konnte nicht erstellt werden.');
+        }
+
         const bild = document.createElement('img');
         bild.id = 'bildVorschau';
         bild.alt = prompt;
         bild.src = daten.bild;
         document.getElementById('bildErgebnis').appendChild(bild);
+
         document.getElementById('status').textContent = 'Bild erstellt.';
       } catch (fehler) {
-        document.getElementById('status').textContent = 'Bildfehler: ' + fehler.message;
+        document.getElementById('status').textContent =
+          'Bildfehler: ' + fehler.message;
       }
     }
 
-    let erkennung = null;
     function spracheStarten() {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
+
       if (!SpeechRecognition) {
         document.getElementById('status').textContent =
           'Spracherkennung wird in diesem Browser nicht unterstützt.';
         return;
       }
+
       if (erkennung) erkennung.stop();
+
       erkennung = new SpeechRecognition();
       erkennung.lang = 'de-DE';
       erkennung.continuous = false;
@@ -433,6 +568,7 @@ document.getElementById('chat').appendChild(vorleseKnopf);
       erkennung.onstart = () => {
         document.getElementById('status').textContent = 'Ich höre zu …';
       };
+
       erkennung.onresult = event => {
         const erkannt = event.results[0][0].transcript;
         const feld = document.getElementById('nachricht');
@@ -440,21 +576,51 @@ document.getElementById('chat').appendChild(vorleseKnopf);
         feld.focus();
         document.getElementById('status').textContent = 'Sprache erkannt.';
       };
+
       erkennung.onerror = event => {
         document.getElementById('status').textContent =
           'Sprachfehler: ' + event.error;
       };
+
       erkennung.onend = () => {
         if (document.getElementById('status').textContent === 'Ich höre zu …') {
-          document.getElementById('status').textContent = 'Spracherkennung beendet.';
+          document.getElementById('status').textContent =
+            'Spracherkennung beendet.';
         }
       };
+
       erkennung.start();
     }
 
     function spracheStoppen() {
       if (erkennung) erkennung.stop();
-      document.getElementById('status').textContent = 'Spracherkennung gestoppt.';
+      document.getElementById('status').textContent =
+        'Spracherkennung gestoppt.';
+    }
+
+    function nantaiVorlesen(text) {
+      if (!('speechSynthesis' in window)) {
+        alert('Vorlesen wird von diesem Browser nicht unterstützt.');
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const stimme = new SpeechSynthesisUtterance(text);
+      stimme.lang = 'de-DE';
+      stimme.rate = 1;
+      stimme.pitch = 1;
+
+      window.speechSynthesis.speak(stimme);
+    }
+
+    function nantaiVorleseKnopf(text) {
+      const knopf = document.createElement('button');
+      knopf.type = 'button';
+      knopf.className = 'secondary';
+      knopf.textContent = '🔊 Vorlesen';
+      knopf.onclick = () => nantaiVorlesen(text);
+      return knopf;
     }
 
     document.getElementById('nachricht').addEventListener('keydown', event => {
@@ -463,45 +629,8 @@ document.getElementById('chat').appendChild(vorleseKnopf);
         nachrichtSenden();
       }
     });
-    
-function nantaiVorlesen(text) {
-  if (!("speechSynthesis" in window)) {
-    alert("Vorlesen wird von diesem Browser nicht unterstützt.");
-    return;
-  }
 
-  window.speechSynthesis.cancel();
-
-  const stimme = new SpeechSynthesisUtterance(text);
-  stimme.lang = "de-DE";
-  stimme.rate = 1;
-  stimme.pitch = 1;
-
-  window.speechSynthesis.speak(stimme);
-}
-
-function nantaiVorleseKnopf(text) {
-  const knopf = document.createElement("button"); 
-  knopf.type = "button";
-  knopf.textContent = "🔊 Vorlesen";
-  knopf.onclick = () => nantaiVorlesen(text);
-  return knopf;
-}
-  chatVerlaufLaden();
-    function neuerChat() {
-  const chat = document.getElementById('chat');
-
-  chat.replaceChildren();
-
-  const begruessung = document.createElement('div');
-  begruessung.className = 'message assistant';
-  begruessung.textContent =
-    'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?';
-
-  chat.appendChild(begruessung);
-
-  chatVerlaufSpeichern();
-}
+    chatVerlaufLaden();
   </script>
 </body>
 </html>
