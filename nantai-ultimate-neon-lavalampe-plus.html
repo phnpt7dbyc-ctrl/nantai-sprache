@@ -177,6 +177,28 @@
       textarea { min-height: 75px; font-size: 16px; }
       .row { gap: 8px; }
     }
+    
+/* NantAI: flüssiger tippen, Effekte sonst beibehalten */
+body:has(#nachricht:focus) .neon-hintergrund,
+body:has(#nachricht:focus) .lava-kugel {
+  animation-play-state: paused !important;
+}
+
+body:has(#nachricht:focus) .lava-lampe {
+  filter: none !important;
+  opacity: 0.35;
+}
+
+body:has(#nachricht:focus) #seitenleiste,
+body:has(#nachricht:focus) header,
+body:has(#nachricht:focus) .widget,
+body:has(#nachricht:focus) .message,
+body:has(#nachricht:focus) .panel,
+body:has(#nachricht:focus) .composer {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
   </style>
 </head>
 <body>
