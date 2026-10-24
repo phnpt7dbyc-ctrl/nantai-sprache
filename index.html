@@ -46,6 +46,7 @@ textarea {
   <textarea id="text" placeholder="Dein erkannter Text erscheint hier"></textarea>
   <br>
   <button onclick="kopieren()">Text kopieren</button>
+  <button onclick="anNantAISenden()">➡️ Direkt an NantAI senden</button>
 </main>
 
 <script>
@@ -61,6 +62,30 @@ function starten() {
     return;
   }
 
+function anNantAISenden() {
+  var feld = document.getElementById('text');
+  var text = feld.value.trim();
+
+  if (!text) {
+    document.getElementById('status').textContent =
+      'Bitte zuerst etwas sprechen.';
+    return;
+  }
+
+  if (!window.opener || window.opener.closed) {
+    document.getElementById('status').textContent =
+      'Bitte NantAI zuerst öffnen und die Spracheingabe über den Mikrofon-Button starten.';
+    return;
+  }
+
+  window.opener.postMessage(
+    { type: 'NANTAI_SPRACHE', text: text },
+    '*'
+  );
+
+  document.getElementById('status').textContent =
+    'Text an NantAI gesendet.';
+}
   erkennung = new API();
   erkennung.lang = 'de-DE';
   erkennung.continuous = true;
@@ -98,8 +123,7 @@ function starten() {
 function stoppen() {
   if (erkennung) erkennung.stop();
 }
-
-
+  
 function kopieren() {
   var feld = document.getElementById('text');
   feld.select();
