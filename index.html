@@ -112,15 +112,10 @@ function kopieren() {
   }
 }
 
-function anNantAISenden() {
-  var feld = document.getElementById('text');
-  var text = feld.value.trim();
-
-  if (!text) {
-    document.getElementById('status').textContent =
-      'Bitte zuerst etwas sprechen.';
-    return;
-  }
+window.opener.postMessage(
+  { type: 'NANTAI_SPRACHE', text: text },
+  '*'
+);
 
   if (!window.opener || window.opener.closed) {
     document.getElementById('status').textContent =
