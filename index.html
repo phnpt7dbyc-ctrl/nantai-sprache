@@ -109,6 +109,31 @@ function kopieren() {
     document.getElementById('status').textContent =
       'Text kopiert. Du kannst ihn in NantAI einfügen.';
   }
+}<button onclick="anNantAISenden()">
+  ➡️ Direkt an NantAI senden
+</button>
+
+<script>
+function anNantAISenden() {
+  const feld = document.querySelector('textarea');
+  const text = feld ? feld.value.trim() : '';
+
+  if (!text) {
+    alert('Bitte zuerst etwas sprechen.');
+    return;
+  }
+
+  if (!window.opener || window.opener.closed) {
+    alert('Bitte NantAI zuerst öffnen und diese Seite über den Mikrofon-Button starten.');
+    return;
+  }
+
+  window.opener.postMessage(
+    { type: 'NANTAI_SPRACHE', text: text },
+    '*'
+  );
+
+  alert('Text wurde an NantAI gesendet.');
 }
 </script>
 </body>
