@@ -229,80 +229,136 @@ function nachrichtAnzeigen(text, klasse) {
 
   chatVerlaufSpeichern();
 }
+let nantaiChats = [];
+let nantaiAktiverChatId = null;
 
 function chatVerlaufSpeichern() {
-  const nachrichten = Array.from(
+  const chat = nantaiChats.find(
+    eintrag => eintrag.id === nantaiAktiverChatId
+  );
+  if (!chat) return;
+
+  chat.nachrichten = Array.from(
     document.querySelectorAll('#chat .message')
   ).map(element => ({
     text: element.textContent,
     klasse: element.classList.contains('user') ? 'user' : 'assistant'
   }));
 
+  const ersteNachricht = chat.nachrichten.find(
+    nachricht => nachricht.klasse === 'user'
+  );
+  if (ersteNachricht) {
+    chat.titel = ersteNachricht.text.slice(0, 35);
+  }
+
   try {
-    localStorage.setItem('nantai_chatverlauf', JSON.stringify(nachrichten));
+    localStorage.setItem('nantai_chats', JSON.stringify(nantaiChats));
+    localStorage.setItem('nantai_aktiver_chat', nantaiAktiverChatId);
   } catch (fehler) {
-    console.warn('Chatverlauf konnte nicht gespeichert werden.', fehler);
+    console.warn('Chats konnten nicht gespeichert werden.', fehler);
+  }
+
+  chatListeAktualisieren();
+}
+
+function chatNachrichtenAnzeigen(nachrichten) {
+  const chat = document.getElementById('chat');
+  chat.replaceChildren();
+
+  nachrichten.forEach(nachricht => {
+    const element = document.createElement('div');
+    element.className = 'message ' +
+      (nachricht.klasse === 'user' ? 'user' : 'assistant');
+    element.textContent = nachricht.text;
+    chat.appendChild(element);
+  });
+}
+
+function chatListeAktualisieren() {
+  const liste = document.getElementById('chatliste');
+  if (!liste) return;
+
+  liste.replaceChildren();
+
+  nantaiChats.forEach(eintrag => {
+    const knopf = document.createElement('button');
+    knopf.type = 'button';
+    knopf.textContent = eintrag.titel || 'Neuer Chat';
+    knopf.onclick = () => chatWechseln(eintrag.id);
+    liste.appendChild(knopf);
+  });
+}
+
+function chatWechseln(id) {
+  chatVerlaufSpeichern();
+  nantaiAktiverChatId = id;
+
+  const ausgewaehlt = nantaiChats.find(eintrag => eintrag.id === id);
+  if (ausgewaehlt) {
+    chatNachrichtenAnzeigen(ausgewaehlt.nachrichten || []);
+    chatListeAktualisieren();
   }
 }
 
 function chatVerlaufLaden() {
   try {
-    const gespeichert = localStorage.getItem('nantai_chatverlauf');
-    if (!gespeichert) return;
+    const gespeichert = localStorage.getItem('nantai_chats');
 
-    const nachrichten = JSON.parse(gespeichert);
-    if (!Array.isArray(nachrichten)) return;
+    if (gespeichert) {
+      const daten = JSON.parse(gespeichert);
+      if (Array.isArray(daten)) nantaiChats = daten;
+    }
 
-    const chat = document.getElementById('chat');
-    chat.replaceChildren();
+    // Vorhandenen Einzel-Chat übernehmen, falls noch keine Chatliste existiert.
+    if (nantaiChats.length === 0) {
+      const alt = localStorage.getItem('nantai_chatverlauf');
+      const nachrichten = alt ? JSON.parse(alt) : [];
 
-    nachrichten.forEach(nachricht => {
-      if (typeof nachricht.text !== 'string') return;
+      nantaiChats = [{
+        id: String(Date.now()),
+        titel: 'Bisheriger Chat',
+        nachrichten: Array.isArray(nachrichten) ? nachrichten : []
+      }];
+    }
 
-      const element = document.createElement('div');
-      element.className = 'message ' +
-        (nachricht.klasse === 'user' ? 'user' : 'assistant');
-      element.textContent = nachricht.text;
-      chat.appendChild(element);
-    });
+    nantaiAktiverChatId =
+      localStorage.getItem('nantai_aktiver_chat');
+
+    if (!nantaiChats.some(eintrag => eintrag.id === nantaiAktiverChatId)) {
+      nantaiAktiverChatId = nantaiChats[0].id;
+    }
+
+    const aktiv = nantaiChats.find(
+      eintrag => eintrag.id === nantaiAktiverChatId
+    );
+
+    chatNachrichtenAnzeigen(aktiv.nachrichten || []);
+    chatListeAktualisieren();
+    chatVerlaufSpeichern();
   } catch (fehler) {
     console.warn('Chatverlauf konnte nicht geladen werden.', fehler);
   }
 }
 
-    function jsonpAnfrage(parameter) {
-      return new Promise((resolve, reject) => {
-        const callback = 'nantai_' + Date.now() + '_' +
-          Math.random().toString(36).slice(2);
-        const script = document.createElement('script');
-        const query = new URLSearchParams({
-          ...parameter,
-          callback
-        });
+function neuerChat() {
+  chatVerlaufSpeichern();
 
-        const timer = setTimeout(() => {
-          cleanup();
-          reject(new Error('Zeitüberschreitung bei der Verbindung.'));
-        }, 90000);
+  const neuerEintrag = {
+    id: String(Date.now()),
+    titel: 'Neuer Chat',
+    nachrichten: [{
+      text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?',
+      klasse: 'assistant'
+    }]
+  };
 
-        function cleanup() {
-          clearTimeout(timer);
-          delete window[callback];
-          script.remove();
-        }
+  nantaiChats.unshift(neuerEintrag);
+  nantaiAktiverChatId = neuerEintrag.id;
 
-        window[callback] = daten => {
-          cleanup();
-          resolve(daten);
-        };
-        script.onerror = () => {
-          cleanup();
-          reject(new Error('NantAI-Backend nicht erreichbar.'));
-        };
-        script.src = BACKEND + '?' + query.toString();
-        document.body.appendChild(script);
-      });
-    }
+  chatNachrichtenAnzeigen(neuerEintrag.nachrichten);
+  chatVerlaufSpeichern();
+}
 
     async function nachrichtSenden() {
       const feld = document.getElementById('nachricht');
