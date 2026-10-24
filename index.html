@@ -167,12 +167,16 @@ async function nantaiBackendTest() {
       ? 'Backend-Test erfolgreich: ' + daten.antwort
       : 'Backend-Fehler: ' + daten.fehler;
   } catch (error) {
-    status.textContent =
+    status.textContent = 
       'Verbindung fehlgeschlagen: ' + error.message;
   }
 }
 
-</script>
+
+
+</script> 
+<button onclick="nantaiBackendTest()">NantAI-Verbindung testen</button>
+<p id="status">Bereit für den Verbindungstest.</p>
 </body>
 </html>
 
