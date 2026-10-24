@@ -99,6 +99,7 @@ function stoppen() {
   if (erkennung) erkennung.stop();
 }
 
+
 function kopieren() {
   var feld = document.getElementById('text');
   feld.select();
@@ -107,33 +108,33 @@ function kopieren() {
   if (feld.value) {
     document.execCommand('copy');
     document.getElementById('status').textContent =
-      'Text kopiert. Du kannst ihn in NantAI einfügen.';
+      'Text kopiert.';
   }
-}<button onclick="anNantAISenden()">
-  ➡️ Direkt an NantAI senden
-</button>
+}
 
-<script>
 function anNantAISenden() {
-  const feld = document.querySelector('textarea');
-  const text = feld ? feld.value.trim() : '';
+  var feld = document.getElementById('text');
+  var text = feld.value.trim();
 
   if (!text) {
-    alert('Bitte zuerst etwas sprechen.');
+    document.getElementById('status').textContent =
+      'Bitte zuerst etwas sprechen.';
     return;
   }
 
   if (!window.opener || window.opener.closed) {
-    alert('Bitte NantAI zuerst öffnen und diese Seite über den Mikrofon-Button starten.');
+    document.getElementById('status').textContent =
+      'Bitte NantAI öffnen und die Spracheingabe über dessen Mikrofon starten.';
     return;
   }
 
   window.opener.postMessage(
     { type: 'NANTAI_SPRACHE', text: text },
-    '*'
+    'https://script.google.com'
   );
 
-  alert('Text wurde an NantAI gesendet.');
+  document.getElementById('status').textContent =
+    'Text an NantAI gesendet.';
 }
 </script>
 </body>
