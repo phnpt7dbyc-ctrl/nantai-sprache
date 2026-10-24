@@ -144,32 +144,33 @@ function anNantAISenden() {
     'Übertragungsversuch an NantAI gesendet.';
 }
   
-async function nantaiBackendTest() {
+function nantaiBackendTest() {
   const status = document.getElementById('status');
+  status.textContent = 'Verbinde mit NantAI …';
 
-  try {
-    const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify({
-          aktion: 'chat',
-          nachricht: 'Antworte nur mit: NantAI-Verbindung funktioniert.'
-        })
-      }
-    );
+  const callbackName = 'nantaiCallback_' + Date.now();
+  const script = document.createElement('script');
 
-    const daten = await response.json();
+  window[callbackName] = function(daten) {
     status.textContent = daten.erfolg
-      ? 'Backend-Test erfolgreich: ' + daten.antwort
-      : 'Backend-Fehler: ' + daten.fehler;
-  } catch (error) {
-    status.textContent = 
-      'Verbindung fehlgeschlagen: ' + error.message;
-  }
+      ? 'Verbindung erfolgreich: NantAI ist erreichbar.'
+      : 'NantAI-Fehler: ' + (daten.fehler || 'Unbekannter Fehler');
+
+    delete window[callbackName];
+    script.remove();
+  };
+
+  script.src =
+    'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec?callback=' +
+    encodeURIComponent(callbackName);
+
+  script.onerror = function() {
+    status.textContent = 'Verbindung fehlgeschlagen.';
+    delete window[callbackName];
+    script.remove();
+  };
+
+  document.body.appendChild(script);
 }
 
 
