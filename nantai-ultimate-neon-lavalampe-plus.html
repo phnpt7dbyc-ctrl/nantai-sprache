@@ -677,29 +677,35 @@ function nantaiVorlesen(text) {
 
   window.speechSynthesis.cancel();
 
-  const sprechText = nantaiTextFuerSprache(text);
-  if (!sprechText) return;
+  // Nur den Text für die Sprachausgabe bereinigen
+  let sprechText = String(text ?? '')
+    .replace(/```[\s\S]*?```/g, ' Codeblock ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/https?:\/\/\S+/gi, ' ')
+    .replace(/[<>{}\[\]_*#|\\~=^]/g, ' ')
+    .replace(/\p{Extended_Pictographic}/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!sprechText) {
+    statusSetzen('Kein lesbarer Text zum Vorlesen vorhanden.', 'status-bad');
+    return;
+  }
 
   const stimme = new SpeechSynthesisUtterance(sprechText);
   stimme.lang = 'de-DE';
   stimme.rate = 1;
   stimme.pitch = 1;
 
+  stimme.onerror = event => {
+    console.error('NantAI Vorlesefehler:', event.error);
+    statusSetzen('Vorlesen fehlgeschlagen: ' + event.error, 'status-bad');
+  };
+
   window.speechSynthesis.speak(stimme);
 }
-
-document.getElementById('nachricht').addEventListener('keydown', event => {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault();
-    nachrichtSenden();
-  }
-});
-
-chatVerlaufLaden();
-uhrAktualisieren();
-setInterval(uhrAktualisieren, 1000);
-medienBereichAktualisieren();
-
   </script>
 </body>
 </html>
