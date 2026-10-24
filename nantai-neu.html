@@ -432,6 +432,20 @@ function nantaiVorleseKnopf(text) {
   return knopf;
 }
   chatVerlaufLaden();
+    function neuerChat() {
+  const chat = document.getElementById('chat');
+
+  chat.replaceChildren();
+
+  const begruessung = document.createElement('div');
+  begruessung.className = 'message assistant';
+  begruessung.textContent =
+    'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?';
+
+  chat.appendChild(begruessung);
+
+  chatVerlaufSpeichern();
+}
   </script>
 </body>
 </html>
