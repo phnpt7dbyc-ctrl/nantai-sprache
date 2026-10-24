@@ -173,20 +173,109 @@
     #bildVorschau { max-width: 100%; border-radius: 14px; margin-top: 12px; }
     .hidden { display: none; }
 
-    @media (max-width: 600px) {
-      body { padding-left: 0; }
+@media (max-width: 600px) {
+  body {
+    padding-left: 0;
+    font-size: 16px;
+  }
 
-      #seitenleiste {
-        position: relative;
-        width: 100%;
-        height: auto;
-        max-height: 260px;
-        border-right: none;
-        border-bottom: 1px solid #30283f;
-      }
+  header {
+    padding: 12px;
+    gap: 10px;
+  }
 
-      main { padding: 14px; }
-    }
+  .logo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  #seitenleiste {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: auto;
+    max-height: 190px;
+    padding: 12px;
+    overflow-y: auto;
+    border-right: none;
+    border-bottom: 1px solid #30283f;
+  }
+
+  #seitenleiste h2 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  #seitenleiste p {
+    margin: 4px 0 8px;
+  }
+
+  #seitenleiste > button:first-of-type {
+    width: 100%;
+    text-align: center;
+  }
+
+  #chatliste {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  #chatliste button {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 200px;
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  main {
+    width: 100%;
+    padding: 12px;
+  }
+
+  #chat {
+    min-height: 35vh;
+    gap: 10px;
+  }
+
+  .message {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .tools {
+    gap: 8px;
+  }
+
+  .tools button,
+  .row button {
+    min-height: 46px;
+  }
+
+  .composer {
+    position: sticky;
+    bottom: 0;
+    padding: 10px 0 max(12px, env(safe-area-inset-bottom));
+  }
+
+  textarea {
+    min-height: 75px;
+    font-size: 16px;
+  }
+
+  .row {
+    gap: 8px;
+  }
+}
+    
   </style>
 </head>
 <body>
