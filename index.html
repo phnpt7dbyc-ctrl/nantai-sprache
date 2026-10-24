@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -62,30 +63,6 @@ function starten() {
     return;
   }
 
-function anNantAISenden() {
-  var feld = document.getElementById('text');
-  var text = feld.value.trim();
-
-  if (!text) {
-    document.getElementById('status').textContent =
-      'Bitte zuerst etwas sprechen.';
-    return;
-  }
-
-  if (!window.opener || window.opener.closed) {
-    document.getElementById('status').textContent =
-      'Bitte NantAI zuerst öffnen und die Spracheingabe über den Mikrofon-Button starten.';
-    return;
-  }
-
-  window.opener.postMessage(
-    { type: 'NANTAI_SPRACHE', text: text },
-    '*'
-  );
-
-  document.getElementById('status').textContent =
-    'Text an NantAI gesendet.';
-}
   erkennung = new API();
   erkennung.lang = 'de-DE';
   erkennung.continuous = true;
@@ -121,40 +98,52 @@ function anNantAISenden() {
 }
 
 function stoppen() {
-  if (erkennung) erkennung.stop();
+  if (erkennung) {
+    erkennung.stop();
+  }
 }
-  
+
 function kopieren() {
   var feld = document.getElementById('text');
   feld.select();
   feld.setSelectionRange(0, feld.value.length);
 
-  if (feld.value) {
-    document.execCommand('copy');
+  if (!feld.value) {
     document.getElementById('status').textContent =
-      'Text kopiert.';
+      'Bitte zuerst etwas sprechen.';
+    return;
   }
+
+  var erfolgreich = document.execCommand('copy');
+  document.getElementById('status').textContent = erfolgreich
+    ? 'Text kopiert. Du kannst ihn in NantAI einfügen.'
+    : 'Bitte markiere den Text und kopiere ihn manuell.';
 }
 
-window.opener.postMessage(
-  { type: 'NANTAI_SPRACHE', text: text },
-  '*'
-);
+function anNantAISenden() {
+  var text = document.getElementById('text').value.trim();
+
+  if (!text) {
+    document.getElementById('status').textContent =
+      'Bitte zuerst etwas sprechen.';
+    return;
+  }
 
   if (!window.opener || window.opener.closed) {
     document.getElementById('status').textContent =
-      'Bitte NantAI öffnen und die Spracheingabe über dessen Mikrofon starten.';
+      'Bitte NantAI zuerst öffnen und die Spracheingabe über den Mikrofon-Button starten.';
     return;
   }
 
   window.opener.postMessage(
     { type: 'NANTAI_SPRACHE', text: text },
-    'https://script.google.com'
+    '*'
   );
 
   document.getElementById('status').textContent =
-    'Text an NantAI gesendet.';
+    'Übertragungsversuch an NantAI gesendet.';
 }
 </script>
 </body>
 </html>
+
