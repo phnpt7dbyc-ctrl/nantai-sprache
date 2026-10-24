@@ -215,8 +215,6 @@
      nachrichtAnzeigen(daten.antwort, 'assistant');
 const vorleseKnopf = nantaiVorleseKnopf(daten.antwort);
 document.getElementById('chat').appendChild(vorleseKnopf);
-const vorleseKnopf = nantaiVorleseKnopf(daten.antwort);
-document.getElementById('chat').appendChild(vorleseKnopf);
         document.getElementById('status').textContent = 'Antwort erhalten.';
       } catch (fehler) {
         nachrichtAnzeigen('Fehler: ' + fehler.message, 'assistant');
