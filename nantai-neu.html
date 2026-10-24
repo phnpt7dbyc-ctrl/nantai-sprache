@@ -212,7 +212,11 @@
           nachricht: text
         });
         if (!daten.erfolg) throw new Error(daten.fehler || 'Unbekannter Fehler');
-        nachrichtAnzeigen(daten.antwort, 'assistant');
+     nachrichtAnzeigen(daten.antwort, 'assistant');
+const vorleseKnopf = nantaiVorleseKnopf(daten.antwort);
+document.getElementById('chat').appendChild(vorleseKnopf);
+const vorleseKnopf = nantaiVorleseKnopf(daten.antwort);
+document.getElementById('chat').appendChild(vorleseKnopf);
         document.getElementById('status').textContent = 'Antwort erhalten.';
       } catch (fehler) {
         nachrichtAnzeigen('Fehler: ' + fehler.message, 'assistant');
@@ -298,6 +302,30 @@
         nachrichtSenden();
       }
     });
+    
+function nantaiVorlesen(text) {
+  if (!("speechSynthesis" in window)) {
+    alert("Vorlesen wird von diesem Browser nicht unterstützt.");
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const stimme = new SpeechSynthesisUtterance(text);
+  stimme.lang = "de-DE";
+  stimme.rate = 1;
+  stimme.pitch = 1;
+
+  window.speechSynthesis.speak(stimme);
+}
+
+function nantaiVorleseKnopf(text) {
+  const knopf = document.createElement("button");
+  knopf.type = "button";
+  knopf.textContent = "🔊 Vorlesen";
+  knopf.onclick = () => nantaiVorlesen(text);
+  return knopf;
+}
   </script>
 </body>
 </html>
