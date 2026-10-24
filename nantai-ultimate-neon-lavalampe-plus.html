@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c0a12">
+  <title>NantAI Ultimate</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0c0a12;
+      --panel: #171321;
+      --panel2: #211a30;
+      --violet: #8250df;
+      --violet2: #a78bfa;
+      --text: #f5f1ff;
+      --muted: #b9aecb;
+      --border: #30283f;
+      --good: #86efac;
+      --bad: #fca5a5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding-left: 230px; min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      position: relative; isolation: isolate; overflow-x: hidden;
+    }
+    /* Animierter Neon-Farbverlauf hinter der gesamten Oberfläche */
+    .neon-hintergrund {
+      position: fixed; inset: -18%; z-index: -3; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 20%, #00e5ff78 0%, #00e5ff20 20%, transparent 40%),
+        radial-gradient(ellipse at 80% 25%, #ff2bd678 0%, #d946ef20 22%, transparent 42%),
+        radial-gradient(ellipse at 55% 85%, #7555ff80 0%, #6366f125 24%, transparent 45%),
+        radial-gradient(ellipse at 35% 55%, #00ffc855 0%, transparent 34%),
+        linear-gradient(125deg, #050712, #190825, #061c2a, #240720);
+      background-size: 200% 200%;
+      animation: neonFarben 16s ease-in-out infinite alternate;
+      box-shadow: inset 0 0 140px #a855f722;
+    }
+    @keyframes neonFarben {
+      0% { background-position: 0% 30%; filter: hue-rotate(0deg) saturate(1.55) brightness(1.05); }
+      50% { background-position: 100% 65%; filter: hue-rotate(55deg) saturate(1.9) brightness(1.2); }
+      100% { background-position: 25% 100%; filter: hue-rotate(110deg) saturate(1.7) brightness(1.1); }
+    }
+    /* Lava-Blasen: dekorativ, rein per CSS animiert */
+    .lava-lampe {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none;
+      overflow: hidden; filter: blur(22px) contrast(1.2) saturate(1.35);
+      opacity: .88; mix-blend-mode: screen;
+    }
+    .lava-kugel {
+      position: absolute; display: block; border-radius: 48% 52% 60% 40%;
+      background: linear-gradient(135deg, #00e5ffbb, #8b5cf6cc 48%, #ec4899bb);
+      box-shadow: 0 0 38px #00e5ff88, 0 0 85px #d946ef77, 0 0 140px #8b5cf655,
+                  inset 0 0 30px #ffffff44;
+      animation: lavaSchweben 18s ease-in-out infinite alternate,
+                 lavaFarbwechsel 14s linear infinite;
+      will-change: transform, border-radius, filter;
+    }
+    .lava-kugel:nth-child(1) { width: 270px; height: 310px; left: 8%; top: 16%; animation-duration: 21s, 17s; }
+    .lava-kugel:nth-child(2) { width: 330px; height: 260px; left: 52%; top: 50%; animation-duration: 25s, 19s; animation-delay: -6s, -4s; }
+    .lava-kugel:nth-child(3) { width: 220px; height: 260px; left: 74%; top: 8%; animation-duration: 19s, 15s; animation-delay: -9s, -8s; }
+    .lava-kugel:nth-child(4) { width: 290px; height: 230px; left: 23%; top: 70%; animation-duration: 24s, 21s; animation-delay: -11s, -5s; }
+    .lava-kugel:nth-child(5) { width: 200px; height: 240px; left: 88%; top: 72%; animation-duration: 20s, 16s; animation-delay: -4s, -10s; }
+    @keyframes lavaSchweben {
+      0% { transform: translate3d(-12px, 18px, 0) scale(.88) rotate(-12deg); border-radius: 48% 52% 60% 40%; }
+      33% { transform: translate3d(45px, -42px, 0) scale(1.12) rotate(18deg); border-radius: 62% 38% 44% 56%; }
+      66% { transform: translate3d(-28px, 35px, 0) scale(.96) rotate(35deg); border-radius: 35% 65% 55% 45%; }
+      100% { transform: translate3d(20px, -25px, 0) scale(1.08) rotate(55deg); border-radius: 55% 45% 36% 64%; }
+    }
+    @keyframes lavaFarbwechsel {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    /* Leicht transparente Flächen, damit der Effekt sichtbar bleibt und Text lesbar ist */
+    #seitenleiste, header, .widget, .message, .panel, .composer {
+      background-color: rgb(20 16 31 / 86%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .user { background-color: rgb(48 32 68 / 91%); }
+    @media (prefers-reduced-motion: reduce) {
+      .neon-hintergrund, .lava-kugel { animation: none !important; }
+    }
+    button, input, textarea { font: inherit; }
+    button {
+      border: 0; border-radius: 12px; padding: 11px 14px;
+      background: var(--violet); color: white; cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+    button:hover { background: #9568e8; }
+    button:active { transform: scale(.98); }
+    button:disabled { opacity: .55; cursor: wait; }
+    button.secondary { background: #292235; border: 1px solid #453653; }
+    button.secondary:hover { background: #3a2d4d; }
+    button.danger { background: #54252e; }
+    input, textarea, select {
+      width: 100%; border: 1px solid #453653; border-radius: 13px;
+      background: var(--panel); color: var(--text); padding: 12px;
+    }
+    textarea { min-height: 82px; resize: vertical; }
+    header {
+      display: flex; align-items: center; gap: 12px; padding: 16px 20px;
+      border-bottom: 1px solid var(--border); background: var(--panel);
+    }
+    .logo {
+      width: 44px; height: 44px; flex: 0 0 auto; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--violet), #4c1d95);
+      border-radius: 14px; font-size: 24px; box-shadow: 0 5px 22px #8250df44;
+    }
+    h1 { margin: 0; font-size: 23px; }
+    header p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
+    #seitenleiste {
+      position: fixed; inset: 0 auto 0 0; width: 220px; padding: 18px 12px;
+      overflow-y: auto; background: #15121f; border-right: 1px solid var(--border); z-index: 20;
+    }
+    #seitenleiste h2 { color: var(--violet2); font-size: 20px; margin: 0 0 6px; }
+    #seitenleiste p { color: var(--muted); font-size: 14px; margin: 4px 0 12px; }
+    #seitenleiste button { display: block; width: 100%; margin-bottom: 8px; text-align: left; overflow-wrap: anywhere; }
+    #chatliste button.aktiv { background: #493562; border: 1px solid var(--violet2); }
+    .side-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; margin: 18px 4px 8px; }
+    main { width: min(1000px, 100%); margin: auto; padding: 18px; }
+    #status { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+    .dashboard { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 16px; }
+    .widget { min-width: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
+    .widget-label { color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+    .widget-value { font-weight: 650; overflow-wrap: anywhere; }
+    .widget small { display: block; color: var(--muted); margin-top: 5px; }
+    #chat { min-height: 32vh; display: flex; flex-direction: column; gap: 12px; }
+    .message { padding: 14px 16px; border-radius: 16px; background: var(--panel); border: 1px solid #2b2339; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
+    .user { background: #302044; align-self: flex-end; max-width: 92%; }
+    .assistant { align-self: stretch; }
+    .message-tools { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
+    .message-tools button { padding: 7px 10px; font-size: 13px; }
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+    .composer { position: sticky; bottom: 0; background: var(--bg); padding: 10px 0 max(14px, env(safe-area-inset-bottom)); }
+    .row { display: flex; gap: 8px; margin-top: 8px; }
+    .row > * { flex: 1; min-width: 0; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin: 14px 0; }
+    .panel h2 { margin: 0 0 10px; font-size: 18px; }
+    .panel p { color: var(--muted); font-size: 13px; }
+    .hidden { display: none !important; }
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(115px,1fr)); gap: 10px; }
+    .media-item { min-width: 0; background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
+    .media-item img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; display: block; }
+    .media-item p { font-size: 12px; overflow-wrap: anywhere; margin: 6px 0; }
+    .media-item button { width: 100%; padding: 7px; font-size: 12px; margin-top: 5px; }
+    .notice { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .pill { display: inline-block; background: #302442; color: #ddd0ff; border-radius: 999px; padding: 4px 9px; font-size: 12px; }
+    #bildVorschau { max-width: 100%; border-radius: 14px; margin-top: 12px; }
+    .status-good { color: var(--good) !important; }
+    .status-bad { color: var(--bad) !important; }
+    @media (max-width: 600px) {
+      body { padding-left: 0; font-size: 16px; }
+      header { padding: 12px; gap: 10px; }
+      .logo { width: 40px; height: 40px; }
+      h1 { font-size: 21px; }
+      #seitenleiste {
+        position: sticky; top: 0; width: 100%; height: auto; max-height: 190px;
+        padding: 10px 12px; overflow-y: auto; border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      #seitenleiste h2 { font-size: 18px; margin-bottom: 4px; }
+      #seitenleiste p { margin: 4px 0 8px; }
+      #seitenleiste > button:first-of-type { width: 100%; text-align: center; }
+      #chatliste { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+      #chatliste button { flex: 0 0 auto; width: auto; max-width: 190px; margin-bottom: 0; text-align: center; }
+      .side-label { display: none; }
+      main { width: 100%; padding: 12px; }
+      .dashboard { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      #chat { min-height: 30vh; gap: 10px; }
+      .message { padding: 12px; font-size: 16px; }
+      .tools button, .row button { min-height: 44px; }
+      .composer { padding: 10px 0 max(12px, env(safe-area-inset-bottom)); }
+      textarea { min-height: 75px; font-size: 16px; }
+      .row { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="neon-hintergrund" aria-hidden="true"></div>
+  <div class="lava-lampe" aria-hidden="true">
+    <span class="lava-kugel"></span>
+    <span class="lava-kugel"></span>
+    <span class="lava-kugel"></span>
+    <span class="lava-kugel"></span>
+    <span class="lava-kugel"></span>
+  </div>
+  <aside id="seitenleiste">
+    <h2>✦ NantAI</h2>
+    <p>Deine Chats</p>
+    <button type="button" onclick="neuerChat()">＋ Neuer Chat</button>
+    <div id="chatliste"></div>
+    <div class="side-label">Funktionen</div>
+    <button class="secondary" onclick="bereichUmschalten('medienBereich')">🖼️ Medienbibliothek</button>
+    <button class="secondary" onclick="standortHolen()">📍 Standort freigeben</button>
+    <button class="secondary" onclick="wetterLaden()">🌦️ Wetter aktualisieren</button>
+    <button class="secondary" onclick="exportChat()">⬇️ Chat exportieren</button>
+  </aside>
+
+  <header>
+    <div class="logo">✦</div>
+    <div>
+      <h1>NantAI Ultimate</h1>
+      <p>Dein persönlicher KI-Assistent</p>
+    </div>
+  </header>
+
+  <main>
+    <p id="status" aria-live="polite">NantAI ist bereit.</p>
+
+    <section class="dashboard" aria-label="Live-Informationen">
+      <div class="widget">
+        <div class="widget-label">🕒 Uhrzeit</div>
+        <div class="widget-value" id="uhrzeit">Wird geladen …</div>
+        <small id="datum">—</small>
+      </div>
+      <div class="widget">
+        <div class="widget-label">📍 Standort</div>
+        <div class="widget-value" id="standortWert">Nicht freigegeben</div>
+        <small id="standortInfo">Nur nach deiner Zustimmung</small>
+      </div>
+      <div class="widget">
+        <div class="widget-label">🌦️ Wetter</div>
+        <div class="widget-value" id="wetterWert">Noch nicht geladen</div>
+        <small id="wetterInfo">Standortfreigabe oder Ort nötig</small>
+      </div>
+    </section>
+
+    <section id="chat" aria-live="polite"></section>
+
+    <div class="tools">
+      <button class="secondary" onclick="spracheStarten()">🎙️ Sprache</button>
+      <button class="secondary" onclick="spracheStoppen()">Stopp</button>
+      <button class="secondary" onclick="bildModus()">🖼️ Bild erzeugen</button>
+      <button class="secondary" onclick="bereichUmschalten('medienBereich')">🗂️ Medien</button>
+      <button class="secondary" onclick="standortHolen()">📍 Standort</button>
+      <button class="secondary" onclick="wetterLaden()">🌦️ Wetter</button>
+    </div>
+
+    <section id="bildBereich" class="panel hidden">
+      <h2>🖼️ Bild erzeugen</h2>
+      <input id="bildPrompt" placeholder="Beschreibe dein gewünschtes Bild">
+      <div class="row">
+        <button onclick="bildErzeugen()">Bild erstellen</button>
+        <button class="secondary" onclick="bildModus()">Schließen</button>
+      </div>
+      <div id="bildErgebnis"></div>
+      <p class="notice">Die Bildgenerierung verwendet weiterhin die Aktion „bild“ deines vorhandenen Backends.</p>
+    </section>
+
+    <section id="medienBereich" class="panel hidden">
+      <h2>🗂️ Medienbibliothek</h2>
+      <p>Bilder auswählen oder deine erzeugten Bilder hier sammeln. Die Bibliothek wird lokal in diesem Browser gespeichert.</p>
+      <input id="medienDatei" type="file" accept="image/*" multiple>
+      <div class="row">
+        <button onclick="medienImportieren()">Bilder hinzufügen</button>
+        <button class="secondary" onclick="medienBereichAktualisieren()">Aktualisieren</button>
+      </div>
+      <div id="medienHinweis" class="notice"></div>
+      <div id="medienListe" class="media-grid"></div>
+      <p class="notice">Hinweis: Der Browser-Speicher ist begrenzt. Große Bilder können nicht gespeichert werden. Dateien bleiben auf diesem Gerät und werden nicht automatisch an die KI gesendet.</p>
+    </section>
+
+    <section id="standortBereich" class="panel hidden">
+      <h2>📍 Standort</h2>
+      <p>Deine genaue Position wird erst abgefragt, wenn du auf die Schaltfläche klickst und der Browser die Freigabe erlaubt.</p>
+      <button onclick="standortHolen()">Meinen Standort freigeben</button>
+      <p id="standortDetails" class="notice">Noch keine Position abgefragt.</p>
+    </section>
+
+    <div class="composer">
+      <textarea id="nachricht" placeholder="Schreibe eine Nachricht …" aria-label="Nachricht an NantAI"></textarea>
+      <div class="row">
+        <button id="sendenKnopf" onclick="nachrichtSenden()">Senden ➤</button>
+        <button class="secondary" onclick="spracheStarten()">🎤 Jetzt sprechen</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const BACKEND = 'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
+    const SPEICHER_CHATS = 'nantai_chats';
+    const SPEICHER_AKTIVER_CHAT = 'nantai_aktiver_chat';
+    const SPEICHER_MEDIEN = 'nantai_medien_v1';
+
+    let nantaiChats = [];
+    let nantaiAktiverChatId = null;
+    let erkennung = null;
+    let letzterStandort = null;
+    let wetterKoordinaten = null;
+    let anfrageLaeuft = false;
+
+    function neueId() {
+      return String(Date.now()) + '-' + Math.random().toString(36).slice(2, 8);
+    }
+    function begruessungsNachricht() {
+      return [{ text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?', klasse: 'assistant' }];
+    }
+    function statusSetzen(text, klasse = '') {
+      const el = document.getElementById('status');
+      el.textContent = text;
+      el.className = klasse;
+    }
+    function aktiveChatDaten() {
+      return nantaiChats.find(chat => chat.id === nantaiAktiverChatId);
+    }
+    function chatNachrichtenAktuell() {
+      return Array.from(document.querySelectorAll('#chat .message')).map(element => ({
+        text: element.dataset.text || element.querySelector('.message-text')?.textContent || element.textContent,
+        klasse: element.classList.contains('user') ? 'user' : 'assistant'
+      }));
+    }
+    function chatVerlaufSpeichern() {
+      const eintrag = aktiveChatDaten();
+      if (!eintrag) return;
+      eintrag.nachrichten = chatNachrichtenAktuell();
+      const erste = eintrag.nachrichten.find(n => n.klasse === 'user');
+      if (erste && (!eintrag.titel || eintrag.titel === 'Neuer Chat')) eintrag.titel = erste.text.slice(0, 35);
+      try {
+        localStorage.setItem(SPEICHER_CHATS, JSON.stringify(nantaiChats));
+        localStorage.setItem(SPEICHER_AKTIVER_CHAT, nantaiAktiverChatId);
+      } catch (e) { console.warn('Chats konnten nicht gespeichert werden.', e); }
+      chatListeAktualisieren();
+    }
+    function chatNachrichtenAnzeigen(nachrichten) {
+      const chat = document.getElementById('chat');
+      chat.replaceChildren();
+      (nachrichten || []).forEach(n => nachrichtElementErstellen(n.text || '', n.klasse || 'assistant', false));
+      chat.scrollTop = chat.scrollHeight;
+    }
+    function nachrichtElementErstellen(text, klasse, speichern = true) {
+      const element = document.createElement('div');
+      element.className = 'message ' + (klasse === 'user' ? 'user' : 'assistant');
+      element.dataset.text = text;
+      const textEl = document.createElement('div');
+      textEl.className = 'message-text';
+      textEl.textContent = text;
+      element.appendChild(textEl);
+      if (klasse !== 'user' && text && !text.startsWith('Hallo! Ich bin NantAI.')) {
+        const tools = document.createElement('div');
+        tools.className = 'message-tools';
+        const read = document.createElement('button');
+        read.className = 'secondary'; read.textContent = '🔊 Vorlesen';
+        read.onclick = () => nantaiVorlesen(text);
+        tools.appendChild(read);
+        const copy = document.createElement('button');
+        copy.className = 'secondary'; copy.textContent = '📋 Kopieren';
+        copy.onclick = async () => {
+          try { await navigator.clipboard.writeText(text); statusSetzen('Antwort kopiert.'); }
+          catch (_) { statusSetzen('Kopieren ist in diesem Browser nicht verfügbar.'); }
+        };
+        tools.appendChild(copy);
+        element.appendChild(tools);
+      }
+      document.getElementById('chat').appendChild(element);
+      if (speichern) chatVerlaufSpeichern();
+      return element;
+    }
+    function nachrichtAnzeigen(text, klasse) {
+      const el = nachrichtElementErstellen(text, klasse, true);
+      el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      return el;
+    }
+    function chatListeAktualisieren() {
+      const liste = document.getElementById('chatliste');
+      if (!liste) return;
+      liste.replaceChildren();
+      nantaiChats.forEach(eintrag => {
+        const knopf = document.createElement('button');
+        knopf.type = 'button';
+        knopf.textContent = eintrag.titel || 'Neuer Chat';
+        if (eintrag.id === nantaiAktiverChatId) knopf.classList.add('aktiv');
+        knopf.onclick = () => chatWechseln(eintrag.id);
+        liste.appendChild(knopf);
+      });
+    }
+    function chatWechseln(id) {
+      chatVerlaufSpeichern();
+      const eintrag = nantaiChats.find(chat => chat.id === id);
+      if (!eintrag) return;
+      nantaiAktiverChatId = id;
+      chatNachrichtenAnzeigen(Array.isArray(eintrag.nachrichten) ? eintrag.nachrichten : begruessungsNachricht());
+      chatListeAktualisieren();
+      try { localStorage.setItem(SPEICHER_AKTIVER_CHAT, id); } catch (_) {}
+    }
+    function chatVerlaufLaden() {
+      try {
+        const gespeichert = localStorage.getItem(SPEICHER_CHATS);
+        if (gespeichert) {
+          const daten = JSON.parse(gespeichert);
+          if (Array.isArray(daten)) nantaiChats = daten;
+        }
+        if (!nantaiChats.length) {
+          let alteNachrichten = [];
+          const alt = localStorage.getItem('nantai_chatverlauf');
+          if (alt) {
+            try { const parsed = JSON.parse(alt); if (Array.isArray(parsed)) alteNachrichten = parsed; } catch (_) {}
+          }
+          nantaiChats = [{ id: neueId(), titel: 'Bisheriger Chat', nachrichten: alteNachrichten.length ? alteNachrichten : begruessungsNachricht() }];
+        }
+        nantaiAktiverChatId = localStorage.getItem(SPEICHER_AKTIVER_CHAT);
+        if (!nantaiChats.some(c => c.id === nantaiAktiverChatId)) nantaiAktiverChatId = nantaiChats[0].id;
+        const aktiv = aktiveChatDaten();
+        chatNachrichtenAnzeigen(aktiv && Array.isArray(aktiv.nachrichten) ? aktiv.nachrichten : begruessungsNachricht());
+        chatListeAktualisieren();
+        chatVerlaufSpeichern();
+      } catch (e) {
+        console.warn('Chatverlauf konnte nicht geladen werden.', e);
+        const c = { id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() };
+        nantaiChats = [c]; nantaiAktiverChatId = c.id;
+        chatNachrichtenAnzeigen(c.nachrichten); chatListeAktualisieren();
+      }
+    }
+    function neuerChat() {
+      chatVerlaufSpeichern();
+      const c = { id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() };
+      nantaiChats.unshift(c); nantaiAktiverChatId = c.id;
+      chatNachrichtenAnzeigen(c.nachrichten); chatVerlaufSpeichern();
+      statusSetzen('Neuer Chat erstellt.');
+    }
+    function jsonpAnfrage(parameter) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'nantaiCallback_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        const script = document.createElement('script');
+        const url = new URL(BACKEND);
+        Object.entries(parameter).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
+        });
+        url.searchParams.set('callback', callbackName);
+        const timeout = setTimeout(() => { aufraeumen(); reject(new Error('Zeitüberschreitung bei der Verbindung.')); }, 60000);
+        function aufraeumen() { clearTimeout(timeout); delete window[callbackName]; script.remove(); }
+        window[callbackName] = daten => { aufraeumen(); resolve(daten); };
+        script.onerror = () => { aufraeumen(); reject(new Error('Backend konnte nicht erreicht werden.')); };
+        script.src = url.toString();
+        document.head.appendChild(script);
+      });
+    }
+    function kontextFuerKI() {
+      const nachrichten = chatNachrichtenAktuell()
+        .filter(n => n.text && !n.text.startsWith('Hallo! Ich bin NantAI.'))
+        .slice(-16)
+        .map(n => ({ rolle: n.klasse === 'user' ? 'user' : 'assistant', text: n.text.slice(0, 2500) }));
+      return JSON.stringify(nachrichten).slice(0, 12000);
+    }
+    async function nachrichtSenden() {
+      if (anfrageLaeuft) return;
+      const feld = document.getElementById('nachricht');
+      const text = feld.value.trim();
+      if (!text) return;
+      feld.value = '';
+      nachrichtAnzeigen(text, 'user');
+      statusSetzen('NantAI denkt …');
+      anfrageLaeuft = true;
+      document.getElementById('sendenKnopf').disabled = true;
+      try {
+        const parameter = {
+          aktion: 'chat',
+          nachricht: text,
+          kontext: kontextFuerKI(),
+          datum_uhrzeit: new Date().toLocaleString('de-DE'),
+          sprache: 'de'
+        };
+        if (letzterStandort) {
+          parameter.breitengrad = letzterStandort.latitude;
+          parameter.laengengrad = letzterStandort.longitude;
+        }
+        const daten = await jsonpAnfrage(parameter);
+        if (!daten || !daten.erfolg) throw new Error((daten && daten.fehler) || 'Unbekannter Fehler');
+        nachrichtAnzeigen(String(daten.antwort || 'Die KI hat keine Antwort zurückgegeben.'), 'assistant');
+        statusSetzen('Antwort erhalten.');
+      } catch (fehler) {
+        nachrichtAnzeigen('Fehler: ' + fehler.message, 'assistant');
+        statusSetzen('Verbindung fehlgeschlagen.', 'status-bad');
+      } finally {
+        anfrageLaeuft = false;
+        document.getElementById('sendenKnopf').disabled = false;
+      }
+    }
+    function bereichUmschalten(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+      if (id === 'medienBereich' && !el.classList.contains('hidden')) medienBereichAktualisieren();
+      if (id === 'standortBereich') document.getElementById('standortDetails').textContent =
+        letzterStandort ? `Breitengrad: ${letzterStandort.latitude.toFixed(5)}, Längengrad: ${letzterStandort.longitude.toFixed(5)}` : 'Noch keine Position abgefragt.';
+    }
+    function bildModus() { document.getElementById('bildBereich').classList.toggle('hidden'); }
+    async function bildErzeugen() {
+      const prompt = document.getElementById('bildPrompt').value.trim();
+      if (!prompt) { statusSetzen('Bitte beschreibe das Bild.'); return; }
+      statusSetzen('Bild wird erstellt …');
+      const ergebnis = document.getElementById('bildErgebnis');
+      ergebnis.replaceChildren();
+      try {
+        const daten = await jsonpAnfrage({ aktion: 'bild', prompt });
+        if (!daten || !daten.erfolg) throw new Error((daten && daten.fehler) || 'Bild konnte nicht erstellt werden.');
+        const bildUrl = daten.bild;
+        if (!bildUrl) throw new Error('Das Backend hat keine Bildadresse zurückgegeben.');
+        const bild = document.createElement('img');
+        bild.id = 'bildVorschau'; bild.alt = prompt; bild.src = bildUrl;
+        ergebnis.appendChild(bild);
+        const speichern = document.createElement('button');
+        speichern.className = 'secondary'; speichern.style.marginTop = '8px';
+        speichern.textContent = '＋ In Medienbibliothek speichern';
+        speichern.onclick = () => medienEintragSpeichern({ name: prompt, src: bildUrl, typ: 'KI-Bild', zeit: new Date().toISOString() });
+        ergebnis.appendChild(speichern);
+        statusSetzen('Bild erstellt.');
+      } catch (e) { statusSetzen('Bildfehler: ' + e.message, 'status-bad'); }
+    }
+    function medienLaden() {
+      try {
+        const daten = JSON.parse(localStorage.getItem(SPEICHER_MEDIEN) || '[]');
+        return Array.isArray(daten) ? daten : [];
+      } catch (_) { return []; }
+    }
+    function medienEintragSpeichern(eintrag) {
+      const medien = medienLaden();
+      medien.unshift({ id: neueId(), ...eintrag });
+      try {
+        localStorage.setItem(SPEICHER_MEDIEN, JSON.stringify(medien));
+        medienBereichAktualisieren();
+        statusSetzen('In Medienbibliothek gespeichert.');
+      } catch (_) {
+        statusSetzen('Speicher voll. Bitte entferne einige Bilder oder verwende kleinere Dateien.', 'status-bad');
+      }
+    }
+    async function medienImportieren() {
+      const dateien = Array.from(document.getElementById('medienDatei').files || []);
+      if (!dateien.length) { document.getElementById('medienHinweis').textContent = 'Wähle zuerst ein oder mehrere Bilder aus.'; return; }
+      const medien = medienLaden();
+      for (const datei of dateien) {
+        if (!datei.type.startsWith('image/')) continue;
+        if (datei.size > 1_500_000) {
+          document.getElementById('medienHinweis').textContent = `${datei.name} ist größer als 1,5 MB und wurde übersprungen.`;
+          continue;
+        }
+        try {
+          const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(datei);
+          });
+          medien.unshift({ id: neueId(), name: datei.name, src: dataUrl, typ: 'Eigenes Bild', zeit: new Date().toISOString() });
+        } catch (_) {}
+      }
+      try {
+        localStorage.setItem(SPEICHER_MEDIEN, JSON.stringify(medien));
+        document.getElementById('medienHinweis').textContent = 'Import abgeschlossen.';
+      } catch (_) {
+        document.getElementById('medienHinweis').textContent = 'Der Browser-Speicher ist voll. Bitte lösche einige Bilder.';
+      }
+      document.getElementById('medienDatei').value = '';
+      medienBereichAktualisieren();
+    }
+    function medienBereichAktualisieren() {
+      const liste = document.getElementById('medienListe');
+      if (!liste) return;
+      liste.replaceChildren();
+      const medien = medienLaden();
+      if (!medien.length) {
+        const p = document.createElement('p'); p.className = 'notice'; p.textContent = 'Noch keine Bilder gespeichert.';
+        liste.appendChild(p); return;
+      }
+      medien.forEach(item => {
+        const card = document.createElement('div'); card.className = 'media-item';
+        const img = document.createElement('img'); img.src = item.src; img.alt = item.name || 'Bild'; img.loading = 'lazy';
+        card.appendChild(img);
+        const p = document.createElement('p'); p.textContent = item.name || 'Bild'; card.appendChild(p);
+        const open = document.createElement('button'); open.className = 'secondary'; open.textContent = 'Öffnen';
+        open.onclick = () => window.open(item.src, '_blank', 'noopener');
+        card.appendChild(open);
+        const del = document.createElement('button'); del.className = 'danger'; del.textContent = 'Löschen';
+        del.onclick = () => {
+          if (!confirm('Dieses Bild aus der lokalen Medienbibliothek löschen?')) return;
+          localStorage.setItem(SPEICHER_MEDIEN, JSON.stringify(medienLaden().filter(m => m.id !== item.id)));
+          medienBereichAktualisieren();
+        };
+        card.appendChild(del); liste.appendChild(card);
+      });
+    }
+    function standortHolen() {
+      if (!navigator.geolocation) { statusSetzen('Standort wird von diesem Browser nicht unterstützt.', 'status-bad'); return; }
+      statusSetzen('Warte auf deine Standortfreigabe …');
+      navigator.geolocation.getCurrentPosition(position => {
+        letzterStandort = { latitude: position.coords.latitude, longitude: position.coords.longitude, genauigkeit: position.coords.accuracy };
+        wetterKoordinaten = { latitude: letzterStandort.latitude, longitude: letzterStandort.longitude };
+        document.getElementById('standortWert').textContent = `${letzterStandort.latitude.toFixed(3)}, ${letzterStandort.longitude.toFixed(3)}`;
+        document.getElementById('standortInfo').textContent = `Genauigkeit ca. ${Math.round(letzterStandort.genauigkeit)} m`;
+        document.getElementById('standortDetails').textContent = `Breitengrad: ${letzterStandort.latitude.toFixed(6)}; Längengrad: ${letzterStandort.longitude.toFixed(6)}; Genauigkeit ca. ${Math.round(letzterStandort.genauigkeit)} m.`;
+        statusSetzen('Standort wurde freigegeben.');
+        wetterLaden();
+      }, error => {
+        const meldungen = { 1: 'Du hast die Standortfreigabe abgelehnt.', 2: 'Standort momentan nicht verfügbar.', 3: 'Standortabfrage hat zu lange gedauert.' };
+        document.getElementById('standortInfo').textContent = meldungen[error.code] || 'Standort nicht verfügbar.';
+        statusSetzen(meldungen[error.code] || 'Standortfehler.', 'status-bad');
+      }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    }
+    async function wetterLaden() {
+      if (!wetterKoordinaten) {
+        statusSetzen('Für das lokale Wetter bitte zuerst den Standort freigeben.');
+        return;
+      }
+      document.getElementById('wetterWert').textContent = 'Lade …';
+      try {
+        const { latitude, longitude } = wetterKoordinaten;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Wetterdienst antwortet nicht.');
+        const data = await response.json();
+        const c = data.current;
+        const beschreibung = wetterCodeText(c.weather_code);
+        document.getElementById('wetterWert').textContent = `${Math.round(c.temperature_2m)} °C · ${beschreibung}`;
+        document.getElementById('wetterInfo').textContent = `Gefühlt ${Math.round(c.apparent_temperature)} °C · Wind ${Math.round(c.wind_speed_10m)} km/h · Luftfeuchte ${c.relative_humidity_2m}%`;
+        statusSetzen('Wetter aktualisiert.');
+      } catch (e) {
+        document.getElementById('wetterWert').textContent = 'Nicht verfügbar';
+        document.getElementById('wetterInfo').textContent = e.message;
+        statusSetzen('Wetter konnte nicht geladen werden.', 'status-bad');
+      }
+    }
+    function wetterCodeText(code) {
+      if (code === 0) return 'Sonnig';
+      if ([1,2].includes(code)) return 'Heiter';
+      if (code === 3) return 'Bewölkt';
+      if ([45,48].includes(code)) return 'Nebel';
+      if ([51,53,55,56,57].includes(code)) return 'Nieselregen';
+      if ([61,63,65,66,67,80,81,82].includes(code)) return 'Regen';
+      if ([71,73,75,77,85,86].includes(code)) return 'Schnee';
+      if ([95,96,99].includes(code)) return 'Gewitter';
+      return 'Wetter';
+    }
+    function uhrAktualisieren() {
+      const jetzt = new Date();
+      document.getElementById('uhrzeit').textContent = jetzt.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('datum').textContent = jetzt.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'long', year: 'numeric' });
+    }
+    function exportChat() {
+      const daten = aktiveChatDaten();
+      if (!daten) return;
+      const text = (daten.nachrichten || []).map(n => `${n.klasse === 'user' ? 'Du' : 'NantAI'}:\n${n.text}`).join('\n\n');
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `${(daten.titel || 'nantai-chat').replace(/[^\p{L}\p{N}-]+/gu, '_')}.txt`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      statusSetzen('Chat exportiert.');
+    }
+    function spracheStarten() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) { statusSetzen('Spracherkennung wird in diesem Browser nicht unterstützt.', 'status-bad'); return; }
+      if (erkennung) erkennung.stop();
+      erkennung = new SpeechRecognition();
+      erkennung.lang = 'de-DE'; erkennung.continuous = false; erkennung.interimResults = false;
+      erkennung.onstart = () => statusSetzen('Ich höre zu …');
+      erkennung.onresult = event => {
+        const erkannt = event.results[0][0].transcript;
+        const feld = document.getElementById('nachricht');
+        feld.value = (feld.value ? feld.value + ' ' : '') + erkannt;
+        feld.focus(); statusSetzen('Sprache erkannt.');
+      };
+      erkennung.onerror = event => statusSetzen('Sprachfehler: ' + event.error, 'status-bad');
+      erkennung.onend = () => { if (document.getElementById('status').textContent === 'Ich höre zu …') statusSetzen('Spracherkennung beendet.'); };
+      erkennung.start();
+    }
+    function spracheStoppen() {
+      if (erkennung) erkennung.stop();
+      statusSetzen('Spracherkennung gestoppt.');
+    }
+    function nantaiVorlesen(text) {
+      if (!('speechSynthesis' in window)) { alert('Vorlesen wird von diesem Browser nicht unterstützt.'); return; }
+      window.speechSynthesis.cancel();
+      const stimme = new SpeechSynthesisUtterance(text);
+      stimme.lang = 'de-DE'; stimme.rate = 1; stimme.pitch = 1;
+      window.speechSynthesis.speak(stimme);
+    }
+    document.getElementById('nachricht').addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); nachrichtSenden(); }
+    });
+    chatVerlaufLaden();
+    uhrAktualisieren();
+    setInterval(uhrAktualisieren, 1000);
+    medienBereichAktualisieren();
+  </script>
+</body>
+</html>
