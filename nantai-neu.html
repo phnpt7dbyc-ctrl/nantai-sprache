@@ -155,13 +155,56 @@
     const BACKEND =
       'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
 
-    function nachrichtAnzeigen(text, klasse) {
+function nachrichtAnzeigen(text, klasse) {
+  const element = document.createElement('div');
+  element.className = 'message ' + klasse;
+  element.textContent = text;
+
+  document.getElementById('chat').appendChild(element);
+  element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+  chatVerlaufSpeichern();
+}
+
+function chatVerlaufSpeichern() {
+  const nachrichten = Array.from(
+    document.querySelectorAll('#chat .message')
+  ).map(element => ({
+    text: element.textContent,
+    klasse: element.classList.contains('user') ? 'user' : 'assistant'
+  }));
+
+  try {
+    localStorage.setItem('nantai_chatverlauf', JSON.stringify(nachrichten));
+  } catch (fehler) {
+    console.warn('Chatverlauf konnte nicht gespeichert werden.', fehler);
+  }
+}
+
+function chatVerlaufLaden() {
+  try {
+    const gespeichert = localStorage.getItem('nantai_chatverlauf');
+    if (!gespeichert) return;
+
+    const nachrichten = JSON.parse(gespeichert);
+    if (!Array.isArray(nachrichten)) return;
+
+    const chat = document.getElementById('chat');
+    chat.replaceChildren();
+
+    nachrichten.forEach(nachricht => {
+      if (typeof nachricht.text !== 'string') return;
+
       const element = document.createElement('div');
-      element.className = 'message ' + klasse;
-      element.textContent = text;
-      document.getElementById('chat').appendChild(element);
-      element.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }
+      element.className = 'message ' +
+        (nachricht.klasse === 'user' ? 'user' : 'assistant');
+      element.textContent = nachricht.text;
+      chat.appendChild(element);
+    });
+  } catch (fehler) {
+    console.warn('Chatverlauf konnte nicht geladen werden.', fehler);
+  }
+}
 
     function jsonpAnfrage(parameter) {
       return new Promise((resolve, reject) => {
@@ -324,6 +367,7 @@ function nantaiVorleseKnopf(text) {
   knopf.onclick = () => nantaiVorlesen(text);
   return knopf;
 }
+  chatVerlaufLaden();
   </script>
 </body>
 </html>
