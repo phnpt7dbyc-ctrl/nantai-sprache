@@ -671,10 +671,14 @@
     function nantaiVorlesen(text) {
       if (!('speechSynthesis' in window)) { alert('Vorlesen wird von diesem Browser nicht unterstützt.'); return; }
       window.speechSynthesis.cancel();
-      const stimme = new SpeechSynthesisUtterance(text);
-      stimme.lang = 'de-DE'; stimme.rate = 1; stimme.pitch = 1;
-      window.speechSynthesis.speak(stimme);
-    }
+const sprechText = nantaiTextFuerSprache(text);
+if (!sprechText) return;
+
+const stimme = new SpeechSynthesisUtterance(sprechText);
+stimme.lang = 'de-DE';
+stimme.rate = 1;
+stimme.pitch = 1;
+window.speechSynthesis.speak(stimme);
     document.getElementById('nachricht').addEventListener('keydown', event => {
       if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); nachrichtSenden(); }
     });
