@@ -143,6 +143,35 @@ function anNantAISenden() {
   document.getElementById('status').textContent =
     'Übertragungsversuch an NantAI gesendet.';
 }
+  
+async function nantaiBackendTest() {
+  const status = document.getElementById('status');
+
+  try {
+    const response = await fetch(
+      'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          aktion: 'chat',
+          nachricht: 'Antworte nur mit: NantAI-Verbindung funktioniert.'
+        })
+      }
+    );
+
+    const daten = await response.json();
+    status.textContent = daten.erfolg
+      ? 'Backend-Test erfolgreich: ' + daten.antwort
+      : 'Backend-Fehler: ' + daten.fehler;
+  } catch (error) {
+    status.textContent =
+      'Verbindung fehlgeschlagen: ' + error.message;
+  }
+}
+
 </script>
 </body>
 </html>
