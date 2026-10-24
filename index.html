@@ -175,8 +175,34 @@ async function nantaiBackendTest() {
 
 
 </script> 
-<button onclick="nantaiBackendTest()">NantAI-Verbindung testen</button>
-<p id="status">Bereit für den Verbindungstest.</p>
+function nantaiBackendTest() {
+  const status = document.getElementById('status');
+  status.textContent = 'Verbinde mit NantAI …';
+
+  const callbackName = 'nantaiCallback_' + Date.now();
+  const script = document.createElement('script');
+
+  window[callbackName] = function(daten) {
+    status.textContent = daten.erfolg
+      ? 'Verbindung erfolgreich: NantAI ist erreichbar.'
+      : 'NantAI-Fehler: ' + (daten.fehler || 'Unbekannter Fehler');
+
+    delete window[callbackName];
+    script.remove();
+  };
+
+  script.src =
+    'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec?callback=' +
+    encodeURIComponent(callbackName);
+
+  script.onerror = function() {
+    status.textContent = 'Verbindung fehlgeschlagen.';
+    delete window[callbackName];
+    script.remove();
+  };
+
+  document.body.appendChild(script);
+}
 </body>
 </html>
 
