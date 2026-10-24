@@ -108,6 +108,65 @@
     .row button { flex: 1; }
     #bildVorschau { max-width: 100%; border-radius: 14px; margin-top: 12px; }
     .hidden { display: none; }
+    /* NantAI: linke Seitenleiste */
+body {
+  padding-left: 230px;
+}
+
+#seitenleiste {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 210px;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: #15121f;
+  border-right: 1px solid #30283f;
+  z-index: 1000;
+}
+
+#seitenleiste h2 {
+  color: #a78bfa;
+  font-size: 20px;
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding-left: 0;
+  }
+
+  #seitenleiste {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #30283f;
+  }
+}
+#seitenleiste button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #6d5a91;
+  border-radius: 8px;
+  background: #302442;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#seitenleiste button:hover {
+  background: #493562;
+}
+
+#chatliste {
+  margin-top: 15px;
+  color: #d6cbe8;
+  font-size: 14px;
+}
   </style>
 </head>
 <body>
@@ -118,7 +177,12 @@
       <p>Dein persönlicher KI-Assistent</p>
     </div>
   </header>
-
+<aside id="seitenleiste">
+  <h2>NantAI</h2>
+  <p>Deine Chats</p>
+  <button type="button" onclick="neuerChat()">＋ Neuer Chat</button>
+  <div id="chatliste"></div>
+</aside>
   <main>
     <p id="status">NantAI ist bereit.</p>
     <section id="chat" aria-live="polite">
@@ -361,7 +425,7 @@ function nantaiVorlesen(text) {
 }
 
 function nantaiVorleseKnopf(text) {
-  const knopf = document.createElement("button");
+  const knopf = document.createElement("button"); 
   knopf.type = "button";
   knopf.textContent = "🔊 Vorlesen";
   knopf.onclick = () => nantaiVorlesen(text);
