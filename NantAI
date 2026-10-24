@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NantAI</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0c0a12;
+      --panel: #171321;
+      --violet: #8250df;
+      --text: #f5f1ff;
+      --muted: #b9aecb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px;
+      border-bottom: 1px solid #30263e;
+      background: var(--panel);
+    }
+    .logo {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      background: var(--violet);
+      border-radius: 14px;
+      font-size: 24px;
+    }
+    h1 { margin: 0; font-size: 23px; }
+    header p { margin: 3px 0 0; color: var(--muted); }
+    main {
+      width: min(900px, 100%);
+      margin: auto;
+      padding: 20px;
+    }
+    #status {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 14px;
+    }
+    #chat {
+      min-height: 45vh;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .message {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--panel);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+    .user {
+      background: #302044;
+      align-self: flex-end;
+      max-width: 90%;
+    }
+    .assistant { align-self: stretch; }
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 18px 0;
+    }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 15px;
+      background: var(--violet);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button.secondary { background: #292235; }
+    button:disabled { opacity: .5; }
+    .composer {
+      position: sticky;
+      bottom: 0;
+      background: var(--bg);
+      padding: 12px 0 18px;
+    }
+    textarea, input {
+      width: 100%;
+      border: 1px solid #453653;
+      border-radius: 14px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 14px;
+      font: inherit;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .row { display: flex; gap: 9px; margin-top: 9px; }
+    .row button { flex: 1; }
+    #bildVorschau { max-width: 100%; border-radius: 14px; margin-top: 12px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">✦</div>
+    <div>
+      <h1>NantAI</h1>
+      <p>Dein persönlicher KI-Assistent</p>
+    </div>
+  </header>
+
+  <main>
+    <p id="status">NantAI ist bereit.</p>
+    <section id="chat" aria-live="polite">
+      <div class="message assistant">
+        Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?
+      </div>
+    </section>
+
+    <div class="tools">
+      <button class="secondary" id="spracheButton" onclick="spracheStarten()">🎙️ Sprache</button>
+      <button class="secondary" onclick="spracheStoppen()">Stopp</button>
+      <button class="secondary" onclick="bildModus()">🖼️ Bild erzeugen</button>
+    </div>
+
+    <section id="bildBereich" class="hidden">
+      <input id="bildPrompt" placeholder="Beschreibe dein gewünschtes Bild">
+      <div class="row">
+        <button onclick="bildErzeugen()">Bild erstellen</button>
+        <button class="secondary" onclick="bildModus()">Schließen</button>
+      </div>
+      <div id="bildErgebnis"></div>
+    </section>
+
+    <div class="composer">
+      <textarea id="nachricht" placeholder="Schreibe eine Nachricht …"></textarea>
+      <div class="row">
+        <button onclick="nachrichtSenden()">Senden ➤</button>
+        <button class="secondary" onclick="spracheStarten()">🎙️ Diktieren</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const BACKEND =
+      'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
+
+    function nachrichtAnzeigen(text, klasse) {
+      const element = document.createElement('div');
+      element.className = 'message ' + klasse;
+      element.textContent = text;
+      document.getElementById('chat').appendChild(element);
+      element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function jsonpAnfrage(parameter) {
+      return new Promise((resolve, reject) => {
+        const callback = 'nantai_' + Date.now() + '_' +
+          Math.random().toString(36).slice(2);
+        const script = document.createElement('script');
+        const query = new URLSearchParams({
+          ...parameter,
+          callback
+        });
+
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error('Zeitüberschreitung bei der Verbindung.'));
+        }, 90000);
+
+        function cleanup() {
+          clearTimeout(timer);
+          delete window[callback];
+          script.remove();
+        }
+
+        window[callback] = daten => {
+          cleanup();
+          resolve(daten);
+        };
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('NantAI-Backend nicht erreichbar.'));
+        };
+        script.src = BACKEND + '?' + query.toString();
+        document.body.appendChild(script);
+      });
+    }
+
+    async function nachrichtSenden() {
+      const feld = document.getElementById('nachricht');
+      const text = feld.value.trim();
+      if (!text) return;
+
+      feld.value = '';
+      nachrichtAnzeigen(text, 'user');
+      document.getElementById('status').textContent = 'NantAI denkt …';
+
+      try {
+        const daten = await jsonpAnfrage({
+          aktion: 'chat',
+          nachricht: text
+        });
+        if (!daten.erfolg) throw new Error(daten.fehler || 'Unbekannter Fehler');
+        nachrichtAnzeigen(daten.antwort, 'assistant');
+        document.getElementById('status').textContent = 'Antwort erhalten.';
+      } catch (fehler) {
+        nachrichtAnzeigen('Fehler: ' + fehler.message, 'assistant');
+        document.getElementById('status').textContent = 'Verbindung fehlgeschlagen.';
+      }
+    }
+
+    function bildModus() {
+      document.getElementById('bildBereich').classList.toggle('hidden');
+    }
+
+    async function bildErzeugen() {
+      const prompt = document.getElementById('bildPrompt').value.trim();
+      if (!prompt) {
+        document.getElementById('status').textContent = 'Bitte beschreibe das Bild.';
+        return;
+      }
+      document.getElementById('status').textContent = 'Bild wird erstellt …';
+      document.getElementById('bildErgebnis').textContent = '';
+
+      try {
+        const daten = await jsonpAnfrage({
+          aktion: 'bild',
+          prompt
+        });
+        if (!daten.erfolg) throw new Error(daten.fehler || 'Bild konnte nicht erstellt werden.');
+        const bild = document.createElement('img');
+        bild.id = 'bildVorschau';
+        bild.alt = prompt;
+        bild.src = daten.bild;
+        document.getElementById('bildErgebnis').appendChild(bild);
+        document.getElementById('status').textContent = 'Bild erstellt.';
+      } catch (fehler) {
+        document.getElementById('status').textContent = 'Bildfehler: ' + fehler.message;
+      }
+    }
+
+    let erkennung = null;
+    function spracheStarten() {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        document.getElementById('status').textContent =
+          'Spracherkennung wird in diesem Browser nicht unterstützt.';
+        return;
+      }
+      if (erkennung) erkennung.stop();
+      erkennung = new SpeechRecognition();
+      erkennung.lang = 'de-DE';
+      erkennung.continuous = false;
+      erkennung.interimResults = false;
+
+      erkennung.onstart = () => {
+        document.getElementById('status').textContent = 'Ich höre zu …';
+      };
+      erkennung.onresult = event => {
+        const erkannt = event.results[0][0].transcript;
+        const feld = document.getElementById('nachricht');
+        feld.value = (feld.value ? feld.value + ' ' : '') + erkannt;
+        feld.focus();
+        document.getElementById('status').textContent = 'Sprache erkannt.';
+      };
+      erkennung.onerror = event => {
+        document.getElementById('status').textContent =
+          'Sprachfehler: ' + event.error;
+      };
+      erkennung.onend = () => {
+        if (document.getElementById('status').textContent === 'Ich höre zu …') {
+          document.getElementById('status').textContent = 'Spracherkennung beendet.';
+        }
+      };
+      erkennung.start();
+    }
+
+    function spracheStoppen() {
+      if (erkennung) erkennung.stop();
+      document.getElementById('status').textContent = 'Spracherkennung gestoppt.';
+    }
+
+    document.getElementById('nachricht').addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        nachrichtSenden();
+      }
+    });
+  </script>
+</body>
+</html>
