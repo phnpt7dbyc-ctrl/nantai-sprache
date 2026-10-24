@@ -668,24 +668,38 @@
       if (erkennung) erkennung.stop();
       statusSetzen('Spracherkennung gestoppt.');
     }
-    function nantaiVorlesen(text) {
-      if (!('speechSynthesis' in window)) { alert('Vorlesen wird von diesem Browser nicht unterstützt.'); return; }
-      window.speechSynthesis.cancel();
-const sprechText = nantaiTextFuerSprache(text);
-if (!sprechText) return;
+   
+function nantaiVorlesen(text) {
+  if (!('speechSynthesis' in window)) {
+    alert('Vorlesen wird von diesem Browser nicht unterstützt.');
+    return;
+  }
 
-const stimme = new SpeechSynthesisUtterance(sprechText);
-stimme.lang = 'de-DE';
-stimme.rate = 1;
-stimme.pitch = 1;
-window.speechSynthesis.speak(stimme);
-    document.getElementById('nachricht').addEventListener('keydown', event => {
-      if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); nachrichtSenden(); }
-    });
-    chatVerlaufLaden();
-    uhrAktualisieren();
-    setInterval(uhrAktualisieren, 1000);
-    medienBereichAktualisieren();
+  window.speechSynthesis.cancel();
+
+  const sprechText = nantaiTextFuerSprache(text);
+  if (!sprechText) return;
+
+  const stimme = new SpeechSynthesisUtterance(sprechText);
+  stimme.lang = 'de-DE';
+  stimme.rate = 1;
+  stimme.pitch = 1;
+
+  window.speechSynthesis.speak(stimme);
+}
+
+document.getElementById('nachricht').addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    nachrichtSenden();
+  }
+});
+
+chatVerlaufLaden();
+uhrAktualisieren();
+setInterval(uhrAktualisieren, 1000);
+medienBereichAktualisieren();
+
   </script>
 </body>
 </html>
