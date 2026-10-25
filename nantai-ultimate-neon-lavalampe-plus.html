@@ -909,6 +909,7 @@
       verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de') || v.lang.startsWith('de-DE')); 
     }
 
+    // Erweiterte Vorlese-Funktion mit komplettem Filter für <<, >>, Striche etc.
     function vorlesenMenschlich(text) {
       if (!synth) return; 
       synth.cancel();
@@ -918,7 +919,16 @@
       }
 
       stimmenLaden();
-      const clean = text.replace(/[*_#`~]/g, '').trim();
+
+      // Filtert <<, >>, Strichketten (----) und Sonderzeichen restlos weg
+      const clean = text
+        .replace(/<<|>>/g, '')
+        .replace(/[-_]{2,}/g, '')
+        .replace(/[*_#`~|<>\-\\/]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!clean) return;
 
       const saetze = clean.match(/[^.!?]+[.!?]+|\S+/g) || [clean];
       let aktuelleWortGruppe = "";
