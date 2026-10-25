@@ -16,11 +16,12 @@
       --accent: #ff007f;
       --text: #f8fafc;
       --muted: #94a3b8;
-      --border: rgba(0, 240, 255, 0.25);
+      --border: rgba(0, 240, 255, 0.4);
       --good: #22c55e;
       --bad: #ef4444;
-      --glow: 0 0 15px rgba(0, 240, 255, 0.25);
-      --glow-accent: 0 0 15px rgba(255, 0, 127, 0.3);
+      --glow-color: rgba(0, 240, 255, 0.6);
+      --glow: 0 0 25px var(--glow-color), inset 0 0 10px rgba(0, 240, 255, 0.15);
+      --glow-accent: 0 0 25px rgba(255, 0, 127, 0.6);
     }
 
     * { box-sizing: border-box; }
@@ -34,9 +35,9 @@
     .neon-hintergrund {
       position: fixed; inset: -20%; z-index: -3; pointer-events: none;
       background:
-        radial-gradient(ellipse at 10% 20%, rgba(255, 0, 127, 0.18) 0%, transparent 45%),
-        radial-gradient(ellipse at 90% 30%, rgba(0, 240, 255, 0.2) 0%, transparent 45%),
-        radial-gradient(ellipse at 50% 90%, rgba(130, 80, 223, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 20%, rgba(255, 0, 127, 0.22) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 30%, rgba(0, 240, 255, 0.25) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 90%, rgba(130, 80, 223, 0.2) 0%, transparent 50%),
         linear-gradient(135deg, #030712, #0a0f1d, #030712);
       background-size: 200% 200%;
       animation: cyberBg 20s ease-in-out infinite alternate;
@@ -48,7 +49,7 @@
 
     .lava-lampe {
       position: fixed; inset: 0; z-index: -2; pointer-events: none;
-      overflow: hidden; filter: blur(45px); opacity: 0.5; mix-blend-mode: screen;
+      overflow: hidden; filter: blur(45px); opacity: 0.6; mix-blend-mode: screen;
     }
     .lava-kugel {
       position: absolute; display: block; border-radius: 40% 60% 70% 30%;
@@ -70,30 +71,31 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       box-shadow: var(--glow);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
     button, input, textarea, select { font: inherit; }
     button {
       border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px;
-      background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(0,240,255,0.05));
+      background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05));
       color: var(--primary); cursor: pointer; font-weight: 600;
       box-shadow: var(--glow);
       transition: all 0.2s ease;
     }
-    button:hover { background: var(--primary); color: #030712; box-shadow: 0 0 20px var(--primary); transform: translateY(-1px); }
+    button:hover { background: var(--primary); color: #030712; box-shadow: 0 0 30px var(--primary); transform: translateY(-1px); }
     button:active { transform: scale(0.98); }
-    button.secondary { background: var(--panel2); color: var(--text); border-color: rgba(255,255,255,0.15); box-shadow: none; }
-    button.secondary:hover { background: rgba(255,255,255,0.1); color: var(--primary); border-color: var(--border); }
-    button.danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); box-shadow: var(--glow-accent); }
+    button.secondary { background: var(--panel2); color: var(--text); border-color: rgba(255,255,255,0.2); box-shadow: none; }
+    button.secondary:hover { background: rgba(255,255,255,0.15); color: var(--primary); border-color: var(--border); }
+    button.danger { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border-color: rgba(239, 68, 68, 0.5); box-shadow: var(--glow-accent); }
     button.danger:hover { background: var(--bad); color: white; }
 
     input, textarea, select {
       width: 100%; border: 1px solid var(--border); border-radius: 10px;
-      background: rgba(3, 7, 18, 0.8); color: var(--text); padding: 10px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+      background: rgba(3, 7, 18, 0.85); color: var(--text); padding: 10px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
     }
     input:focus, textarea:focus, select:focus {
-      outline: none; border-color: var(--primary); box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), var(--glow);
+      outline: none; border-color: var(--primary); box-shadow: inset 0 2px 5px rgba(0,0,0,0.6), var(--glow);
     }
     textarea { min-height: 70px; resize: vertical; }
 
@@ -101,47 +103,47 @@
       position: fixed; inset: 0 auto 0 0; width: 270px; padding: 16px;
       border-right: 1px solid var(--border); overflow-y: auto; z-index: 10;
     }
-    aside h2 { color: var(--primary); font-size: 1.25rem; margin: 0 0 2px; text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+    aside h2 { color: var(--primary); font-size: 1.25rem; margin: 0 0 2px; text-shadow: 0 0 12px var(--primary); }
     aside p { color: var(--muted); font-size: 0.8rem; margin: 0 0 14px; text-transform: uppercase; letter-spacing: 0.08em; }
     .nav-btn { display: block; width: 100%; text-align: left; margin-bottom: 6px; background: transparent; color: var(--text); border: 1px solid transparent; box-shadow: none; }
     .nav-btn:hover { background: var(--primary-light); border-color: var(--border); color: var(--primary); }
-    .nav-btn.active { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: var(--primary); border-color: var(--primary); font-weight: 600; box-shadow: var(--glow); }
+    .nav-btn.active { background: linear-gradient(135deg, rgba(0,240,255,0.25), rgba(0,240,255,0.05)); color: var(--primary); border-color: var(--primary); font-weight: 600; box-shadow: var(--glow); }
     .side-label { color: var(--accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 18px 0 6px; text-shadow: var(--glow-accent); font-weight: bold; }
 
     main { max-width: 920px; margin: 0 auto; padding: 20px; }
     header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding: 14px 18px; border-radius: 14px; }
     .header-left { display: flex; align-items: center; gap: 14px; }
-    .logo { width: 42px; height: 42px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 12px; display: grid; place-items: center; color: #030712; font-size: 22px; font-weight: bold; box-shadow: 0 0 20px var(--primary); }
-    h1 { margin: 0; font-size: 1.35rem; letter-spacing: 0.03em; text-shadow: 0 0 10px rgba(0,240,255,0.3); }
+    .logo { width: 42px; height: 42px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 12px; display: grid; place-items: center; color: #030712; font-size: 22px; font-weight: bold; box-shadow: 0 0 25px var(--primary); }
+    h1 { margin: 0; font-size: 1.35rem; letter-spacing: 0.03em; text-shadow: 0 0 12px var(--primary); }
     header p { margin: 2px 0 0; color: var(--muted); font-size: 0.8rem; }
 
     .dashboard { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
     .widget { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: var(--glow); }
     .widget-label { color: var(--muted); font-size: 0.72rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .widget-value { font-weight: 600; font-size: 1rem; overflow-wrap: anywhere; color: var(--primary); text-shadow: 0 0 8px rgba(0,240,255,0.3); }
+    .widget-value { font-weight: 600; font-size: 1rem; overflow-wrap: anywhere; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
     
     .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; box-shadow: var(--glow); }
-    .panel h3 { margin-top: 0; font-size: 1.15rem; color: var(--primary); text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+    .panel h3 { margin-top: 0; font-size: 1.15rem; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
     .hidden { display: none !important; }
 
     #chat { display: flex; flex-direction: column; gap: 12px; min-height: 40vh; margin-bottom: 20px; }
     .message { padding: 12px 16px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--border); overflow-wrap: anywhere; line-height: 1.5; box-shadow: var(--glow); }
-    .message.user { background: rgba(0, 240, 255, 0.1); align-self: flex-end; max-width: 88%; border-color: var(--primary); color: var(--primary); }
+    .message.user { background: rgba(0, 240, 255, 0.12); align-self: flex-end; max-width: 88%; border-color: var(--primary); color: var(--primary); }
     .message.assistant { align-self: stretch; }
-    .message code { background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: var(--accent); }
-    .message pre { background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; overflow-x: auto; font-family: monospace; border: 1px solid var(--border); }
+    .message code { background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: var(--accent); }
+    .message pre { background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; overflow-x: auto; font-family: monospace; border: 1px solid var(--border); }
     .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
     .msg-tools button { padding: 5px 10px; font-size: 0.75rem; }
 
-    .composer { position: sticky; bottom: 0; background: rgba(3, 7, 18, 0.9); padding: 14px 0; border-top: 1px solid var(--border); backdrop-filter: blur(16px); }
+    .composer { position: sticky; bottom: 0; background: rgba(3, 7, 18, 0.92); padding: 14px 0; border-top: 1px solid var(--border); backdrop-filter: blur(16px); }
     .row { display: flex; gap: 8px; margin-top: 8px; }
     .row > * { flex: 1; }
 
     #status { font-size: 0.82rem; color: var(--accent); margin-bottom: 10px; font-weight: 600; text-shadow: var(--glow-accent); }
 
     .avatar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-    .avatar-face { width: 95px; height: 95px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 42px; box-shadow: 0 0 30px var(--primary); margin-bottom: 14px; animation: avPulse 2.5s infinite ease-in-out; color: #030712; }
-    @keyframes avPulse { 0% { transform: scale(1); box-shadow: 0 0 20px var(--primary); } 50% { transform: scale(1.06); box-shadow: 0 0 35px var(--accent); } 100% { transform: scale(1); box-shadow: 0 0 20px var(--primary); } }
+    .avatar-face { width: 95px; height: 95px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 42px; box-shadow: 0 0 35px var(--primary); margin-bottom: 14px; animation: avPulse 2.5s infinite ease-in-out; color: #030712; }
+    @keyframes avPulse { 0% { transform: scale(1); box-shadow: 0 0 25px var(--primary); } 50% { transform: scale(1.06); box-shadow: 0 0 40px var(--accent); } 100% { transform: scale(1); box-shadow: 0 0 25px var(--primary); } }
 
     #drawingCanvas { width: 100%; height: 280px; background: rgba(3, 7, 18, 0.9); border: 1px solid var(--border); border-radius: 10px; cursor: crosshair; touch-action: none; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
     #snakeCanvas { background: rgba(3, 7, 18, 0.9); border: 1px solid var(--border); border-radius: 10px; display: block; margin: 10px auto; box-shadow: var(--glow); }
@@ -167,6 +169,7 @@
     <p>Cyber Cloud Edition</p>
     <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">Dashboard</button>
     <button class="nav-btn" onclick="tabWechseln('chatTab', this)">Chat und Cloud KI</button>
+    <button class="nav-btn" onclick="tabWechseln('einstellungenTab', this)">Vorlese & Leuchten</button>
     <button class="nav-btn" onclick="tabWechseln('bildTab', this)">Bildstudio AI</button>
     <button class="nav-btn" onclick="tabWechseln('archivTab', this)">Chat Archiv</button>
     
@@ -224,7 +227,7 @@
       </div>
       <div class="row" style="margin-top: 16px;">
         <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">Zum Chat</button>
-        <button class="secondary" onclick="tabWechseln('flashcardTab', document.querySelectorAll('aside .nav-btn')[4])">Lernkarten starten</button>
+        <button class="secondary" onclick="tabWechseln('einstellungenTab', document.querySelectorAll('aside .nav-btn')[2])">Einstellungen & Leuchten</button>
       </div>
     </section>
 
@@ -249,7 +252,39 @@
         <textarea id="nachrichtInput" placeholder="Stelle eine beliebige Frage an NandoAI..." onkeydown="pruefeEingabe(event)"></textarea>
         <div class="row">
           <button id="sendenBtn" onclick="nachrichtSenden()">Senden</button>
-          <button class="secondary" onclick="sprachEingabeStarten()">Sprechen</button>
+          <button class="secondary" onclick="sprachEingabeStarten()">Sprechen in Eingabe</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EINSTELLUNGEN: VORLESE & LEUCHTEN -->
+    <section id="einstellungenTab" class="panel hidden">
+      <h3>Vorlese & Leuchten Einstellungen</h3>
+      
+      <div style="margin-bottom: 18px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Stimme auswählen:</label>
+        <select id="stimmenSelect" onchange="einstellungenSpeichern()" style="margin-bottom: 10px;"></select>
+        
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Vorlese Tempo (<span id="tempoWert">1.0</span>x):</label>
+        <input type="range" id="tempoRange" min="0.5" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('tempoWert').textContent=this.value; einstellungenSpeichern()" style="margin-bottom: 14px;">
+      </div>
+
+      <hr style="border-color: var(--border); margin: 18px 0;">
+
+      <div>
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--accent);">Kachel Leuchten (Glow):</label>
+        <div class="row" style="margin-bottom: 10px;">
+          <button onclick="leuchtenAnAus(true)">Leuchten AN</button>
+          <button class="danger" onclick="leuchtenAnAus(false)">Leuchten AUS</button>
+        </div>
+
+        <label style="display: block; font-size: 0.85rem; margin-top: 10px; margin-bottom: 4px;">Leuchtstärke (Intensität):</label>
+        <input type="range" id="glowIntensitaet" min="0" max="50" value="25" oninput="einstellungenSpeichern()" style="margin-bottom: 14px;">
+
+        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px;">Leuchtfarbe wählen:</label>
+        <div class="row">
+          <input type="color" id="glowFarbePicker" value="#00f0ff" onchange="einstellungenSpeichern()" style="height: 40px; background: transparent;">
+          <button class="secondary" onclick="farbeZuruecksetzen()">Standard Cyan</button>
         </div>
       </div>
     </section>
@@ -444,6 +479,7 @@
     const SPEICHER_BOOKMARKS = 'nandoai_cyber_bookmarks_v3';
     const SPEICHER_LERNKARTEN = 'nandoai_cyber_lernkarten_v3';
     const SPEICHER_TODO = 'nandoai_cyber_todo_v3';
+    const SPEICHER_CONFIG = 'nandoai_cyber_config_v3';
 
     let chats = [];
     let aktuellerChatId = null;
@@ -466,12 +502,17 @@
       lernkartenLaden();
       todoLaden();
       neuePaletteGenerieren();
-      stimmenLaden();
       canvasInitialisieren();
       
+      stimmenLaden();
+      if (synth && synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = stimmenLaden;
+      }
+
+      configLaden();
+
       const zitatBox = document.getElementById('zitatBox');
       if(zitatBox) zitatBox.textContent = zitate[Math.floor(Math.random() * zitate.length)];
-      if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = stimmenLaden;
     });
 
     function uhrAktualisieren() {
@@ -500,8 +541,66 @@
     let glowAn = true;
     function cyberModusWechseln() {
       glowAn = !glowAn;
-      document.documentElement.style.setProperty('--glow', glowAn ? '0 0 15px rgba(0, 240, 255, 0.25)' : 'none');
+      document.documentElement.style.setProperty('--glow', glowAn ? '0 0 25px var(--glow-color), inset 0 0 10px rgba(0,240,255,0.15)' : 'none');
       statusSetzen(glowAn ? 'Cyber Glow aktiviert.' : 'Cyber Glow gedimmt.');
+    }
+
+    // Leuchten & Konfiguration verwalten
+    function einstellungenSpeichern() {
+      const stimmeIdx = document.getElementById('stimmenSelect').value;
+      const tempo = document.getElementById('tempoRange').value;
+      const intensitaet = document.getElementById('glowIntensitaet').value;
+      const farbe = document.getElementById('glowFarbePicker').value;
+
+      document.getElementById('tempoWert').textContent = tempo;
+
+      const config = { stimmeIdx, tempo, intensitaet, farbe, glowAn };
+      localStorage.setItem(SPEICHER_CONFIG, JSON.stringify(config));
+      configAnwenden();
+    }
+
+    function configLaden() {
+      try {
+        const saved = localStorage.getItem(SPEICHER_CONFIG);
+        if (saved) {
+          const cfg = JSON.parse(saved);
+          if (cfg.tempo) document.getElementById('tempoRange').value = cfg.tempo;
+          if (cfg.intensitaet) document.getElementById('glowIntensitaet').value = cfg.intensitaet;
+          if (cfg.farbe) document.getElementById('glowFarbePicker').value = cfg.farbe;
+          document.getElementById('tempoWert').textContent = document.getElementById('tempoRange').value;
+          glowAn = cfg.glowAn !== undefined ? cfg.glowAn : true;
+        }
+      } catch(e) {}
+      configAnwenden();
+    }
+
+    function configAnwenden() {
+      const intensitaet = document.getElementById('glowIntensitaet').value;
+      const farbe = document.getElementById('glowFarbePicker').value;
+
+      // Hex zu rgba konvertieren für kräftigen Glow
+      let r = parseInt(farbe.slice(1,3), 16);
+      let g = parseInt(farbe.slice(3,5), 16);
+      let b = parseInt(farbe.slice(5,7), 16);
+      const glowRgba = `rgba(${r}, ${g}, ${b}, ${intensitaet / 50})`;
+      const insetRgba = `rgba(${r}, ${g}, ${b}, ${intensitaet / 100})`;
+
+      document.documentElement.style.setProperty('--primary', farbe);
+      document.documentElement.style.setProperty('--glow-color', glowRgba);
+      document.documentElement.style.setProperty('--glow', glowAn ? `0 0 ${intensitaet}px ${glowRgba}, inset 0 0 12px ${insetRgba}` : 'none');
+      document.documentElement.style.setProperty('--border', glowAn ? `rgba(${r}, ${g}, ${b}, 0.5)` : 'rgba(255,255,255,0.1)');
+    }
+
+    function leuchtenAnAus(an) {
+      glowAn = an;
+      einstellungenSpeichern();
+      statusSetzen(an ? 'Kachel-Leuchten eingeschaltet.' : 'Kachel-Leuchten ausgeschaltet.');
+    }
+
+    function farbeZuruecksetzen() {
+      document.getElementById('glowFarbePicker').value = '#00f0ff';
+      document.getElementById('glowIntensitaet').value = 25;
+      einstellungenSpeichern();
     }
 
     function formatMarkdown(text) {
@@ -515,7 +614,7 @@
     }
 
     async function kiAntwortHubern(prompt) {
-      const apiKey = "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";
+      const apiKey = "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";
 
       if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
         return "Bitte trage deinen echten Groq API Key im Code ein.";
@@ -906,10 +1005,22 @@
 
     function stimmenLaden() { 
       if (!synth) return; 
-      verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de') || v.lang.startsWith('de-DE')); 
+      verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de') || v.lang.startsWith('de-DE') || v.lang.startsWith('en')); 
+      const select = document.getElementById('stimmenSelect');
+      if (!select) return;
+      
+      const savedIdx = JSON.parse(localStorage.getItem(SPEICHER_CONFIG) || '{}').stimmeIdx || 0;
+      select.replaceChildren();
+      
+      verfuegbareStimmen.forEach((v, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = v.name + ' (' + v.lang + ')';
+        if (idx == savedIdx) opt.selected = true;
+        select.appendChild(opt);
+      });
     }
 
-    // Erweiterte Vorlese-Funktion mit komplettem Filter für <<, >>, Striche etc.
     function vorlesenMenschlich(text) {
       if (!synth) return; 
       synth.cancel();
@@ -918,9 +1029,6 @@
         return; 
       }
 
-      stimmenLaden();
-
-      // Filtert <<, >>, Strichketten (----) und Sonderzeichen restlos weg
       const clean = text
         .replace(/<<|>>/g, '')
         .replace(/[-_]{2,}/g, '')
@@ -929,6 +1037,9 @@
         .trim();
 
       if (!clean) return;
+
+      const tempoVal = parseFloat(document.getElementById('tempoRange').value) || 1.0;
+      const stimmeIdx = parseInt(document.getElementById('stimmenSelect').value) || 0;
 
       const saetze = clean.match(/[^.!?]+[.!?]+|\S+/g) || [clean];
       let aktuelleWortGruppe = "";
@@ -947,21 +1058,34 @@
       blueecke.forEach(block => {
         const utter = new SpeechSynthesisUtterance(block);
         utter.lang = 'de-DE';
-        if (verfuegbareStimmen.length > 0) {
-          utter.voice = verfuegbareStimmen[0];
+        utter.rate = tempoVal;
+        if (verfuegbareStimmen.length > 0 && verfuegbareStimmen[stimmeIdx]) {
+          utter.voice = verfuegbareStimmen[stimmeIdx];
         }
         synth.speak(utter);
       });
     }
 
+    // Sprach-Eingabe (wandert direkt ins Chat-Eingabefeld, wird erst beim Absenden gesendet)
     function sprachEingabeStarten() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) { alert('Nicht unterstuetzt.'); return; }
-      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start(); statusSetzen('Hoere zu...');
+      if (!SpeechRecognition) { alert('Spracherkennung wird von deinem Browser nicht unterstuetzt.'); return; }
+      
+      const rec = new SpeechRecognition(); 
+      rec.lang = 'de-DE'; 
+      rec.start(); 
+      statusSetzen('Hoere zu (Sprache wird in Eingabe geschrieben)...');
+
       rec.onresult = (e) => { 
         const nInput = document.getElementById('nachrichtInput');
-        if(nInput) nInput.value = e.results[0][0].transcript; 
-        nachrichtSenden(); 
+        if(nInput) {
+          nInput.value = (nInput.value ? nInput.value + ' ' : '') + e.results[0][0].transcript;
+        }
+        statusSetzen('Sprache erfasst. Du kannst sie jetzt abschicken.');
+      };
+
+      rec.onerror = () => {
+        statusSetzen('Fehler bei der Spracherkennung.');
       };
     }
 
