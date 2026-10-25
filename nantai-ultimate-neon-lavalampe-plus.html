@@ -2,9 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0c0a12">
-  <title>NantAI Ultimate</title>
+  <title>NantAI</title>
   <style>
     :root {
       color-scheme: dark;
@@ -13,6 +13,7 @@
       --panel2: #211a30;
       --violet: #8250df;
       --violet2: #a78bfa;
+      --cyan: #00e5ff;
       --text: #f5f1ff;
       --muted: #b9aecb;
       --border: #30283f;
@@ -21,518 +22,579 @@
     }
     * { box-sizing: border-box; }
     body {
-      margin: 0; padding-left: 230px; min-height: 100vh;
+      margin: 0; padding-left: 260px; min-height: 100vh;
       background: var(--bg); color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      position: relative; isolation: isolate; overflow-x: hidden;
     }
-    /* Animierter Neon-Farbverlauf hinter der gesamten Oberfläche */
-    .neon-hintergrund {
-      position: fixed; inset: -18%; z-index: -3; pointer-events: none;
-      background:
-        radial-gradient(ellipse at 15% 20%, #00e5ff78 0%, #00e5ff20 20%, transparent 40%),
-        radial-gradient(ellipse at 80% 25%, #ff2bd678 0%, #d946ef20 22%, transparent 42%),
-        radial-gradient(ellipse at 55% 85%, #7555ff80 0%, #6366f125 24%, transparent 45%),
-        radial-gradient(ellipse at 35% 55%, #00ffc855 0%, transparent 34%),
-        linear-gradient(125deg, #050712, #190825, #061c2a, #240720);
-      background-size: 200% 200%;
-      animation: neonFarben 16s ease-in-out infinite alternate;
-      box-shadow: inset 0 0 140px #a855f722;
-    }
-    @keyframes neonFarben {
-      0% { background-position: 0% 30%; filter: hue-rotate(0deg) saturate(1.55) brightness(1.05); }
-      50% { background-position: 100% 65%; filter: hue-rotate(55deg) saturate(1.9) brightness(1.2); }
-      100% { background-position: 25% 100%; filter: hue-rotate(110deg) saturate(1.7) brightness(1.1); }
-    }
-    /* Lava-Blasen: dekorativ, rein per CSS animiert */
-    .lava-lampe {
-      position: fixed; inset: 0; z-index: -2; pointer-events: none;
-      overflow: hidden; filter: blur(22px) contrast(1.2) saturate(1.35);
-      opacity: .88; mix-blend-mode: screen;
-    }
-    .lava-kugel {
-      position: absolute; display: block; border-radius: 48% 52% 60% 40%;
-      background: linear-gradient(135deg, #00e5ffbb, #8b5cf6cc 48%, #ec4899bb);
-      box-shadow: 0 0 38px #00e5ff88, 0 0 85px #d946ef77, 0 0 140px #8b5cf655,
-                  inset 0 0 30px #ffffff44;
-      animation: lavaSchweben 18s ease-in-out infinite alternate,
-                 lavaFarbwechsel 14s linear infinite;
-      will-change: transform, border-radius, filter;
-    }
-    .lava-kugel:nth-child(1) { width: 270px; height: 310px; left: 8%; top: 16%; animation-duration: 21s, 17s; }
-    .lava-kugel:nth-child(2) { width: 330px; height: 260px; left: 52%; top: 50%; animation-duration: 25s, 19s; animation-delay: -6s, -4s; }
-    .lava-kugel:nth-child(3) { width: 220px; height: 260px; left: 74%; top: 8%; animation-duration: 19s, 15s; animation-delay: -9s, -8s; }
-    .lava-kugel:nth-child(4) { width: 290px; height: 230px; left: 23%; top: 70%; animation-duration: 24s, 21s; animation-delay: -11s, -5s; }
-    .lava-kugel:nth-child(5) { width: 200px; height: 240px; left: 88%; top: 72%; animation-duration: 20s, 16s; animation-delay: -4s, -10s; }
-    @keyframes lavaSchweben {
-      0% { transform: translate3d(-12px, 18px, 0) scale(.88) rotate(-12deg); border-radius: 48% 52% 60% 40%; }
-      33% { transform: translate3d(45px, -42px, 0) scale(1.12) rotate(18deg); border-radius: 62% 38% 44% 56%; }
-      66% { transform: translate3d(-28px, 35px, 0) scale(.96) rotate(35deg); border-radius: 35% 65% 55% 45%; }
-      100% { transform: translate3d(20px, -25px, 0) scale(1.08) rotate(55deg); border-radius: 55% 45% 36% 64%; }
-    }
-    @keyframes lavaFarbwechsel {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-    /* Leicht transparente Flächen, damit der Effekt sichtbar bleibt und Text lesbar ist */
-    #seitenleiste, header, .widget, .message, .panel, .composer {
-      background-color: rgb(20 16 31 / 86%);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .user { background-color: rgb(48 32 68 / 91%); }
-    @media (prefers-reduced-motion: reduce) {
-      .neon-hintergrund, .lava-kugel { animation: none !important; }
-    }
-    button, input, textarea { font: inherit; }
+    button, input, textarea, select { font: inherit; }
     button {
-      border: 0; border-radius: 12px; padding: 11px 14px;
+      border: 0; border-radius: 10px; padding: 10px 14px;
       background: var(--violet); color: white; cursor: pointer;
-      transition: background .15s, transform .15s;
+      transition: filter .15s, transform .1s;
     }
-    button:hover { background: #9568e8; }
-    button:active { transform: scale(.98); }
-    button:disabled { opacity: .55; cursor: wait; }
-    button.secondary { background: #292235; border: 1px solid #453653; }
+    button:hover { filter: brightness(1.15); }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary { background: #292235; border: 1px solid var(--border); }
     button.secondary:hover { background: #3a2d4d; }
     button.danger { background: #54252e; }
     input, textarea, select {
-      width: 100%; border: 1px solid #453653; border-radius: 13px;
-      background: var(--panel); color: var(--text); padding: 12px;
+      width: 100%; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--panel); color: var(--text); padding: 10px;
     }
-    textarea { min-height: 82px; resize: vertical; }
-    header {
-      display: flex; align-items: center; gap: 12px; padding: 16px 20px;
-      border-bottom: 1px solid var(--border); background: var(--panel);
+    textarea { min-height: 70px; resize: vertical; }
+
+    /* Layout & Sidebar */
+    aside {
+      position: fixed; inset: 0 auto 0 0; width: 260px; padding: 16px;
+      background: #120f1b; border-right: 1px solid var(--border);
+      overflow-y: auto; z-index: 10;
     }
-    .logo {
-      width: 44px; height: 44px; flex: 0 0 auto; display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--violet), #4c1d95);
-      border-radius: 14px; font-size: 24px; box-shadow: 0 5px 22px #8250df44;
-    }
-    h1 { margin: 0; font-size: 23px; }
-    header p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
-    #seitenleiste {
-      position: fixed; inset: 0 auto 0 0; width: 220px; padding: 18px 12px;
-      overflow-y: auto; background: #15121f; border-right: 1px solid var(--border); z-index: 20;
-    }
-    #seitenleiste h2 { color: var(--violet2); font-size: 20px; margin: 0 0 6px; }
-    #seitenleiste p { color: var(--muted); font-size: 14px; margin: 4px 0 12px; }
-    #seitenleiste button { display: block; width: 100%; margin-bottom: 8px; text-align: left; overflow-wrap: anywhere; }
-    #chatliste button.aktiv { background: #493562; border: 1px solid var(--violet2); }
-    .side-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; margin: 18px 4px 8px; }
-    main { width: min(1000px, 100%); margin: auto; padding: 18px; }
-    #status { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+    aside h2 { color: var(--cyan); font-size: 1.2rem; margin: 0 0 4px; }
+    aside p { color: var(--muted); font-size: 0.85rem; margin: 0 0 12px; }
+    .nav-btn { display: block; width: 100%; text-align: left; margin-bottom: 6px; background: transparent; border: 1px solid transparent; }
+    .nav-btn:hover { background: var(--panel2); border-color: var(--border); }
+    .nav-btn.active { background: var(--panel2); border-color: var(--violet2); }
+    .side-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 6px; }
+
+    main { max-width: 900px; margin: 0 auto; padding: 20px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
+    .logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--violet), var(--cyan)); border-radius: 10px; display: grid; place-items: center; font-size: 20px; }
+    h1 { margin: 0; font-size: 1.3rem; }
+    header p { margin: 2px 0 0; color: var(--muted); font-size: 0.85rem; }
+
+    /* Widgets & Panels */
     .dashboard { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 16px; }
-    .widget { min-width: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
-    .widget-label { color: var(--muted); font-size: 12px; margin-bottom: 5px; }
-    .widget-value { font-weight: 650; overflow-wrap: anywhere; }
-    .widget small { display: block; color: var(--muted); margin-top: 5px; }
-    #chat { min-height: 32vh; display: flex; flex-direction: column; gap: 12px; }
-    .message { padding: 14px 16px; border-radius: 16px; background: var(--panel); border: 1px solid #2b2339; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
-    .user { background: #302044; align-self: flex-end; max-width: 92%; }
-    .assistant { align-self: stretch; }
-    .message-tools { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
-    .message-tools button { padding: 7px 10px; font-size: 13px; }
-    .tools { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
-    .composer { position: sticky; bottom: 0; background: var(--bg); padding: 10px 0 max(14px, env(safe-area-inset-bottom)); }
-    .row { display: flex; gap: 8px; margin-top: 8px; }
-    .row > * { flex: 1; min-width: 0; }
-    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin: 14px 0; }
-    .panel h2 { margin: 0 0 10px; font-size: 18px; }
-    .panel p { color: var(--muted); font-size: 13px; }
+    .widget { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+    .widget-label { color: var(--muted); font-size: 0.75rem; margin-bottom: 4px; }
+    .widget-value { font-weight: 600; font-size: 0.95rem; overflow-wrap: anywhere; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+    .panel h3 { margin-top: 0; font-size: 1.1rem; color: var(--violet2); }
     .hidden { display: none !important; }
-    .media-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(115px,1fr)); gap: 10px; }
-    .media-item { min-width: 0; background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
-    .media-item img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; display: block; }
-    .media-item p { font-size: 12px; overflow-wrap: anywhere; margin: 6px 0; }
-    .media-item button { width: 100%; padding: 7px; font-size: 12px; margin-top: 5px; }
-    .notice { color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .pill { display: inline-block; background: #302442; color: #ddd0ff; border-radius: 999px; padding: 4px 9px; font-size: 12px; }
-    #bildVorschau { max-width: 100%; border-radius: 14px; margin-top: 12px; }
-    .status-good { color: var(--good) !important; }
-    .status-bad { color: var(--bad) !important; }
-    @media (max-width: 600px) {
-      body { padding-left: 0; font-size: 16px; }
-      header { padding: 12px; gap: 10px; }
-      .logo { width: 40px; height: 40px; }
-      h1 { font-size: 21px; }
-      #seitenleiste {
-        position: sticky; top: 0; width: 100%; height: auto; max-height: 190px;
-        padding: 10px 12px; overflow-y: auto; border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-      #seitenleiste h2 { font-size: 18px; margin-bottom: 4px; }
-      #seitenleiste p { margin: 4px 0 8px; }
-      #seitenleiste > button:first-of-type { width: 100%; text-align: center; }
-      #chatliste { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
-      #chatliste button { flex: 0 0 auto; width: auto; max-width: 190px; margin-bottom: 0; text-align: center; }
-      .side-label { display: none; }
-      main { width: 100%; padding: 12px; }
-      .dashboard { grid-template-columns: repeat(2,minmax(0,1fr)); }
-      #chat { min-height: 30vh; gap: 10px; }
-      .message { padding: 12px; font-size: 16px; }
-      .tools button, .row button { min-height: 44px; }
-      .composer { padding: 10px 0 max(12px, env(safe-area-inset-bottom)); }
-      textarea { min-height: 75px; font-size: 16px; }
-      .row { gap: 8px; }
+
+    /* Chat Bereich */
+    #chat { display: flex; flex-direction: column; gap: 12px; min-height: 40vh; margin-bottom: 20px; }
+    .message { padding: 12px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; }
+    .message.user { background: #231b33; align-self: flex-end; max-width: 88%; border-color: #3d2f59; }
+    .message.assistant { align-self: stretch; }
+    .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
+    .msg-tools button { padding: 5px 10px; font-size: 0.8rem; }
+
+    /* Composer */
+    .composer { position: sticky; bottom: 0; background: var(--bg); padding: 12px 0; border-top: 1px solid var(--border); }
+    .row { display: flex; gap: 8px; margin-top: 8px; }
+    .row > * { flex: 1; }
+
+    #status { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
+
+    @media (max-width: 768px) {
+      body { padding-left: 0; }
+      aside { position: static; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+      .dashboard { grid-template-columns: 1fr; }
     }
-    
-/* NantAI: flüssiger tippen, Effekte sonst beibehalten */
-body:has(#nachricht:focus) .neon-hintergrund,
-body:has(#nachricht:focus) .lava-kugel {
-  animation-play-state: paused !important;
-}
-
-body:has(#nachricht:focus) .lava-lampe {
-  filter: none !important;
-  opacity: 0.35;
-}
-
-body:has(#nachricht:focus) #seitenleiste,
-body:has(#nachricht:focus) header,
-body:has(#nachricht:focus) .widget,
-body:has(#nachricht:focus) .message,
-body:has(#nachricht:focus) .panel,
-body:has(#nachricht:focus) .composer {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* Weniger GPU- und Speicherlast bei aktivierter Sparoption */
-html.nantai-sparmodus .lava-lampe {
-  display: none;
-}
-
-html.nantai-sparmodus .neon-hintergrund {
-  animation: none;
-  filter: none;
-}
-
   </style>
 </head>
 <body>
-<section id="nantai-stimmenstudio" style="padding:16px;margin:16px 0;border-radius:16px;background:rgba(100,80,180,.15);border:1px solid #8b7bdb">
-  <h2>🎙️ NantAI Stimmenstudio</h2>
 
-  <label for="stimmenAuswahl">Deutsche Stimme</label>
-  <select id="stimmenAuswahl" style="display:block;width:100%;padding:10px;margin:8px 0">
-    <option value="">Automatisch auswählen</option>
-  </select>
-
-  <label for="stimmenRate">Sprechtempo: <span id="stimmenRateWert">1,0</span></label>
-  <input id="stimmenRate" type="range" min="0.5" max="2" step="0.1" value="1" style="width:100%">
-
-  <label for="stimmenPitch">Tonhöhe: <span id="stimmenPitchWert">1,0</span></label>
-  <input id="stimmenPitch" type="range" min="0" max="2" step="0.1" value="1" style="width:100%">
-
-  <label for="stimmenVolume">Lautstärke: <span id="stimmenVolumeWert">100 %</span></label>
-  <input id="stimmenVolume" type="range" min="0" max="1" step="0.05" value="1" style="width:100%">
-
-  <button type="button" onclick="stimmenSpeichern()">💾 Stimmeinstellungen speichern</button>
-  <button type="button" onclick="stimmenVorschau()">▶️ Stimme testen</button>
-</section>
-
-  <div class="neon-hintergrund" aria-hidden="true"></div>
-  <div class="lava-lampe" aria-hidden="true">
-    <span class="lava-kugel"></span>
-    <span class="lava-kugel"></span>
-    <span class="lava-kugel"></span>
-    <span class="lava-kugel"></span>
-    <span class="lava-kugel"></span>
-  </div>
-  <aside id="seitenleiste">
+  <aside>
     <h2>✦ NantAI</h2>
-    <p>Deine Chats</p>
-    <button type="button" onclick="neuerChat()">＋ Neuer Chat</button>
-    <div id="chatliste"></div>
-    <div class="side-label">Funktionen</div>
-    <button class="secondary" onclick="bereichUmschalten('medienBereich')">🖼️ Medienbibliothek</button>
-    <button class="secondary" onclick="standortHolen()">📍 Standort freigeben</button>
-    <button class="secondary" onclick="wetterLaden()">🌦️ Wetter aktualisieren</button>
-    <button class="secondary" onclick="exportChat()">⬇️ Chat exportieren</button>
+    <p>KI-Assistenz & Tools</p>
+    <button class="nav-btn active" onclick="tabWechseln('chatTab', this)">💬 Chat & Verlauf</button>
+    <button class="nav-btn" onclick="tabWechseln('sprachStudioTab', this)">🗣️ Sprachstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('timerTab', this)">⏱️ Timer & Stoppuhr</button>
+    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen</button>
+    <div class="side-label">Aktionen</div>
+    <button class="nav-btn" onclick="neuerChat()">＋ Neuer Chat</button>
+    <button class="nav-btn" onclick="chatExportieren()">⬇️ Chat exportieren</button>
   </aside>
 
-  <header>
-    <div class="logo">✦</div>
-    <div>
-      <h1>NantAI Ultimate</h1>
-      <p>Dein persönlicher KI-Assistent</p>
-    </div>
-  </header>
-
   <main>
-    <p id="status" aria-live="polite">NantAI ist bereit.</p>
+    <header>
+      <div class="logo">✦</div>
+      <div>
+        <h1>NantAI Assistant</h1>
+        <p>Zuverlässig, lokal & optimiert</p>
+      </div>
+    </header>
 
-    <section class="dashboard" aria-label="Live-Informationen">
-      <div class="widget">
-        <div class="widget-label">🕒 Uhrzeit</div>
-        <div class="widget-value" id="uhrzeit">Wird geladen …</div>
-        <small id="datum">—</small>
+    <div id="status">System bereit.</div>
+
+    <!-- CHAT BEREICH -->
+    <section id="chatTab">
+      <div class="dashboard">
+        <div class="widget">
+          <div class="widget-label">🕒 Uhrzeit</div>
+          <div class="widget-value" id="uhrzeitWdiget">--:--:--</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">💬 Aktueller Chat</div>
+          <div class="widget-value" id="chatTitelWidget">Neuer Chat</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">⚡ Status</div>
+          <div class="widget-value" id="verbindungsWidget">Aktiv</div>
+        </div>
       </div>
-      <div class="widget">
-        <div class="widget-label">📍 Standort</div>
-        <div class="widget-value" id="standortWert">Nicht freigegeben</div>
-        <small id="standortInfo">Nur nach deiner Zustimmung</small>
-      </div>
-      <div class="widget">
-        <div class="widget-label">🌦️ Wetter</div>
-        <div class="widget-value" id="wetterWert">Noch nicht geladen</div>
-        <small id="wetterInfo">Standortfreigabe oder Ort nötig</small>
+
+      <div id="chat" aria-live="polite"></div>
+
+      <div class="composer">
+        <textarea id="nachrichtInput" placeholder="Schreibe eine Nachricht an NantAI..." onkeydown="pruefeEingabe(event)"></textarea>
+        <div class="row">
+          <button id="sendenBtn" onclick="nachrichtSenden()">Senden ➤</button>
+          <button class="secondary" onclick="sprachEingabeStarten()">🎤 Sprechen</button>
+        </div>
       </div>
     </section>
 
-    <section id="chat" aria-live="polite"></section>
-
-    <div class="tools">
-      <button class="secondary" onclick="spracheStarten()">🎙️ Sprache</button>
-      <button class="secondary" onclick="spracheStoppen()">Stopp</button>
-      <button class="secondary" onclick="bildModus()">🖼️ Bild erzeugen</button>
-      <button class="secondary" onclick="bereichUmschalten('medienBereich')">🗂️ Medien</button>
-      <button class="secondary" onclick="standortHolen()">📍 Standort</button>
-      <button class="secondary" onclick="wetterLaden()">🌦️ Wetter</button>
-    </div>
-
-    <section id="bildBereich" class="panel hidden">
-      <h2>🖼️ Bild erzeugen</h2>
-      <input id="bildPrompt" placeholder="Beschreibe dein gewünschtes Bild">
+    <!-- SPRACHSTUDIO BEREICH -->
+    <section id="sprachStudioTab" class="panel hidden">
+      <h3>🗣️ Sprachstudio (Text-to-Speech)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Wähle eine deutsche Stimme aus und passe Sprechtempo, Tonhöhe sowie Lautstärke an.</p>
+      <div style="margin-bottom: 10px;">
+        <label style="font-size: 0.85rem; color: var(--muted);">Stimme:</label>
+        <select id="stimmenSelect" style="margin-top: 4px;"></select>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label style="font-size: 0.85rem; color: var(--muted);">Sprechtempo (<span id="rateVal">1.0</span>):</label>
+        <input type="range" id="speechRate" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('rateVal').textContent=this.value">
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label style="font-size: 0.85rem; color: var(--muted);">Tonhöhe (<span id="pitchVal">1.0</span>):</label>
+        <input type="range" id="speechPitch" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('pitchVal').textContent=this.value">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="font-size: 0.85rem; color: var(--muted);">Lautstärke (<span id="volVal">1.0</span>):</label>
+        <input type="range" id="speechVolume" min="0.1" max="1.0" step="0.1" value="1.0" oninput="document.getElementById('volVal').textContent=this.value">
+      </div>
       <div class="row">
-        <button onclick="bildErzeugen()">Bild erstellen</button>
-        <button class="secondary" onclick="bildModus()">Schließen</button>
+        <button onclick="sprachVorschau()">Vorschau abspielen</button>
+        <button class="secondary" onclick="sprachEinstellungenSpeichern()">Einstellungen speichern</button>
       </div>
-      <div id="bildErgebnis"></div>
-      <p class="notice">Die Bildgenerierung verwendet weiterhin die Aktion „bild“ deines vorhandenen Backends.</p>
     </section>
 
-    <section id="medienBereich" class="panel hidden">
-      <h2>🗂️ Medienbibliothek</h2>
-      <p>Bilder auswählen oder deine erzeugten Bilder hier sammeln. Die Bibliothek wird lokal in diesem Browser gespeichert.</p>
-      <input id="medienDatei" type="file" accept="image/*" multiple>
-      <div class="row">
-        <button onclick="medienImportieren()">Bilder hinzufügen</button>
-        <button class="secondary" onclick="medienBereichAktualisieren()">Aktualisieren</button>
+    <!-- TIMER & STOPPUHR BEREICH -->
+    <section id="timerTab" class="panel hidden">
+      <h3>⏱️ Timer & Stoppuhr</h3>
+      <div style="margin-bottom: 16px;">
+        <label style="font-size: 0.85rem; color: var(--muted);">Timer (Sekunden):</label>
+        <div class="row" style="margin-top: 4px;">
+          <input type="number" id="timerSekundenInput" placeholder="z. B. 60" min="1">
+          <button onclick="timerStarten()">Starten</button>
+          <button class="danger" onclick="timerStoppen()">Stopp</button>
+        </div>
+        <div id="timerAnzeige" style="font-size: 1.2rem; font-weight: bold; margin-top: 8px;">00:00</div>
       </div>
-      <div id="medienHinweis" class="notice"></div>
-      <div id="medienListe" class="media-grid"></div>
-      <p class="notice">Hinweis: Der Browser-Speicher ist begrenzt. Große Bilder können nicht gespeichert werden. Dateien bleiben auf diesem Gerät und werden nicht automatisch an die KI gesendet.</p>
     </section>
 
-    <section id="standortBereich" class="panel hidden">
-      <h2>📍 Standort</h2>
-      <p>Deine genaue Position wird erst abgefragt, wenn du auf die Schaltfläche klickst und der Browser die Freigabe erlaubt.</p>
-      <button onclick="standortHolen()">Meinen Standort freigeben</button>
-      <p id="standortDetails" class="notice">Noch keine Position abgefragt.</p>
+    <!-- NOTIZEN BEREICH -->
+    <section id="notizenTab" class="panel hidden">
+      <h3>📝 Lokale Notizen</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Deine Notizen werden sicher und ausschließlich lokal in deinem Browser gespeichert.</p>
+      <input id="notizTitel" placeholder="Titel der Notiz" style="margin-bottom: 8px;">
+      <textarea id="notizInhalt" placeholder="Inhalt eingeben..." style="margin-bottom: 8px;"></textarea>
+      <button onclick="notizSpeichern()">Notiz speichern</button>
+      <div id="notizenListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
     </section>
 
-    <div class="composer">
-      <textarea id="nachricht" placeholder="Schreibe eine Nachricht …" aria-label="Nachricht an NantAI"></textarea>
-      <div class="row">
-        <button id="sendenKnopf" onclick="nachrichtSenden()">Senden ➤</button>
-        <button class="secondary" onclick="spracheStarten()">🎤 Jetzt sprechen</button>
-      </div>
-    </div>
   </main>
 
   <script>
     const BACKEND = 'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
-    const SPEICHER_CHATS = 'nantai_chats';
-    const SPEICHER_AKTIVER_CHAT = 'nantai_aktiver_chat';
-    const SPEICHER_MEDIEN = 'nantai_medien_v1';
+    const SPEICHER_CHATS = 'nantai_chats_v2';
+    const SPEICHER_NOTIZEN = 'nantai_notizen_v2';
+    const SPEICHER_CONFIG = 'nantai_config_v2';
 
-    let nantaiChats = [];
-    let nantaiAktiverChatId = null;
-    let erkennung = null;
-    let letzterStandort = null;
-    let wetterKoordinaten = null;
+    let chats = [];
+    let aktuellerChatId = null;
     let anfrageLaeuft = false;
+    let synth = window.speechSynthesis;
+    let verfuegbareStimmen = [];
+    let timerInterval = null;
 
+    // --- INITIALISIERUNG ---
+    window.addEventListener('DOMContentLoaded', () => {
+      uhrAktualisieren();
+      setInterval(uhrAktualisieren, 1000);
+      chatVerlaufLaden();
+      notizenLaden();
+      konfigurationLaden();
+      stimmenLaden();
+      if (synth && synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = stimmenLaden;
+      }
+    });
+
+    function uhrAktualisieren() {
+      const d = new Date();
+      document.getElementById('uhrzeitWdiget').textContent = d.toLocaleTimeString('de-DE');
+    }
+
+    function statusSetzen(text) {
+      document.getElementById('status').textContent = text;
+    }
+
+    // --- NAVIGATION ---
+    function tabWechseln(tabId, btn) {
+      document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+      document.querySelectorAll('aside .nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // --- CHAT VERWALTUNG ---
     function neueId() {
-      return String(Date.now()) + '-' + Math.random().toString(36).slice(2, 8);
+      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
     }
+
     function begruessungsNachricht() {
-      return [{ text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?', klasse: 'assistant' }];
+      return [{ text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?', rolle: 'assistant' }];
     }
-    function statusSetzen(text, klasse = '') {
-      const el = document.getElementById('status');
-      el.textContent = text;
-      el.className = klasse;
-    }
-    function aktiveChatDaten() {
-      return nantaiChats.find(chat => chat.id === nantaiAktiverChatId);
-    }
-    function chatNachrichtenAktuell() {
-      return Array.from(document.querySelectorAll('#chat .message')).map(element => ({
-        text: element.dataset.text || element.querySelector('.message-text')?.textContent || element.textContent,
-        klasse: element.classList.contains('user') ? 'user' : 'assistant'
-      }));
-    }
-    function chatVerlaufSpeichern() {
-      const eintrag = aktiveChatDaten();
-      if (!eintrag) return;
-      eintrag.nachrichten = chatNachrichtenAktuell();
-      const erste = eintrag.nachrichten.find(n => n.klasse === 'user');
-      if (erste && (!eintrag.titel || eintrag.titel === 'Neuer Chat')) eintrag.titel = erste.text.slice(0, 35);
+
+    function chatVerlaufLaden() {
       try {
-        localStorage.setItem(SPEICHER_CHATS, JSON.stringify(nantaiChats));
-        localStorage.setItem(SPEICHER_AKTIVER_CHAT, nantaiAktiverChatId);
-      } catch (e) { console.warn('Chats konnten nicht gespeichert werden.', e); }
-      chatListeAktualisieren();
+        const gespeichert = localStorage.getItem(SPEICHER_CHATS);
+        if (gespeichert) {
+          chats = JSON.parse(gespeichert);
+        }
+      } catch (e) {
+        console.warn('Fehler beim Laden des Chatverlaufs', e);
+      }
+
+      if (!Array.isArray(chats) || chats.length === 0) {
+        chats = [{ id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() }];
+      }
+      aktuellerChatId = chats[0].id;
+      chatAnzeigen();
     }
-    function chatNachrichtenAnzeigen(nachrichten) {
-      const chat = document.getElementById('chat');
-      chat.replaceChildren();
-      (nachrichten || []).forEach(n => nachrichtElementErstellen(n.text || '', n.klasse || 'assistant', false));
-      chat.scrollTop = chat.scrollHeight;
+
+    function chatVerlaufSpeichern() {
+      try {
+        localStorage.setItem(SPEICHER_CHATS, JSON.stringify(chats));
+      } catch (e) {
+        console.warn('Speicherlimit erreicht', e);
+      }
     }
-    function nachrichtElementErstellen(text, klasse, speichern = true) {
-      const element = document.createElement('div');
-      element.className = 'message ' + (klasse === 'user' ? 'user' : 'assistant');
-      element.dataset.text = text;
-      const textEl = document.createElement('div');
-      textEl.className = 'message-text';
-      textEl.textContent = text;
-      element.appendChild(textEl);
-      if (klasse !== 'user' && text && !text.startsWith('Hallo! Ich bin NantAI.')) {
+
+    function aktuellerChatObjekt() {
+      return chats.find(c => c.id === aktuellerChatId) || chats[0];
+    }
+
+    function chatAnzeigen() {
+      const chat = aktuellerChatObjekt();
+      document.getElementById('chatTitelWidget').textContent = chat.titel;
+      const container = document.getElementById('chat');
+      container.replaceChildren();
+
+      chat.nachrichten.forEach(msg => {
+        nachrichtElementErstellen(msg.text, msg.rolle, false);
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function neuerChat() {
+      const neuer = { id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() };
+      chats.unshift(neuer);
+      aktuellerChatId = neuer.id;
+      chatVerlaufSpeichern();
+      chatAnzeigen();
+      statusSetzen('Neuer Chat gestartet.');
+    }
+
+    function nachrichtElementErstellen(text, rolle, speichern = true) {
+      const container = document.getElementById('chat');
+      const div = document.createElement('div');
+      div.className = `message ${rolle}`;
+      
+      const textDiv = document.createElement('div');
+      textDiv.textContent = text;
+      div.appendChild(textDiv);
+
+      if (rolle === 'assistant') {
         const tools = document.createElement('div');
-        tools.className = 'message-tools';
-        const read = document.createElement('button');
-        read.className = 'secondary'; read.textContent = '🔊 Vorlesen';
-read.onclick = () => vorlesen(text);
-tools.appendChild(read);
-element.appendChild(tools);
+        tools.className = 'msg-tools';
 
+        const vorlesenBtn = document.createElement('button');
+        vorlesenBtn.className = 'secondary';
+        vorlesenBtn.textContent = '🔊 Vorlesen';
+        vorlesenBtn.onclick = () => vorlesen(text);
+        tools.appendChild(vorlesenBtn);
 
-function vorlesen(text) {
-  window.speechSynthesis.cancel();
+        const kopierenBtn = document.createElement('button');
+        kopierenBtn.className = 'secondary';
+        kopierenBtn.textContent = '📋 Kopieren';
+        kopierenBtn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+            statusSetzen('Antwort in Zwischenablage kopiert.');
+          } catch (e) {
+            statusSetzen('Kopieren fehlgeschlagen.');
+          }
+        };
+        tools.appendChild(kopierenBtn);
+        div.appendChild(tools);
+      }
 
-  const sprechText = String(text ?? '')
-    .replace(/```[\s\S]*?```/g, ' Codeblock ')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/https?:\/\/\S+/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
 
-  if (!sprechText) {
-    statusSetzen('Kein lesbarer Text zum Vorlesen vorhanden.', 'status-bad');
-    return;
-  }
+      if (speichern) {
+        const chat = aktuellerChatObjekt();
+        chat.nachrichten.push({ text, rolle });
+        if (chat.titel === 'Neuer Chat' && rolle === 'user') {
+          chat.titel = text.slice(0, 30);
+          document.getElementById('chatTitelWidget').textContent = chat.titel;
+        }
+        chatVerlaufSpeichern();
+      }
+    }
 
-  const einstellungen = JSON.parse(
-    localStorage.getItem('nantai_stimmeinstellungen_v1') || '{}'
-  );
+    function pruefeEingabe(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        nachrichtSenden();
+      }
+    }
 
-  const stimme = new SpeechSynthesisUtterance(sprechText);
-  stimme.lang = 'de-DE';
-  stimme.rate = Math.min(2, Math.max(0.5, Number(einstellungen.rate) || 1));
-  stimme.pitch = Math.min(2, Math.max(0, Number(einstellungen.pitch) || 1));
-  stimme.volume = Math.min(1, Math.max(0, Number(einstellungen.volume ?? 1));
+    // --- BACKEND KOMMUNIKATION (JSONP) ---
+    function jsonpAnfrage(parameter) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'nantaiCB_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        const script = document.createElement('script');
+        const url = new URL(BACKEND);
 
-  const passendeStimme = speechSynthesis.getVoices().find(
-    v => v.name === einstellungen.voiceName
-  );
-  if (passendeStimme) stimme.voice = passendeStimme;
+        Object.entries(parameter).forEach(([k, v]) => {
+          if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+        });
+        url.searchParams.set('callback', callbackName);
 
-  speechSynthesis.speak(stimme);
-}
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error('Zeitüberschreitung bei der Verbindung zum Server.'));
+        }, 45000);
 
+        function cleanup() {
+          clearTimeout(timer);
+          delete window[callbackName];
+          script.remove();
+        }
 
-function stimmenSpeichern() {
-  const einstellungen = {
-    rate: Number(document.getElementById('stimmenRate').value),
-    pitch: Number(document.getElementById('stimmenPitch').value),
-    volume: Number(document.getElementById('stimmenVolume').value),
-    voiceName: document.getElementById('stimmenAuswahl').value
-  };
+        window[callbackName] = (daten) => {
+          cleanup();
+          resolve(daten);
+        };
 
-  localStorage.setItem(
-    'nantai_stimmeinstellungen_v1',
-    JSON.stringify(einstellungen)
-  );
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('Netzwerkfehler: Verbindung zum Backend fehlgeschlagen.'));
+        };
 
-  statusSetzen('Stimmeinstellungen gespeichert.', 'status-good');
-}
+        script.src = url.toString();
+        document.head.appendChild(script);
+      });
+    }
 
-function stimmenStudioLaden() {
-  const auswahl = document.getElementById('stimmenAuswahl');
-  const rate = document.getElementById('stimmenRate');
-  const pitch = document.getElementById('stimmenPitch');
-  const volume = document.getElementById('stimmenVolume');
+    async function nachrichtSenden() {
+      if (anfrageLaeuft) return;
+      const input = document.getElementById('nachrichtInput');
+      const text = input.value.trim();
+      if (!text) return;
 
-  function stimmenListeAktualisieren() {
-    const vorher = auswahl.value;
-    const stimmen = speechSynthesis.getVoices()
-      .filter(stimme => stimme.lang.toLowerCase().startsWith('de'));
+      input.value = '';
+      nachrichtElementErstellen(text, 'user', true);
+      statusSetzen('NantAI denkt nach...');
+      anfrageLaeuft = true;
+      document.getElementById('sendenBtn').disabled = true;
 
-    auswahl.replaceChildren(new Option('Automatisch auswählen', ''));
+      try {
+        const chat = aktuellerChatObjekt();
+        const kontext = chat.nachrichten.slice(-10).map(m => ({ rolle: m.rolle, text: m.text }));
 
-    stimmen.forEach(stimme => {
-      auswahl.add(new Option(stimme.name + ' (' + stimme.lang + ')', stimme.name));
-    });
+        const antwortDaten = await jsonpAnfrage({
+          aktion: 'chat',
+          nachricht: text,
+          kontext: JSON.stringify(kontext),
+          sprache: 'de'
+        });
 
-    const gespeichert = JSON.parse(
-      localStorage.getItem('nantai_stimmeinstellungen_v1') || '{}'
-    );
+        if (!antwortDaten || !antwortDaten.erfolg) {
+          throw new Error((antwortDaten && antwortDaten.fehler) || 'Ungültige Serverantwort.');
+        }
 
-    auswahl.value = gespeichert.voiceName || vorher || '';
-  }
+        const kiAntwort = String(antwortDaten.antwort || 'Keine Antwort erhalten.');
+        nachrichtElementErstellen(kiAntwort, 'assistant', true);
+        statusSetzen('Antwort empfangen.');
+        vorlesen(kiAntwort);
+      } catch (err) {
+        nachrichtElementErstellen('Fehler: ' + err.message, 'assistant', true);
+        statusSetzen('Verbindungsfehler aufgetreten.');
+      } finally {
+        anfrageLaeuft = false;
+        document.getElementById('sendenBtn').disabled = false;
+      }
+    }
 
-  try {
-    const gespeichert = JSON.parse(
-      localStorage.getItem('nantai_stimmeinstellungen_v1') || '{}'
-    );
+    function chatExportieren() {
+      const chat = aktuellerChatObjekt();
+      const blob = new Blob([JSON.stringify(chat, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${chat.titel.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      statusSetzen('Chat exportiert.');
+    }
 
-    if (gespeichert.rate != null) rate.value = gespeichert.rate;
-    if (gespeichert.pitch != null) pitch.value = gespeichert.pitch;
-    if (gespeichert.volume != null) volume.value = gespeichert.volume;
-  } catch (e) {
-    console.warn('Stimmeinstellungen konnten nicht geladen werden.');
-  }
+    // --- SPRACHSTUDIO & TTS ---
+    function stimmenLaden() {
+      if (!synth) return;
+      verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de'));
+      const select = document.getElementById('stimmenSelect');
+      if (!select) return;
+      select.replaceChildren();
 
-  function werteAnzeigen() {
-    document.getElementById('stimmenRateWert').textContent =
-      Number(rate.value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
-    document.getElementById('stimmenPitchWert').textContent =
-      Number(pitch.value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
-    document.getElementById('stimmenVolumeWert').textContent =
-      Math.round(Number(volume.value) * 100) + ' %';
-  }
+      verfuegbareStimmen.forEach((st, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = `${st.name} (${st.lang})`;
+        select.appendChild(opt);
+      });
+    }
 
-  [rate, pitch, volume, auswahl].forEach(element => {
-    element.addEventListener('input', () => {
-      werteAnzeigen();
-      stimmenSpeichern();
-    });
-    element.addEventListener('change', stimmenSpeichern);
-  });
+    function vorlesen(text) {
+      if (!synth) return;
+      synth.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      const select = document.getElementById('stimmenSelect');
+      if (select && verfuegbareStimmen[select.value]) {
+        utter.voice = verfuegbareStimmen[select.value];
+      }
+      utter.rate = parseFloat(document.getElementById('speechRate').value) || 1.0;
+      utter.pitch = parseFloat(document.getElementById('speechPitch').value) || 1.0;
+      utter.volume = parseFloat(document.getElementById('speechVolume').value) || 1.0;
+      synth.speak(utter);
+    }
 
-  stimmenListeAktualisieren();
-  speechSynthesis.addEventListener('voiceschanged', stimmenListeAktualisieren);
-  werteAnzeigen();
-}
+    function sprachVorschau() {
+      vorlesen('Das ist eine Hörprobe der ausgewählten deutschen Stimme von NantAI.');
+    }
 
-function stimmenVorschau() {
-  speechSynthesis.cancel();
+    function sprachEinstellungenSpeichern() {
+      const config = {
+        stimme: document.getElementById('stimmenSelect').value,
+        rate: document.getElementById('speechRate').value,
+        pitch: document.getElementById('speechPitch').value,
+        volume: document.getElementById('speechVolume').value
+      };
+      localStorage.setItem(SPEICHER_CONFIG, JSON.stringify(config));
+      statusSetzen('Spracheinstellungen gespeichert.');
+    }
 
-  const stimme = new SpeechSynthesisUtterance(
-    'Hallo! Ich bin NantAI. So klingt meine ausgewählte Stimme.'
-  );
+    function konfigurationLaden() {
+      try {
+        const cfg = JSON.parse(localStorage.getItem(SPEICHER_CONFIG));
+        if (cfg) {
+          if (cfg.rate) { document.getElementById('speechRate').value = cfg.rate; document.getElementById('rateVal').textContent = cfg.rate; }
+          if (cfg.pitch) { document.getElementById('speechPitch').value = cfg.pitch; document.getElementById('pitchVal').textContent = cfg.pitch; }
+          if (cfg.volume) { document.getElementById('speechVolume').value = cfg.volume; document.getElementById('volVal').textContent = cfg.volume; }
+        }
+      } catch (e) {}
+    }
 
-  stimme.lang = 'de-DE';
-  stimme.rate = Number(document.getElementById('stimmenRate').value);
-  stimme.pitch = Number(document.getElementById('stimmenPitch').value);
-  stimme.volume = Number(document.getElementById('stimmenVolume').value);
+    function sprachEingabeStarten() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Spracherkennung wird in diesem Browser nicht unterstützt.');
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'de-DE';
+      recognition.start();
+      statusSetzen('Höre zu...');
 
-  const name = document.getElementById('stimmenAuswahl').value;
-  const passendeStimme = speechSynthesis.getVoices()
-    .find(v => v.name === name);
+      recognition.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        document.getElementById('nachrichtInput').value = text;
+        statusSetzen('Sprache erkannt.');
+        nachrichtSenden();
+      };
+      recognition.onerror = () => statusSetzen('Spracherkennung abgebrochen oder Fehler.');
+    }
 
-  if (passendeStimme) stimme.voice = passendeStimme;
+    // --- TIMER & STOPPUHR ---
+    function timerStarten() {
+      const sekInput = parseInt(document.getElementById('timerSekundenInput').value);
+      if (isNaN(sekInput) || sekInput <= 0) return;
+      let verbleibend = sekInput;
+      const anzeige = document.getElementById('timerAnzeige');
 
-  speechSynthesis.speak(stimme); 
-}
+      if (timerInterval) clearInterval(timerInterval);
 
+      timerInterval = setInterval(() => {
+        if (verbleibend <= 0) {
+          clearInterval(timerInterval);
+          anzeige.textContent = 'Zeit abgelaufen!';
+          vorlesen('Der Timer ist abgelaufen.');
+          return;
+        }
+        const min = Math.floor(verbleibend / 60);
+        const sek = verbleibend % 60;
+        anzeige.textContent = `${min}:${sek < 10 ? '0' : ''}${sek}`;
+        verbleibend--;
+      }, 1000);
+      statusSetzen('Timer gestartet.');
+    }
+
+    function timerStoppen() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById('timerAnzeige').textContent = '00:00';
+      statusSetzen('Timer gestoppt.');
+    }
+
+    // --- NOTIZEN ---
+    function notizenLaden() {
+      const liste = document.getElementById('notizenListe');
+      liste.replaceChildren();
+      try {
+        const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
+        daten.forEach((n, idx) => {
+          const div = document.createElement('div');
+          div.className = 'panel';
+          div.style.marginBottom = '8px';
+          div.innerHTML = `<strong>${n.titel}</strong><p style="margin:6px 0 0; font-size:0.9rem;">${n.inhalt}</p>`;
+          const loeschBtn = document.createElement('button');
+          loeschBtn.className = 'danger';
+          loeschBtn.textContent = 'Löschen';
+          loeschBtn.style.marginTop = '8px';
+          loeschBtn.onclick = () => {
+            daten.splice(idx, 1);
+            localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
+            notizenLaden();
+          };
+          div.appendChild(loeschBtn);
+          liste.appendChild(div);
+        });
+      } catch (e) {}
+    }
+
+    function notizSpeichern() {
+      const titel = document.getElementById('notizTitel').value.trim();
+      const inhalt = document.getElementById('notizInhalt').value.trim();
+      if (!titel && !inhalt) return;
+
+      try {
+        const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
+        daten.unshift({ titel: titel || 'Unbenannte Notiz', inhalt });
+        localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
+        document.getElementById('notizTitel').value = '';
+        document.getElementById('notizInhalt').value = '';
+        notizenLaden();
+        statusSetzen('Notiz gespeichert.');
+      } catch (e) {
+        statusSetzen('Fehler beim Speichern der Notiz.');
+      }
+    }
   </script>
 </body>
 </html>
