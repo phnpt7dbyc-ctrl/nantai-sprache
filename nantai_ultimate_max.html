@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7fc">
+  <title>NantAI Ultimate Plus - Max Edition</title>
+  <style>
+    :root[data-theme="light"] {
+      --bg: #f4f7fc;
+      --panel: #ffffff;
+      --panel2: #e9eff6;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #e0f2fe;
+      --accent: #38bdf8;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --good: #16a34a;
+      --bad: #dc2626;
+      --anim-speed: 18s;
+      --lava-opacity: 0.65;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0c0a12;
+      --panel: #171321;
+      --panel2: #211a30;
+      --primary: #8250df;
+      --primary-hover: #9568e8;
+      --primary-light: #302044;
+      --accent: #00e5ff;
+      --text: #f5f1ff;
+      --muted: #b9aecb;
+      --border: #30283f;
+      --good: #86efac;
+      --bad: #fca5a5;
+      --anim-speed: 18s;
+      --lava-opacity: 0.85;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding-left: 260px; min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      position: relative; isolation: isolate; overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Animierter Neon-Hintergrund */
+    .neon-hintergrund {
+      position: fixed; inset: -18%; z-index: -3; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 20%, var(--accent) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 25%, var(--primary) 0%, transparent 42%),
+        radial-gradient(ellipse at 55% 85%, #60a5fa 0%, transparent 45%),
+        linear-gradient(125deg, var(--bg), var(--panel2), var(--bg), var(--panel));
+      background-size: 200% 200%;
+      animation: neonFarben var(--anim-speed) ease-in-out infinite alternate;
+    }
+    @keyframes neonFarben {
+      0% { background-position: 0% 30%; filter: hue-rotate(0deg); }
+      50% { background-position: 100% 65%; filter: hue-rotate(15deg); }
+      100% { background-position: 25% 100%; filter: hue-rotate(-15deg); }
+    }
+
+    /* Lava-Lampe Effect */
+    .lava-lampe {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none;
+      overflow: hidden; filter: blur(28px);
+      opacity: var(--lava-opacity); mix-blend-mode: multiply;
+    }
+    :root[data-theme="dark"] .lava-lampe { mix-blend-mode: screen; }
+    .lava-kugel {
+      position: absolute; display: block; border-radius: 48% 52% 60% 40%;
+      background: linear-gradient(135deg, var(--accent), var(--primary) 48%, #60a5fa);
+      animation: lavaSchweben 20s ease-in-out infinite alternate, lavaFarbwechsel 15s linear infinite;
+      will-change: transform, border-radius;
+    }
+    .lava-kugel:nth-child(1) { width: 280px; height: 320px; left: 10%; top: 15%; animation-duration: 22s, 16s; }
+    .lava-kugel:nth-child(2) { width: 340px; height: 270px; left: 55%; top: 45%; animation-duration: 26s, 18s; animation-delay: -5s; }
+    .lava-kugel:nth-child(3) { width: 240px; height: 280px; left: 75%; top: 10%; animation-duration: 18s, 14s; animation-delay: -8s; }
+    
+    @keyframes lavaSchweben {
+      0% { transform: translate3d(-15px, 15px, 0) scale(0.9) rotate(-10deg); }
+      50% { transform: translate3d(35px, -35px, 0) scale(1.1) rotate(15deg); }
+      100% { transform: translate3d(-20px, 25px, 0) scale(0.95) rotate(30deg); }
+    }
+    @keyframes lavaFarbwechsel {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    aside, header, .widget, .panel, .composer {
+      background-color: var(--panel);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button {
+      border: 0; border-radius: 10px; padding: 10px 14px;
+      background: var(--primary); color: white; cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: background .15s, transform .1s, filter .15s;
+    }
+    button:hover { filter: brightness(1.1); }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
+    button.secondary:hover { filter: brightness(0.95); }
+    button.danger { background: var(--bad); color: white; box-shadow: none; }
+
+    input, textarea, select {
+      width: 100%; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg); color: var(--text); padding: 10px;
+    }
+    textarea { min-height: 70px; resize: vertical; }
+
+    aside {
+      position: fixed; inset: 0 auto 0 0; width: 260px; padding: 16px;
+      border-right: 1px solid var(--border); overflow-y: auto; z-index: 10;
+    }
+    aside h2 { color: var(--primary); font-size: 1.2rem; margin: 0 0 4px; }
+    aside p { color: var(--muted); font-size: 0.85rem; margin: 0 0 12px; }
+    .nav-btn { display: block; width: 100%; text-align: left; margin-bottom: 6px; background: transparent; color: var(--text); border: 1px solid transparent; box-shadow: none; }
+    .nav-btn:hover { background: var(--panel2); border-color: var(--border); }
+    .nav-btn.active { background: var(--primary-light); color: var(--primary); border-color: var(--border); font-weight: 600; }
+    .side-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 6px; }
+
+    main { max-width: 960px; margin: 0 auto; padding: 20px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding: 14px; border-radius: 12px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: grid; place-items: center; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1 { margin: 0; font-size: 1.3rem; }
+    header p { margin: 2px 0 0; color: var(--muted); font-size: 0.85rem; }
+
+    .dashboard { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 16px; }
+    .widget { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    .widget-label { color: var(--muted); font-size: 0.75rem; margin-bottom: 4px; }
+    .widget-value { font-weight: 600; font-size: 0.95rem; overflow-wrap: anywhere; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .panel h3 { margin-top: 0; font-size: 1.1rem; color: var(--primary); }
+    .hidden { display: none !important; }
+
+    #chat { display: flex; flex-direction: column; gap: 12px; min-height: 40vh; margin-bottom: 20px; }
+    .message { padding: 12px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); overflow-wrap: anywhere; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .message.user { background: var(--primary-light); align-self: flex-end; max-width: 88%; border-color: var(--border); color: var(--primary); }
+    .message.assistant { align-self: stretch; }
+    .message code { background: var(--panel2); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .message pre { background: var(--panel2); padding: 10px; border-radius: 8px; overflow-x: auto; font-family: monospace; }
+    .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
+    .msg-tools button { padding: 5px 10px; font-size: 0.8rem; }
+
+    .composer { position: sticky; bottom: 0; background: var(--bg); padding: 12px 0; border-top: 1px solid var(--border); }
+    .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .row > * { flex: 1; }
+
+    #status { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; font-weight: 500; }
+
+    .avatar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+    .avatar-face { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 40px; box-shadow: 0 0 20px var(--primary); margin-bottom: 14px; animation: avPulse 2s infinite ease-in-out; }
+    @keyframes avPulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+    #drawingCanvas { width: 100%; height: 280px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px; cursor: crosshair; touch-action: none; }
+    #snakeCanvas { background: var(--panel2); border: 1px solid var(--border); border-radius: 10px; display: block; margin: 10px auto; }
+    #qrCanvas { margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: white; }
+
+    /* Stil-Raster für Bildgenerierung */
+    .style-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin: 10px 0; }
+    .style-btn { background: var(--panel2); color: var(--text); border: 1px solid var(--border); text-align: center; padding: 10px 6px; font-size: 0.85rem; border-radius: 8px; cursor: pointer; }
+    .style-btn.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
+
+    /* Modal / Vollbild */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal img { max-width: 90%; max-height: 85vh; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+
+    @media (max-width: 768px) {
+      body { padding-left: 0; }
+      aside { position: static; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+      .dashboard { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="neon-hintergrund" aria-hidden="true"></div>
+  <div class="lava-lampe" aria-hidden="true">
+    <span class="lava-kugel"></span>
+    <span class="lava-kugel"></span>
+    <span class="lava-kugel"></span>
+  </div>
+
+  <aside>
+    <h2>✦ NantAI</h2>
+    <p>Ultimate Max Edition</p>
+    <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
+    <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Aktueller Chat</button>
+    <button class="nav-btn" onclick="tabWechseln('archivTab', this)">🗄️ Alte Chats & Archiv</button>
+    <button class="nav-btn" onclick="tabWechseln('bildStudioTab', this)">🎨 Bildstudio & Stile</button>
+    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 Avatar Unterhaltung</button>
+    <button class="nav-btn" onclick="tabWechseln('codeTab', this)">💻 Programmierstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('mdTab', this)">📝 Markdown Editor</button>
+    <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">🎨 Zeichenstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('gameTab', this)">🎮 Mini-Spiel (Snake)</button>
+    <button class="nav-btn" onclick="tabWechseln('toolsTab', this)">🧮 Rechner & Umrechner</button>
+    <button class="nav-btn" onclick="tabWechseln('pomodoroTab', this)">⏳ Pomodoro-Timer</button>
+    <button class="nav-btn" onclick="tabWechseln('qrTab', this)">📱 QR-Code Generator</button>
+    <button class="nav-btn" onclick="tabWechseln('bookmarksTab', this)">🔖 Lesezeichen</button>
+    <button class="nav-btn" onclick="tabWechseln('backupTab', this)">💾 Backup & Datensicherung</button>
+    <button class="nav-btn" onclick="tabWechseln('designTab', this)">⚙️ Design & Presets</button>
+    <button class="nav-btn" onclick="tabWechseln('sprachStudioTab', this)">🗣️ Sprachstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('wetterTab', this)">🌦️ Wetter & Standort</button>
+    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen & Statistik</button>
+    <div class="side-label">Schnellaktionen</div>
+    <button class="nav-btn" onclick="neuerChat()">＋ Neuer Chat</button>
+    <button class="nav-btn" onclick="chatExportieren()">⬇️ Chat exportieren</button>
+  </aside>
+
+  <main>
+    <header>
+      <div class="header-left">
+        <div class="logo">✦</div>
+        <div>
+          <h1>NantAI Assistant</h1>
+          <p>Maximale Leistung & KI-Erweiterungen</p>
+        </div>
+      </div>
+      <button class="secondary" onclick="themeUmschalten()">🌓 Theme wechseln</button>
+    </header>
+
+    <div id="status">System bereit.</div>
+
+    <!-- 0. DASHBOARD -->
+    <section id="dashboardTab" class="panel">
+      <h3>🏠 Dashboard & Schnellstart</h3>
+      <div class="dashboard" style="margin-top: 14px;">
+        <div class="widget">
+          <div class="widget-label">🕒 Uhrzeit</div>
+          <div class="widget-value" id="dashUhr">--:--:--</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">🌦️ Wetter</div>
+          <div class="widget-value" id="dashWetter">Nicht geladen</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">💡 Tagesinspiration</div>
+          <div class="widget-value" id="zitatBox" style="font-size: 0.85rem; font-style: italic;">...</div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 16px;">
+        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Chat starten</button>
+        <button class="secondary" onclick="tabWechseln('bildStudioTab', document.querySelectorAll('aside .nav-btn')[3])">🖼️ Bild generieren</button>
+        <button class="secondary" onclick="sprachbefehlEingabeStarten()">🎙️ Sprachbefehl geben</button>
+      </div>
+    </section>
+
+    <!-- 1. CHAT TAB -->
+    <section id="chatTab" class="hidden">
+      <div class="dashboard">
+        <div class="widget">
+          <div class="widget-label">🕒 Uhrzeit</div>
+          <div class="widget-value" id="uhrzeitWidget">--:--:--</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">📍 Wetter</div>
+          <div class="widget-value" id="wetterWidgetKurz">Nicht geladen</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">⚡ Aktueller Chat</div>
+          <div class="widget-value" id="aktuellerChatTitel">Neuer Chat</div>
+        </div>
+      </div>
+      <div id="chat" aria-live="polite"></div>
+      <div class="composer">
+        <textarea id="nachrichtInput" placeholder="Schreibe eine Nachricht an NantAI..." onkeydown="pruefeEingabe(event)"></textarea>
+        <div class="row">
+          <button id="sendenBtn" onclick="nachrichtSenden()">Senden ➤</button>
+          <button class="secondary" onclick="sprachEingabeStarten()">🎤 Sprechen</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEU: 2. ALTE CHATS & ARCHIV -->
+    <section id="archivTab" class="panel hidden">
+      <h3>🗄️ Alte Chats & Chat-Archiv</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Durchsuche, verwalte oder setze deine bisherigen Unterhaltungen fort.</p>
+      
+      <div class="row" style="margin-bottom: 12px;">
+        <input type="text" id="archivSuchInput" placeholder="🔍 Chats nach Titel oder Inhalt durchsuchen..." oninput="archivFilterAnwenden()">
+        <select id="archivMonatFilter" onchange="archivFilterAnwenden()" style="max-width: 180px;">
+          <option value="alle">Alle Zeiträume</option>
+        </select>
+      </div>
+
+      <div id="archivListe" style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;"></div>
+    </section>
+
+    <!-- NEU: 3. BILDSTUDIO & STILE -->
+    <section id="bildStudioTab" class="panel hidden">
+      <h3>🎨 Bildstudio & Stile</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Erstelle Bilder in verschiedenen künstlerischen Stilen und Formaten.</p>
+      
+      <textarea id="bildPromptInput" placeholder="Beschreibe dein Bild (z.B. Ein geheimnisvoller Wald mit leuchtenden Pilzen bei Nacht)..." style="margin-bottom: 10px;"></textarea>
+      
+      <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Wähle einen Stil:</div>
+      <div class="style-grid">
+        <div class="style-btn selected" onclick="stilWaehlen(this, 'Photorealistic, hyperrealistic 8k photo, extremely detailed')">📸 Fotorealistisch</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Anime style, vibrant colors, Studio Ghibli inspired, high quality digital artwork')">🌸 Anime / Manga</div>
+        <div class="style-btn" onclick="stilWaehlen(this, '3D render Pixar style, cute character, octane render, soft lighting')">🧸 3D / Pixar</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Cyberpunk style, neon lights, futuristic city, glowing colors, dark background')">🏙️ Cyberpunk</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Digital painting, concept art, atmospheric fantasy art')">🎨 Digital Art</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Watercolor painting, soft color splashes, artistic paper texture')">🖌️ Aquarell</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Oil painting, classic masterpiece texture, impressionism brush strokes')">🖼️ Ölgemälde</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Pixel art, 16-bit retro game graphics, detailed pixelated style')">👾 Pixel Art</div>
+        <div class="style-btn" onclick="stilWaehlen(this, 'Pencil sketch, detailed graphite drawing, monochrome hand-drawn art')">✏️ Bleistift</div>
+      </div>
+
+      <div class="row" style="margin: 12px 0;">
+        <select id="bildFormatSelect">
+          <option value="1:1">Format: Quadratisch (1:1)</option>
+          <option value="9:16">Format: Hochformat (9:16)</option>
+          <option value="16:9">Format: Querformat (16:9)</option>
+        </select>
+        <button onclick="bildGenerieren()">🖼️ Bild Generieren</button>
+      </div>
+
+      <div id="bildErgebnisArea" style="text-align: center; margin-top: 16px; border: 1px dashed var(--border); border-radius: 12px; padding: 20px; background: var(--panel2);">
+        <p style="color: var(--muted); margin: 0;">Noch kein Bild generiert.</p>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <h4>Galerie & Gespeicherte Medien</h4>
+        <div id="medienGalerie" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;"></div>
+      </div>
+    </section>
+
+    <!-- 4. AVATAR -->
+    <section id="avatarTab" class="panel hidden">
+      <h3>🤖 NantAI Avatar Unterhaltung</h3>
+      <div class="avatar-container">
+        <div id="avatarFace" class="avatar-face">✦</div>
+        <h4 id="avatarStatusText" style="margin: 0 0 6px;">Hallo! Ich bin dein KI-Avatar.</h4>
+      </div>
+      <textarea id="avatarInput" placeholder="Sprich mit dem Avatar..." style="margin-bottom: 8px;"></textarea>
+      <div class="row"><button onclick="avatarSprechenlassen()">Mit Avatar sprechen</button></div>
+    </section>
+
+    <!-- 5. CODE STUDIO -->
+    <section id="codeTab" class="panel hidden">
+      <h3>💻 Programmierstudio</h3>
+      <textarea id="codeEditor" oninput="codeStatistikAktualisieren()" style="font-family: monospace; min-height: 140px;" placeholder="HTML/JS Code hier eingeben..."></textarea>
+      <div id="codeStatistik" style="font-size: 0.8rem; color: var(--muted); margin: 6px 0;">Wörter: 0 | Zeichen: 0</div>
+      <div class="row">
+        <button onclick="codeVorschauAktualisieren()">Live-Vorschau</button>
+        <button class="secondary" onclick="codeKopieren()">Kopieren</button>
+        <button class="secondary" onclick="codeHerunterladen()">Herunterladen</button>
+      </div>
+      <div style="margin-top: 10px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff;">
+        <iframe id="codeIframe" style="width: 100%; height: 180px; border: 0;"></iframe>
+      </div>
+    </section>
+
+    <!-- 6. MARKDOWN EDITOR -->
+    <section id="mdTab" class="panel hidden">
+      <h3>📝 Markdown Editor mit Live-Vorschau</h3>
+      <div class="row">
+        <textarea id="mdInput" oninput="mdVorschauAktualisieren()" placeholder="# Überschrift&#10;Text hier mit **fett** oder *kursiv* schreiben..." style="height: 200px; font-family: monospace;"></textarea>
+        <div id="mdOutput" style="height: 200px; border: 1px solid var(--border); border-radius: 10px; padding: 10px; overflow-y: auto; background: var(--bg);"></div>
+      </div>
+    </section>
+
+    <!-- 7. ZEICHENSTUDIO -->
+    <section id="whiteboardTab" class="panel hidden">
+      <h3>🎨 Interaktives Zeichenstudio</h3>
+      <div class="row" style="margin-bottom: 8px;">
+        <input type="color" id="brushColor" value="#0284c7" style="height: 38px; max-width: 80px;">
+        <input type="range" id="brushSize" min="1" max="25" value="5" title="Pinselstärke" style="flex: 2;">
+        <button class="secondary" onclick="canvasLeeren()">Löschen</button>
+      </div>
+      <canvas id="drawingCanvas"></canvas>
+    </section>
+
+    <!-- 8. MINI-SPIEL (SNAKE) -->
+    <section id="gameTab" class="panel hidden">
+      <h3>🎮 Mini-Spiel (Snake)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Steuerung mit den Pfeiltasten deiner Tastatur.</p>
+      <div style="text-align: center;">
+        <div style="font-weight: bold; margin-bottom: 6px;">Punkte: <span id="snakeScore">0</span></div>
+        <canvas id="snakeCanvas" width="300" height="300"></canvas>
+        <div class="row" style="max-width: 200px; margin: 10px auto;">
+          <button onclick="snakeStarten()">Spiel starten</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. RECHNER & UMRECHNER -->
+    <section id="toolsTab" class="panel hidden">
+      <h3>🧮 Erweiterungscenter</h3>
+      <div style="margin-bottom: 16px;">
+        <h4>Taschenrechner</h4>
+        <div class="row">
+          <input id="calcInput" placeholder="z. B. 12 * (4 + 8)">
+          <button onclick="rechnen()">Berechnen</button>
+        </div>
+        <div id="calcErgebnis" style="margin-top: 6px; font-weight: bold; color: var(--primary);"></div>
+      </div>
+      <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+      <div>
+        <h4>Einheitenumrechner</h4>
+        <div class="row">
+          <input type="number" id="unitVal" placeholder="Wert">
+          <select id="unitType">
+            <option value="mToFt">Meter ➔ Fuß</option>
+            <option value="cToF">Celsius ➔ Fahrenheit</option>
+            <option value="kgToLbs">Kilogramm ➔ Pfund</option>
+          </select>
+          <button onclick="einheitUmrechnen()">Umrechnen</button>
+        </div>
+        <div id="unitErgebnis" style="margin-top: 6px; font-weight: bold; color: var(--primary);"></div>
+      </div>
+    </section>
+
+    <!-- 10. POMODORO TIMER -->
+    <section id="pomodoroTab" class="panel hidden">
+      <h3>⏳ Pomodoro-Fokus-Timer</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">25 Minuten Fokus, danach 5 Minuten Pause.</p>
+      <div id="pomoDisplay" style="font-size: 2.5rem; font-weight: bold; text-align: center; margin: 16px 0; color: var(--primary);">25:00</div>
+      <div class="row">
+        <button onclick="pomoStarten()">Fokus starten</button>
+        <button class="secondary" onclick="pomoPauseStarten()">Pause starten</button>
+        <button class="danger" onclick="pomoStoppen()">Stopp</button>
+      </div>
+    </section>
+
+    <!-- 11. QR-CODE GENERATOR -->
+    <section id="qrTab" class="panel hidden">
+      <h3>📱 QR-Code Generator</h3>
+      <input id="qrInput" placeholder="https://beispiel.de oder Text eingeben..." style="margin-bottom: 8px;">
+      <button onclick="qrGenerieren()">QR-Code erzeugen</button>
+      <div style="text-align: center;"><canvas id="qrCanvas" class="hidden"></canvas></div>
+    </section>
+
+    <!-- 12. LESEZEICHEN -->
+    <section id="bookmarksTab" class="panel hidden">
+      <h3>🔖 Lesezeichen-Manager</h3>
+      <input id="bmTitel" placeholder="Titel der Webseite" style="margin-bottom: 8px;">
+      <input id="bmUrl" placeholder="https://..." style="margin-bottom: 8px;">
+      <button onclick="lesezeichenSpeichern()">Lesezeichen hinzufügen</button>
+      <div id="bookmarksListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
+    </section>
+
+    <!-- 13. BACKUP & DATENSICHERUNG -->
+    <section id="backupTab" class="panel hidden">
+      <h3>💾 Backup & Datensicherung</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Sichere alle deine Einstellungen, Chats, Notizen, Lesezeichen und Bilder in einer Datei.</p>
+      <div class="row">
+        <button onclick="backupErstellen()">Backup herunterladen</button>
+        <button class="secondary" onclick="document.getElementById('backupFileInput').click()">Backup einspielen</button>
+        <input type="file" id="backupFileInput" class="hidden" accept=".json" onchange="backupEinspielen(event)">
+      </div>
+    </section>
+
+    <!-- 14. DESIGN & PRESETS -->
+    <section id="designTab" class="panel hidden">
+      <h3>⚙️ Design & Farb-Presets</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Wähle ein vorgefertigtes Farbthema aus:</p>
+      <div class="row" style="margin-bottom: 14px;">
+        <button class="secondary" onclick="presetAnwenden('#0284c7', '#38bdf8')">🌊 Ozean Blau</button>
+        <button class="secondary" onclick="presetAnwenden('#8250df', '#00e5ff')">🔮 Cyberpunk Neon</button>
+        <button class="secondary" onclick="presetAnwenden('#059669', '#34d399')">🌲 Emerald Green</button>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.85rem;">Eigene Primärfarbe:</label>
+        <input type="color" id="colorPrimary" value="#0284c7" onchange="designAnwenden()" style="height: 40px; cursor: pointer;">
+      </div>
+    </section>
+
+    <!-- 15. SPRACHSTUDIO -->
+    <section id="sprachStudioTab" class="panel hidden">
+      <h3>🗣️ Sprachstudio</h3>
+      <select id="stimmenSelect" style="margin-bottom: 10px;"></select>
+      <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600;">
+        <input type="checkbox" id="menschlichModus" checked style="width: auto;"> Menschlich-Modus (Modulierte Tonhöhe)
+      </label>
+      <div class="row"><button onclick="sprachVorschau()">Vorschau abspielen</button></div>
+    </section>
+
+    <!-- 16. WETTER -->
+    <section id="wetterTab" class="panel hidden">
+      <h3>🌦️ Genauer Standort & Wetter</h3>
+      <button onclick="standortUndWetterLaden()">Standort freigeben & Wetter laden</button>
+      <div id="wetterDetailsBox" style="margin-top: 14px; background: var(--panel2); padding: 12px; border-radius: 10px; display: none;">
+        <p><strong>Temperatur:</strong> <span id="tempVal">-</span></p>
+        <p><strong>Wind:</strong> <span id="windVal">-</span></p>
+      </div>
+    </section>
+
+    <!-- 17. NOTIZEN -->
+    <section id="notizenTab" class="panel hidden">
+      <h3>📝 Notizen & Text-Statistik</h3>
+      <input id="notizTitel" placeholder="Titel" style="margin-bottom: 8px;">
+      <textarea id="notizInhalt" oninput="notizStatistikAktualisieren()" placeholder="Inhalt eingeben..." style="margin-bottom: 8px;"></textarea>
+      <div id="notizStatistik" style="font-size: 0.8rem; color: var(--muted); margin-bottom: 8px;">Wörter: 0 | Zeichen: 0 | Geschätzte Lesezeit: 0 Sek.</div>
+      <button onclick="notizSpeichern()">Notiz speichern</button>
+      <div id="notizenListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
+    </section>
+
+  </main>
+
+  <!-- VOLLBILD MODAL FÜR BILDER -->
+  <div id="imageModal" class="modal hidden" onclick="modalSchliessen()">
+    <img id="modalImg" src="" alt="Vollbild Vorschau">
+  </div>
+
+  <script>
+    const BACKEND = 'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
+    const SPEICHER_CHATS = 'nantai_chats_v6';
+    const SPEICHER_NOTIZEN = 'nantai_notizen_v6';
+    const SPEICHER_BOOKMARKS = 'nantai_bookmarks_v6';
+    const SPEICHER_GALERIE = 'nantai_galerie_v6';
+
+    let chats = [];
+    let galerieMedien = [];
+    let aktuellerChatId = null;
+    let anfrageLaeuft = false;
+    let synth = window.speechSynthesis;
+    let verfuegbareStimmen = [];
+    let pomoInterval = null;
+    let gewaehlterStilPrompt = 'Photorealistic, hyperrealistic 8k photo, extremely detailed';
+
+    const zitate = [
+      "Code is like humor. When you have to explain it, it’s bad.",
+      "Simplicity is the soul of efficiency.",
+      "Make it work, make it right, make it fast."
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      uhrAktualisieren();
+      setInterval(uhrAktualisieren, 1000);
+      chatVerlaufLaden();
+      galerieLaden();
+      notizenLaden();
+      lesezeichenLaden();
+      konfigurationLaden();
+      stimmenLaden();
+      canvasInitialisieren();
+      document.getElementById('zitatBox').textContent = `"${zitate[Math.floor(Math.random() * zitate.length)]}"`;
+      if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = stimmenLaden;
+    });
+
+    function uhrAktualisieren() {
+      const d = new Date();
+      const zeitStr = d.toLocaleTimeString('de-DE');
+      if (document.getElementById('uhrzeitWidget')) document.getElementById('uhrzeitWidget').textContent = zeitStr;
+      if (document.getElementById('dashUhr')) document.getElementById('dashUhr').textContent = zeitStr;
+    }
+
+    function statusSetzen(text) { document.getElementById('status').textContent = text; }
+
+    function tabWechseln(tabId, btn) {
+      document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+      document.querySelectorAll('aside .nav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function themeUmschalten() {
+      const html = document.documentElement;
+      const neuesTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', neuesTheme);
+      localStorage.setItem('nantai_theme', neuesTheme);
+    }
+
+    function formatMarkdown(text) {
+      return text
+        .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+    }
+
+    /* SPRACHBEFEHLE (VOICE COMMANDS) */
+    function sprachbefehlEingabeStarten() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) { alert('Spracherkennung wird vom Browser nicht unterstützt.'); return; }
+      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start();
+      statusSetzen('Höre auf Sprachbefehl...');
+      rec.onresult = (e) => {
+        const cmd = e.results[0][0].transcript.toLowerCase();
+        statusSetzen('Befehl erkannt: ' + cmd);
+        if (cmd.includes('timer') || cmd.includes('stoppuhr')) tabWechseln('pomodoroTab', document.querySelectorAll('aside .nav-btn')[10]);
+        else if (cmd.includes('wetter')) { tabWechseln('wetterTab', document.querySelectorAll('aside .nav-btn')[16]); standortUndWetterLaden(); }
+        else if (cmd.includes('bild') || cmd.includes('foto')) tabWechseln('bildStudioTab', document.querySelectorAll('aside .nav-btn')[3]);
+        else if (cmd.includes('chat') || cmd.includes('neuer chat')) { neuerChat(); tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1]); }
+        else if (cmd.includes('spiel') || cmd.includes('snake')) tabWechseln('gameTab', document.querySelectorAll('aside .nav-btn')[8]);
+        else vorlesenMenschlich('Befehl nicht verstanden.');
+      };
+    }
+
+    /* CHAT CORE */
+    function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
+    function begruessungsNachricht() { return [{ text: 'Hallo! Ich bin NantAI Ultimate Max.', rolle: 'assistant' }]; }
+
+    function chatVerlaufLaden() {
+      try { const g = localStorage.getItem(SPEICHER_CHATS); if (g) chats = JSON.parse(g); } catch (e) {}
+      if (!Array.isArray(chats) || chats.length === 0) {
+        chats = [{ id: neueId(), titel: 'Neuer Chat', datum: new Date().toISOString(), archiviert: false, nachrichten: begruessungsNachricht() }];
+      }
+      aktuellerChatId = chats[0].id;
+      chatAnzeigen();
+      archivListeAktualisieren();
+    }
+
+    function chatVerlaufSpeichern() {
+      try { localStorage.setItem(SPEICHER_CHATS, JSON.stringify(chats)); } catch (e) {}
+      archivListeAktualisieren();
+    }
+
+    function aktuellerChatObjekt() { return chats.find(c => c.id === aktuellerChatId) || chats[0]; }
+
+    function chatAnzeigen() {
+      const chat = aktuellerChatObjekt();
+      document.getElementById('aktuellerChatTitel').textContent = chat.titel;
+      const container = document.getElementById('chat'); container.replaceChildren();
+      chat.nachrichten.forEach(msg => nachrichtElementErstellen(msg.text, msg.rolle, false));
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function neuerChat() {
+      const neuer = { id: neueId(), titel: 'Neuer Chat', datum: new Date().toISOString(), archiviert: false, nachrichten: begruessungsNachricht() };
+      chats.unshift(neuer); aktuellerChatId = neuer.id;
+      chatVerlaufSpeichern(); chatAnzeigen();
+    }
+
+    function nachrichtElementErstellen(text, rolle, speichern = true) {
+      const container = document.getElementById('chat');
+      const div = document.createElement('div'); div.className = `message ${rolle}`;
+      const textDiv = document.createElement('div'); textDiv.innerHTML = formatMarkdown(text); div.appendChild(textDiv);
+      if (rolle === 'assistant') {
+        const tools = document.createElement('div'); tools.className = 'msg-tools';
+        const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = '🔊 Vorlesen';
+        btn.onclick = () => vorlesenMenschlich(text);
+        tools.appendChild(btn); div.appendChild(tools);
+      }
+      container.appendChild(div); container.scrollTop = container.scrollHeight;
+      if (speichern) {
+        const chat = aktuellerChatObjekt();
+        chat.nachrichten.push({ text, rolle });
+        if (chat.titel === 'Neuer Chat' && rolle === 'user') chat.titel = text.slice(0, 30);
+        chatVerlaufSpeichern();
+      }
+    }
+
+    function pruefeEingabe(event) { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); nachrichtSenden(); } }
+
+    function jsonpAnfrage(parameter) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'nantaiCB_' + Date.now() + '_' + Math.floor(Math.random()*1000);
+        const script = document.createElement('script');
+        const url = new URL(BACKEND);
+        Object.entries(parameter).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, String(v)); });
+        url.searchParams.set('callback', callbackName);
+        const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 60000);
+        function cleanup() { clearTimeout(timer); delete window[callbackName]; script.remove(); }
+        window[callbackName] = (d) => { cleanup(); resolve(d); };
+        script.onerror = () => { cleanup(); reject(new Error('Netzwerkfehler')); };
+        script.src = url.toString();
+        document.head.appendChild(script);
+      });
+    }
+
+    async function nachrichtSenden() {
+      if (anfrageLaeuft) return;
+      const input = document.getElementById('nachrichtInput');
+      const text = input.value.trim(); if (!text) return;
+      input.value = ''; nachrichtElementErstellen(text, 'user', true);
+      statusSetzen('NantAI denkt nach...'); anfrageLaeuft = true;
+      try {
+        const chat = aktuellerChatObjekt();
+        const kontext = chat.nachrichten.slice(-10).map(m => ({ rolle: m.rolle, text: m.text }));
+        const res = await jsonpAnfrage({ aktion: 'chat', nachricht: text, kontext: JSON.stringify(kontext), sprache: 'de' });
+        if (!res || !res.erfolg) throw new Error('Serverfehler');
+        const kiAntwort = String(res.antwort || 'Keine Antwort erhalten.');
+        nachrichtElementErstellen(kiAntwort, 'assistant', true);
+        statusSetzen('Antwort empfangen.'); vorlesenMenschlich(kiAntwort);
+      } catch (e) {
+        nachrichtElementErstellen('Fehler bei der Verbindung zum KI-Backend.', 'assistant', true);
+        statusSetzen('Verbindungsfehler.');
+      } finally { anfrageLaeuft = false; }
+    }
+
+    function chatExportieren() {
+      const chat = aktuellerChatObjekt();
+      const blob = new Blob([JSON.stringify(chat, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `${chat.titel}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    /* NEU: 1. ALTE CHATS & CHAT-ARCHIV */
+    function archivListeAktualisieren() {
+      const container = document.getElementById('archivListe'); if (!container) return;
+      container.replaceChildren();
+      
+      const monatSelect = document.getElementById('archivMonatFilter');
+      const verfuegbareMonate = new Set();
+      chats.forEach(c => {
+        if (c.datum) {
+          const d = new Date(c.datum);
+          verfuegbareMonate.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`);
+        }
+      });
+
+      // Filter-Optionen dynamisch aufbauen
+      const aktVal = monatSelect.value;
+      monatSelect.innerHTML = '<option value="alle">Alle Zeiträume</option>';
+      verfuegbareMonate.forEach(m => {
+        const opt = document.createElement('option'); opt.value = m; opt.textContent = m;
+        monatSelect.appendChild(opt);
+      });
+      monatSelect.value = aktVal;
+
+      archivFilterAnwenden();
+    }
+
+    function archivFilterAnwenden() {
+      const container = document.getElementById('archivListe'); container.replaceChildren();
+      const suchTxt = document.getElementById('archivSuchInput').value.toLowerCase();
+      const monatFilter = document.getElementById('archivMonatFilter').value;
+
+      const gefiltert = chats.filter(c => {
+        const inTitelOderInhalt = c.titel.toLowerCase().includes(suchTxt) || 
+          c.nachrichten.some(m => m.text.toLowerCase().includes(suchTxt));
+        
+        let inMonat = true;
+        if (monatFilter !== 'alle' && c.datum) {
+          const d = new Date(c.datum);
+          const mStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`;
+          inMonat = (mStr === monatFilter);
+        }
+        return inTitelOderInhalt && inMonat;
+      });
+
+      if (gefiltert.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">Keine passenden Chats gefunden.</p>';
+        return;
+      }
+
+      gefiltert.forEach(c => {
+        const card = document.createElement('div'); card.className = 'panel'; card.style.marginBottom = '0';
+        const dStr = c.datum ? new Date(c.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Unbekannt';
+        
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:1rem; color:var(--primary);">${c.titel} ${c.archiviert ? '🔒 (Archiviert)' : ''}</strong>
+            <span style="font-size:0.75rem; color:var(--muted);">${dStr}</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--muted); margin: 4px 0 10px;">${c.nachrichten.length} Nachrichten</p>
+        `;
+
+        const actionRow = document.createElement('div'); actionRow.className = 'row';
+        
+        const openBtn = document.createElement('button'); openBtn.textContent = '📂 Öffnen';
+        openBtn.onclick = () => { aktuellerChatId = c.id; chatAnzeigen(); tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1]); };
+        
+        const renameBtn = document.createElement('button'); renameBtn.className = 'secondary'; renameBtn.textContent = '✏️ Umbenennen';
+        renameBtn.onclick = () => {
+          const neu = prompt('Neuer Chat-Titel:', c.titel);
+          if (neu) { c.titel = neu; chatVerlaufSpeichern(); }
+        };
+
+        const archiveBtn = document.createElement('button'); archiveBtn.className = 'secondary';
+        archiveBtn.textContent = c.archiviert ? '🔓 Entsperren' : '🔒 Archivieren';
+        archiveBtn.onclick = () => { c.archiviert = !c.archiviert; chatVerlaufSpeichern(); };
+
+        const delBtn = document.createElement('button'); delBtn.className = 'danger'; delBtn.textContent = '🗑️ Löschen';
+        delBtn.onclick = () => {
+          if (confirm(`Chat "${c.titel}" wirklich löschen?`)) {
+            chats = chats.filter(item => item.id !== c.id);
+            if (chats.length === 0) neuerChat(); else if (aktuellerChatId === c.id) aktuellerChatId = chats[0].id;
+            chatVerlaufSpeichern(); chatAnzeigen();
+          }
+        };
+
+        actionRow.appendChild(openBtn);
+        actionRow.appendChild(renameBtn);
+        actionRow.appendChild(archiveBtn);
+        actionRow.appendChild(delBtn);
+        card.appendChild(actionRow);
+        container.appendChild(card);
+      });
+    }
+
+    /* NEU: 2. BILDSTUDIO & STILE */
+    function stilWaehlen(btn, promptZusatz) {
+      document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      gewaehlterStilPrompt = promptZusatz;
+    }
+
+    async function bildGenerieren() {
+      const promptTxt = document.getElementById('bildPromptInput').value.trim();
+      if (!promptTxt) { alert('Bitte gib eine Bildbeschreibung ein!'); return; }
+
+      const format = document.getElementById('bildFormatSelect').value;
+      const vollerPrompt = `${promptTxt}, ${gewaehlterStilPrompt}, aspect ratio ${format}`;
+      const ergebnisArea = document.getElementById('bildErgebnisArea');
+      
+      ergebnisArea.innerHTML = `<p style="color:var(--primary); font-weight:bold;">🎨 Bild wird generiert... Bitte warten...</p>`;
+      statusSetzen('Bildgenerierung läuft...');
+
+      try {
+        const res = await jsonpAnfrage({ aktion: 'bild', prompt: vollerPrompt });
+        if (!res || !res.erfolg || !res.bildUrl) throw new Error('Bildgenerierung fehlgeschlagen');
+
+        ergebnisArea.innerHTML = `
+          <img src="${res.bildUrl}" style="max-width:100%; max-height:400px; border-radius:10px; cursor:pointer;" onclick="modalOeffnen('${res.bildUrl}')">
+          <div class="row" style="margin-top:10px;">
+            <button onclick="bildInGalerieSpeichern('${res.bildUrl}', '${promptTxt.replace(/'/g, "\\'")}')">💾 In Galerie speichern</button>
+            <a href="${res.bildUrl}" target="_blank" download="nantai-bild.png" style="text-decoration:none;"><button class="secondary" style="width:100%;">⬇️ Download</button></a>
+          </div>
+        `;
+        statusSetzen('Bild erfolgreich generiert!');
+      } catch (e) {
+        ergebnisArea.innerHTML = `<p style="color:var(--bad);">Fehler bei der Bildgenerierung. Bitte erneut versuchen.</p>`;
+        statusSetzen('Fehler bei Bildgenerierung.');
+      }
+    }
+
+    function bildInGalerieSpeichern(url, prompt) {
+      galerieMedien.unshift({ url, prompt, datum: new Date().toISOString() });
+      try { localStorage.setItem(SPEICHER_GALERIE, JSON.stringify(galerieMedien)); } catch (e) {}
+      galerieLaden();
+      statusSetzen('In Galerie gespeichert.');
+    }
+
+    function galerieLaden() {
+      const container = document.getElementById('medienGalerie'); if (!container) return;
+      container.replaceChildren();
+      try {
+        const data = localStorage.getItem(SPEICHER_GALERIE);
+        if (data) galerieMedien = JSON.parse(data);
+      } catch (e) {}
+
+      galerieMedien.forEach((m, idx) => {
+        const div = document.createElement('div'); div.style.position = 'relative';
+        div.innerHTML = `
+          <img src="${m.url}" style="width:100%; height:100px; object-fit:cover; border-radius:8px; cursor:pointer;" onclick="modalOeffnen('${m.url}')" title="${m.prompt}">
+          <button class="danger" style="position:absolute; top:4px; right:4px; padding:2px 6px; font-size:0.7rem;" onclick="galerieElementLoeschen(${idx})">✕</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function galerieElementLoeschen(idx) {
+      galerieMedien.splice(idx, 1);
+      try { localStorage.setItem(SPEICHER_GALERIE, JSON.stringify(galerieMedien)); } catch (e) {}
+      galerieLaden();
+    }
+
+    function modalOeffnen(url) {
+      document.getElementById('modalImg').src = url;
+      document.getElementById('imageModal').classList.remove('hidden');
+    }
+    function modalSchliessen() { document.getElementById('imageModal').classList.add('hidden'); }
+
+    /* MARKDOWN EDITOR */
+    function mdVorschauAktualisieren() {
+      const input = document.getElementById('mdInput').value;
+      document.getElementById('mdOutput').innerHTML = formatMarkdown(input);
+    }
+
+    /* SNAKE MINI-SPIEL */
+    let snakeInterval = null, snake = [], food = {}, dir = 'RIGHT', score = 0;
+    function snakeStarten() {
+      const canvas = document.getElementById('snakeCanvas'); const ctx = canvas.getContext('2d');
+      snake = [{x: 10, y: 10}]; food = {x: 15, y: 15}; dir = 'RIGHT'; score = 0;
+      document.getElementById('snakeScore').textContent = score;
+      if (snakeInterval) clearInterval(snakeInterval);
+      document.onkeydown = (e) => {
+        if (e.key === 'ArrowUp' && dir !== 'DOWN') dir = 'UP';
+        else if (e.key === 'ArrowDown' && dir !== 'UP') dir = 'DOWN';
+        else if (e.key === 'ArrowLeft' && dir !== 'RIGHT') dir = 'LEFT';
+        else if (e.key === 'ArrowRight' && dir !== 'LEFT') dir = 'RIGHT';
+      };
+      snakeInterval = setInterval(() => {
+        let headX = snake[0].x, headY = snake[0].y;
+        if (dir === 'RIGHT') headX++; else if (dir === 'LEFT') headX--; else if (dir === 'UP') headY--; else if (dir === 'DOWN') headY++;
+        if (headX < 0 || headX >= 20 || headY < 0 || headY >= 20) { clearInterval(snakeInterval); alert('Game Over!'); return; }
+        if (headX === food.x && headY === food.y) {
+          score += 10; document.getElementById('snakeScore').textContent = score;
+          food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
+        } else snake.pop();
+        snake.unshift({x: headX, y: headY});
+        ctx.fillStyle = '#171321'; ctx.fillRect(0, 0, 300, 300);
+        ctx.fillStyle = '#0284c7'; snake.forEach(s => ctx.fillRect(s.x * 15, s.y * 15, 14, 14));
+        ctx.fillStyle = '#dc2626'; ctx.fillRect(food.x * 15, food.y * 15, 14, 14);
+      }, 120);
+    }
+
+    /* BACKUP & DATENSICHERUNG */
+    function backupErstellen() {
+      const data = {
+        chats: localStorage.getItem(SPEICHER_CHATS),
+        notizen: localStorage.getItem(SPEICHER_NOTIZEN),
+        bookmarks: localStorage.getItem(SPEICHER_BOOKMARKS),
+        galerie: localStorage.getItem(SPEICHER_GALERIE),
+        theme: localStorage.getItem('nantai_theme')
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'nantai_backup_max.json'; a.click();
+      URL.revokeObjectURL(url);
+    }
+    function backupEinspielen(event) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.chats) localStorage.setItem(SPEICHER_CHATS, data.chats);
+          if (data.notizen) localStorage.setItem(SPEICHER_NOTIZEN, data.notizen);
+          if (data.bookmarks) localStorage.setItem(SPEICHER_BOOKMARKS, data.bookmarks);
+          if (data.galerie) localStorage.setItem(SPEICHER_GALERIE, data.galerie);
+          location.reload();
+        } catch (err) { alert('Ungültiges Backup-Format.'); }
+      };
+      reader.readAsText(event.target.files[0]);
+    }
+
+    /* RECHNER & UMRECHNER */
+    function rechnen() {
+      try {
+        const res = Function(`'use strict'; return (${document.getElementById('calcInput').value})`)();
+        document.getElementById('calcErgebnis').textContent = 'Ergebnis: ' + res;
+      } catch (e) { document.getElementById('calcErgebnis').textContent = 'Ungültiges Ergebnis'; }
+    }
+    function einheitUmrechnen() {
+      const val = parseFloat(document.getElementById('unitVal').value);
+      const type = document.getElementById('unitType').value;
+      if (isNaN(val)) return;
+      let res = 0;
+      if (type === 'mToFt') res = (val * 3.28084).toFixed(2) + ' Fuß';
+      else if (type === 'cToF') res = ((val * 9/5) + 32).toFixed(1) + ' °F';
+      else if (type === 'kgToLbs') res = (val * 2.20462).toFixed(2) + ' lbs';
+      document.getElementById('unitErgebnis').textContent = 'Ergebnis: ' + res;
+    }
+
+    /* POMODORO */
+    function pomoStarten() { pomoTimerRun(25 * 60); statusSetzen('Fokus-Phase läuft!'); }
+    function pomoPauseStarten() { pomoTimerRun(5 * 60); statusSetzen('Pause läuft!'); }
+    function pomoTimerRun(sekunden) {
+      if (pomoInterval) clearInterval(pomoInterval);
+      let s = sekunden;
+      pomoInterval = setInterval(() => {
+        if (s <= 0) { clearInterval(pomoInterval); document.getElementById('pomoDisplay').textContent = '00:00'; vorlesenMenschlich('Timer abgelaufen!'); return; }
+        const m = Math.floor(s / 60); const sec = s % 60;
+        document.getElementById('pomoDisplay').textContent = `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        s--;
+      }, 1000);
+    }
+    function pomoStoppen() { if (pomoInterval) clearInterval(pomoInterval); document.getElementById('pomoDisplay').textContent = '25:00'; }
+
+    /* QR CODE GENERATOR */
+    function qrGenerieren() {
+      const text = document.getElementById('qrInput').value.trim(); if (!text) return;
+      const canvas = document.getElementById('qrCanvas'); canvas.classList.remove('hidden');
+      canvas.width = 160; canvas.height = 160; const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'white'; ctx.fillRect(0, 0, 160, 160); ctx.fillStyle = 'black';
+      for (let x = 10; x < 150; x += 10) { for (let y = 10; y < 150; y += 10) { if (Math.random() > 0.4) ctx.fillRect(x, y, 8, 8); } }
+      statusSetzen('Muster-QR-Code erzeugt.');
+    }
+
+    /* LESEZEICHEN */
+    function lesezeichenLaden() {
+      const container = document.getElementById('bookmarksListe'); container.replaceChildren();
+      try {
+        const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
+        daten.forEach((b, idx) => {
+          const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '6px';
+          div.innerHTML = `<a href="${b.url}" target="_blank" style="color:var(--primary); font-weight:bold;">${b.titel}</a><p style="margin:2px 0 0; font-size:0.8rem; color:var(--muted);">${b.url}</p>`;
+          const btn = document.createElement('button'); btn.className = 'danger'; btn.textContent = 'Löschen'; btn.style.marginTop = '6px';
+          btn.onclick = () => { daten.splice(idx, 1); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten)); lesezeichenLaden(); };
+          div.appendChild(btn); container.appendChild(div);
+        });
+      } catch (e) {}
+    }
+    function lesezeichenSpeichern() {
+      const titel = document.getElementById('bmTitel').value.trim();
+      const url = document.getElementById('bmUrl').value.trim(); if (!titel || !url) return;
+      const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
+      daten.unshift({ titel, url }); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten));
+      document.getElementById('bmTitel').value = ''; document.getElementById('bmUrl').value = '';
+      lesezeichenLaden();
+    }
+
+    /* AVATAR & CODE & CANVAS */
+    async function avatarSprechenlassen() {
+      const input = document.getElementById('avatarInput'); const text = input.value.trim(); if (!text) return;
+      input.value = ''; const avText = document.getElementById('avatarStatusText'); avText.textContent = 'Denke...';
+      try { const res = await jsonpAnfrage({ aktion: 'chat', nachricht: text, sprache: 'de' }); const ant = res.antwort || 'Hallo!'; avText.textContent = ant; vorlesenMenschlich(ant); } catch (e) { avText.textContent = 'Fehler.'; }
+    }
+    function codeVorschauAktualisieren() { document.getElementById('codeIframe').srcdoc = document.getElementById('codeEditor').value; }
+    function codeKopieren() { navigator.clipboard.writeText(document.getElementById('codeEditor').value); statusSetzen('Kopiert.'); }
+    function codeHerunterladen() {
+      const blob = new Blob([document.getElementById('codeEditor').value], { type: 'text/html' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click(); URL.revokeObjectURL(url);
+    }
+    function codeStatistikAktualisieren() {
+      const val = document.getElementById('codeEditor').value;
+      const w = val.trim() ? val.trim().split(/\s+/).length : 0;
+      document.getElementById('codeStatistik').textContent = `Wörter: ${w} | Zeichen: ${val.length}`;
+    }
+    function canvasInitialisieren() {
+      const canvas = document.getElementById('drawingCanvas'); const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth - 32; canvas.height = 280;
+      let zeichnet = false;
+      canvas.addEventListener('pointerdown', (e) => { zeichnet = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!zeichnet) return;
+        ctx.strokeStyle = document.getElementById('brushColor').value; ctx.lineWidth = document.getElementById('brushSize').value;
+        ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
+      });
+      window.addEventListener('pointerup', () => { zeichnet = false; });
+    }
+    function canvasLeeren() { const canvas = document.getElementById('drawingCanvas'); canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); }
+
+    /* DESIGN PRESETS */
+    function presetAnwenden(p, a) {
+      document.documentElement.style.setProperty('--primary', p);
+      document.documentElement.style.setProperty('--accent', a);
+      document.getElementById('colorPrimary').value = p;
+    }
+    function designAnwenden() { document.documentElement.style.setProperty('--primary', document.getElementById('colorPrimary').value); }
+
+    /* SPRACHSTUDIO (STERNCHEN UND SONDERZEICHEN ENTFERNEN) */
+    function stimmenLaden() {
+      if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de'));
+      const select = document.getElementById('stimmenSelect'); if (!select) return; select.replaceChildren();
+      verfuegbareStimmen.forEach((st, idx) => { const opt = document.createElement('option'); opt.value = idx; opt.textContent = st.name; select.appendChild(opt); });
+    }
+    function vorlesenMenschlich(text) {
+      if (!synth) return; synth.cancel();
+      // Automatische Bereinigung aller Sonderzeichen, Sternchen, Unterstriche und Codeblock-Formatierungen
+      const bereinigterText = text
+        .replace(/```[\s\S]*?```/g, 'Codeblock übersprungen.')
+        .replace(/[*_#`~]/g, '')
+        .replace(/https?:\/\/\S+/g, 'Weblink')
+        .trim();
+
+      const menschlich = document.getElementById('menschlichModus')?.checked;
+      const utter = new SpeechSynthesisUtterance(bereinigterText);
+      const select = document.getElementById('stimmenSelect');
+      if (select && verfuegbareStimmen[select.value]) utter.voice = verfuegbareStimmen[select.value];
+      if (menschlich) utter.pitch = 1.0 + (Math.random() * 0.08 - 0.04);
+      synth.speak(utter);
+    }
+    function sprachVorschau() { vorlesenMenschlich('Das ist eine Hörprobe für die Sprachausgabe.'); }
+    function sprachEingabeStarten() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) { alert('Nicht unterstützt.'); return; }
+      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start(); statusSetzen('Höre zu...');
+      rec.onresult = (e) => { document.getElementById('nachrichtInput').value = e.results[0][0].transcript; nachrichtSenden(); };
+    }
+
+    function standortUndWetterLaden() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(async pos => {
+        try {
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true`);
+          const data = await res.json();
+          if (data && data.current_weather) {
+            const t = data.current_weather.temperature + ' °C';
+            const w = data.current_weather.windspeed + ' km/h';
+            document.getElementById('tempVal').textContent = t; document.getElementById('windVal').textContent = w;
+            if (document.getElementById('wetterWidgetKurz')) document.getElementById('wetterWidgetKurz').textContent = t;
+            if (document.getElementById('dashWetter')) document.getElementById('dashWetter').textContent = t;
+            document.getElementById('wetterDetailsBox').style.display = 'block';
+            statusSetzen('Wetter geladen.');
+          }
+        } catch (e) { statusSetzen('Wetterfehler.'); }
+      });
+    }
+
+    function notizenLaden() {
+      const liste = document.getElementById('notizenListe'); liste.replaceChildren();
+      try {
+        const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
+        daten.forEach((n, idx) => {
+          const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '8px';
+          div.innerHTML = `<strong>${n.titel}</strong><p>${n.inhalt}</p>`;
+          const btn = document.createElement('button'); btn.className = 'danger'; btn.textContent = 'Löschen';
+          btn.onclick = () => { daten.splice(idx, 1); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); notizenLaden(); };
+          div.appendChild(btn); liste.appendChild(div);
+        });
+      } catch (e) {}
+    }
+    function notizStatistikAktualisieren() {
+      const val = document.getElementById('notizInhalt').value;
+      const w = val.trim() ? val.trim().split(/\s+/).length : 0;
+      const s = Math.ceil(w / 3);
+      document.getElementById('notizStatistik').textContent = `Wörter: ${w} | Zeichen: ${val.length} | Geschätzte Lesezeit: ${s} Sek.`;
+    }
+    function notizSpeichern() {
+      const titel = document.getElementById('notizTitel').value.trim();
+      const inhalt = document.getElementById('notizInhalt').value.trim(); if (!titel && !inhalt) return;
+      const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
+      daten.unshift({ titel: titel || 'Notiz', inhalt }); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
+      document.getElementById('notizTitel').value = ''; document.getElementById('notizInhalt').value = '';
+      notizenLaden(); statusSetzen('Notiz gespeichert.');
+    }
+
+    function konfigurationLaden() {
+      const savedTheme = localStorage.getItem('nantai_theme');
+      if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+  </script>
+</body>
+</html>
