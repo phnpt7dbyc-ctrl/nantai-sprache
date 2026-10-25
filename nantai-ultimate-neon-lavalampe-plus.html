@@ -477,30 +477,39 @@
       stimmenLaden();
       canvasInitialisieren();
       
-      // API Key laden falls vorhanden
       const savedKey = localStorage.getItem('nandoai_gemini_key');
       if (savedKey) {
-        document.getElementById('apiKeyInput').value = savedKey;
-        document.getElementById('kiModusAnzeige').textContent = 'Cloud Active (Gemini)';
-        document.getElementById('kiStatusAnzeige').textContent = 'Cloud Active (Gemini)';
+        const keyInput = document.getElementById('apiKeyInput');
+        if(keyInput) keyInput.value = savedKey;
+        const statusEl1 = document.getElementById('kiModusAnzeige');
+        const statusEl2 = document.getElementById('kiStatusAnzeige');
+        if(statusEl1) statusEl1.textContent = 'Cloud Active (Gemini)';
+        if(statusEl2) statusEl2.textContent = 'Cloud Active (Gemini)';
       }
 
-      document.getElementById('zitatBox').textContent = `"${zitate[Math.floor(Math.random() * zitate.length)]}"`;
+      const zitatBox = document.getElementById('zitatBox');
+      if(zitatBox) zitatBox.textContent = `"${zitate[Math.floor(Math.random() * zitate.length)]}"`;
       if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = stimmenLaden;
     });
 
     function uhrAktualisieren() {
       const d = new Date();
       const zeitStr = d.toLocaleTimeString('de-DE');
-      if (document.getElementById('uhrzeitWidget')) document.getElementById('uhrzeitWidget').textContent = zeitStr;
-      if (document.getElementById('dashUhr')) document.getElementById('dashUhr').textContent = zeitStr;
+      const uhrW = document.getElementById('uhrzeitWidget');
+      const dashU = document.getElementById('dashUhr');
+      if (uhrW) uhrW.textContent = zeitStr;
+      if (dashU) dashU.textContent = zeitStr;
     }
 
-    function statusSetzen(text) { document.getElementById('status').textContent = text; }
+    function statusSetzen(text) { 
+      const st = document.getElementById('status');
+      if(st) st.textContent = text; 
+    }
 
     function tabWechseln(tabId, btn) {
       document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
-      document.getElementById(tabId).classList.remove('hidden');
+      const targetTab = document.getElementById(tabId);
+      if(targetTab) targetTab.classList.remove('hidden');
       document.querySelectorAll('aside .nav-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       if (tabId === 'archivTab') archivAnzeigen();
@@ -514,6 +523,7 @@
     }
 
     function formatMarkdown(text) {
+      if(!text) return '';
       return text
         .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
         .replace(/`([^`]+)`/g, '<code>$1</code>')
@@ -523,20 +533,23 @@
     }
 
     function apiSchlüsselSpeichern() {
-      const key = document.getElementById('apiKeyInput').value.trim();
+      const keyInput = document.getElementById('apiKeyInput');
+      if(!keyInput) return;
+      const key = keyInput.value.trim();
       localStorage.setItem('nandoai_gemini_key', key);
+      const m1 = document.getElementById('kiModusAnzeige');
+      const m2 = document.getElementById('kiStatusAnzeige');
       if (key) {
-        document.getElementById('kiModusAnzeige').textContent = 'Cloud Active (Gemini)';
-        document.getElementById('kiStatusAnzeige').textContent = 'Cloud Active (Gemini)';
+        if(m1) m1.textContent = 'Cloud Active (Gemini)';
+        if(m2) m2.textContent = 'Cloud Active (Gemini)';
         statusSetzen('Gemini API-Schlüssel aktiviert!');
       } else {
-        document.getElementById('kiModusAnzeige').textContent = 'Offline Fallback';
-        document.getElementById('kiStatusAnzeige').textContent = 'Offline Fallback';
+        if(m1) m1.textContent = 'Offline Fallback';
+        if(m2) m2.textContent = 'Offline Fallback';
         statusSetzen('API-Schlüssel entfernt. Lokaler Modus aktiv.');
       }
     }
 
-    // LOKALE FALLBACK KI
     function lokaleKIAntwortGenerieren(prompt) {
       const t = prompt.toLowerCase();
       function zufallsAntwort(liste) { return liste[Math.floor(Math.random() * liste.length)]; }
@@ -552,7 +565,6 @@
       }
     }
 
-    // HYBRID KI HUB (Cloud + Lokaler Fallback)
     async function kiAntwortHubern(prompt) {
       const apiKey = localStorage.getItem('nandoai_gemini_key');
       if (!apiKey) {
@@ -591,8 +603,11 @@
     
     function chatAnzeigen() {
       const chat = aktuellerChatObjekt();
-      document.getElementById('chatTitelWidget').textContent = chat.titel;
-      const container = document.getElementById('chat'); container.replaceChildren();
+      const titelW = document.getElementById('chatTitelWidget');
+      if(titelW) titelW.textContent = chat.titel;
+      const container = document.getElementById('chat'); 
+      if(!container) return;
+      container.replaceChildren();
       chat.nachrichten.forEach(msg => nachrichtElementErstellen(msg.text, msg.rolle, false));
       container.scrollTop = container.scrollHeight;
     }
@@ -606,6 +621,7 @@
 
     function nachrichtElementErstellen(text, rolle, speichern = true) {
       const container = document.getElementById('chat');
+      if(!container) return;
       const div = document.createElement('div'); div.className = `message ${rolle}`;
       const textDiv = document.createElement('div'); textDiv.innerHTML = formatMarkdown(text); div.appendChild(textDiv);
       if (rolle === 'assistant') {
@@ -627,6 +643,7 @@
 
     async function nachrichtSenden() {
       const input = document.getElementById('nachrichtInput');
+      if(!input) return;
       const text = input.value.trim(); if (!text) return;
       input.value = ''; nachrichtElementErstellen(text, 'user', true);
       statusSetzen('NandoAI denkt nach...');
@@ -640,7 +657,9 @@
 
     /* CHAT ARCHIV */
     function archivAnzeigen() {
-      const container = document.getElementById('archivListe'); container.replaceChildren();
+      const container = document.getElementById('archivListe'); 
+      if(!container) return;
+      container.replaceChildren();
       chats.forEach(c => {
         const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '6px';
         div.innerHTML = `<strong>${c.titel}</strong> (${c.nachrichten.length} Nachrichten)`;
@@ -652,7 +671,7 @@
       });
     }
 
-    /* LERNKARTEN & WEITERE MODULE */
+    /* LERNKARTEN & MODULE */
     let lernkarten = [];
     let fcIndex = 0;
     let fcZeigeAntwort = false;
@@ -662,17 +681,21 @@
       fcIndex = 0; fcZeigeAntwort = false; lernkarteAktualisierenAnsicht();
     }
     function lernkarteHinzufuegen() {
-      const f = document.getElementById('fcFrage').value.trim();
-      const a = document.getElementById('fcAntwort').value.trim();
+      const fEl = document.getElementById('fcFrage');
+      const aEl = document.getElementById('fcAntwort');
+      if(!fEl || !aEl) return;
+      const f = fEl.value.trim();
+      const a = aEl.value.trim();
       if (!f || !a) return;
       lernkarten.push({ frage: f, antwort: a });
       localStorage.setItem(SPEICHER_LERNKARTEN, JSON.stringify(lernkarten));
-      document.getElementById('fcFrage').value = ''; document.getElementById('fcAntwort').value = '';
+      fEl.value = ''; aEl.value = '';
       lernkarteAktualisierenAnsicht();
       statusSetzen('Lernkarte gespeichert.');
     }
     function lernkarteAktualisierenAnsicht() {
       const el = document.getElementById('fcTextAnzeige');
+      if(!el) return;
       if (lernkarten.length === 0) { el.textContent = 'Keine Lernkarten vorhanden.'; return; }
       const karte = lernkarten[fcIndex];
       el.textContent = fcZeigeAntwort ? `Antwort: ${karte.antwort}` : `Frage: ${karte.frage}`;
@@ -689,6 +712,7 @@
     function rpgEntscheidung(wahl) {
       const storyEl = document.getElementById('rpgStory');
       const aktionenEl = document.getElementById('rpgAktionen');
+      if(!storyEl || !aktionenEl) return;
       if (wahl === 1) {
         storyEl.innerHTML = "Du erreichst die obere Cyber-Ebene. Admin-Codes empfangen!";
         aktionenEl.innerHTML = `<button onclick="rpgNeustart()">🔄 Neu starten</button>`;
@@ -701,8 +725,10 @@
       }
     }
     function rpgNeustart() {
-      document.getElementById('rpgStory').innerHTML = "Du erwachst in Sektor 7 der Megastadt Neo-Müllheim. Neonlichter flackern...";
-      document.getElementById('rpgAktionen').innerHTML = `
+      const s = document.getElementById('rpgStory');
+      const a = document.getElementById('rpgAktionen');
+      if(s) s.innerHTML = "Du erwachst in Sektor 7 der Megastadt Neo-Müllheim. Neonlichter flackern...";
+      if(a) a.innerHTML = `
         <button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber-Ebene folgen</button>
         <button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund-Tunnel</button>
         <button onclick="rpgEntscheidung(3)">3. System-Interface hacken und lokal absichern</button>
@@ -710,7 +736,9 @@
     }
 
     function neuePaletteGenerieren() {
-      const container = document.getElementById('farbenContainer'); container.replaceChildren();
+      const container = document.getElementById('farbenContainer'); 
+      if(!container) return;
+      container.replaceChildren();
       for (let i = 0; i < 5; i++) {
         const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
         const box = document.createElement('div');
@@ -724,7 +752,9 @@
     }
 
     function todoLaden() {
-      const liste = document.getElementById('todoListe'); liste.replaceChildren();
+      const liste = document.getElementById('todoListe'); 
+      if(!liste) return;
+      liste.replaceChildren();
       try {
         const todos = JSON.parse(localStorage.getItem(SPEICHER_TODO) || '[]');
         todos.forEach((t, idx) => {
@@ -742,33 +772,47 @@
       } catch(e) {}
     }
     function todoHinzufuegen() {
-      const input = document.getElementById('todoInput'); const text = input.value.trim(); if (!text) return;
+      const input = document.getElementById('todoInput'); 
+      if(!input) return;
+      const text = input.value.trim(); if (!text) return;
       const todos = JSON.parse(localStorage.getItem(SPEICHER_TODO) || '[]');
       todos.push({ text, erledigt: false }); localStorage.setItem(SPEICHER_TODO, JSON.stringify(todos));
       input.value = ''; todoLaden();
     }
 
     function bildErzeugen() {
-      const prompt = document.getElementById('bildPrompt').value.trim(); if (!prompt) return;
-      const stil = document.getElementById('bildStil').value;
-      const format = document.getElementById('bildFormat').value;
+      const pEl = document.getElementById('bildPrompt');
+      const sEl = document.getElementById('bildStil');
+      const fEl = document.getElementById('bildFormat');
+      if(!pEl) return;
+      const prompt = pEl.value.trim(); if (!prompt) return;
+      const stil = sEl ? sEl.value : 'cyberpunk';
+      const format = fEl ? fEl.value : '1:1';
       let w = 768, h = 768;
       if (format === '16:9') { w = 1024; h = 576; } else if (format === '9:16') { w = 576; h = 1024; }
       const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ', ' + stil)}?width=${w}&height=${h}&nologo=true`;
       const container = document.getElementById('bildErgebnis');
+      if(!container) return;
       container.innerHTML = `<p style="color:var(--muted);">Generiere Grafik...</p>`;
       const img = new Image();
       img.onload = () => { container.innerHTML = `<img src="${url}" style="max-width:100%; border-radius:12px;"><br><a href="${url}" target="_blank" download="bild.jpg"><button style="margin-top:10px;">Herunterladen</button></a>`; };
       img.src = url;
     }
 
-    function mdVorschauAktualisieren() { document.getElementById('mdOutput').innerHTML = formatMarkdown(document.getElementById('mdInput').value); }
+    function mdVorschauAktualisieren() { 
+      const mdIn = document.getElementById('mdInput');
+      const mdOut = document.getElementById('mdOutput');
+      if(mdIn && mdOut) mdOut.innerHTML = formatMarkdown(mdIn.value); 
+    }
 
     let snakeInterval = null, snake = [], food = {}, dir = 'RIGHT', score = 0;
     function snakeStarten() {
-      const canvas = document.getElementById('snakeCanvas'); const ctx = canvas.getContext('2d');
+      const canvas = document.getElementById('snakeCanvas'); 
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
       snake = [{x: 10, y: 10}]; food = {x: 15, y: 15}; dir = 'RIGHT'; score = 0;
-      document.getElementById('snakeScore').textContent = score;
+      const scEl = document.getElementById('snakeScore');
+      if(scEl) scEl.textContent = score;
       if (snakeInterval) clearInterval(snakeInterval);
       document.onkeydown = (e) => {
         if (e.key === 'ArrowUp' && dir !== 'DOWN') dir = 'UP';
@@ -780,7 +824,11 @@
         let hX = snake[0].x, hY = snake[0].y;
         if (dir === 'RIGHT') hX++; else if (dir === 'LEFT') hX--; else if (dir === 'UP') hY--; else if (dir === 'DOWN') hY++;
         if (hX < 0 || hX >= 20 || hY < 0 || hY >= 20) { clearInterval(snakeInterval); alert('Game Over!'); return; }
-        if (hX === food.x && hY === food.y) { score += 10; document.getElementById('snakeScore').textContent = score; food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)}; } else snake.pop();
+        if (hX === food.x && hY === food.y) { 
+          score += 10; 
+          if(scEl) scEl.textContent = score; 
+          food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)}; 
+        } else snake.pop();
         snake.unshift({x: hX, y: hY});
         ctx.fillStyle = '#030712'; ctx.fillRect(0, 0, 300, 300);
         ctx.fillStyle = '#00f0ff'; snake.forEach(s => ctx.fillRect(s.x*15, s.y*15, 14, 14));
@@ -794,6 +842,8 @@
       const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nandoai_backup.json'; a.click();
     }
     function backupEinspielen(event) {
+      const file = event.target.files[0];
+      if(!file) return;
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -803,55 +853,107 @@
           location.reload();
         } catch (err) { alert('Fehler beim Backup.'); }
       };
-      reader.readAsText(event.target.files[0]);
+      reader.readAsText(file);
     }
 
     function rechnen() {
-      try { const res = Function(`'use strict'; return (${document.getElementById('calcInput').value})`)(); document.getElementById('calcErgebnis').textContent = 'Ergebnis: ' + res; } catch (e) { document.getElementById('calcErgebnis').textContent = 'Fehler'; }
+      try { 
+        const cIn = document.getElementById('calcInput');
+        const cOut = document.getElementById('calcErgebnis');
+        if(!cIn || !cOut) return;
+        const res = Function(`'use strict'; return (${cIn.value})`)(); 
+        cOut.textContent = 'Ergebnis: ' + res; 
+      } catch (e) { 
+        const cOut = document.getElementById('calcErgebnis');
+        if(cOut) cOut.textContent = 'Fehler'; 
+      }
     }
 
-    let pomoInterval = null;
     function pomoStarten() { pomoTimerRun(25 * 60); }
     function pomoPauseStarten() { pomoTimerRun(5 * 60); }
     function pomoTimerRun(sekunden) {
       if (pomoInterval) clearInterval(pomoInterval);
       let s = sekunden;
       pomoInterval = setInterval(() => {
-        if (s <= 0) { clearInterval(pomoInterval); vorlesenMenschlich('Timer abgelaufen!'); return; }
+        const pDisp = document.getElementById('pomoDisplay');
+        if (s <= 0) { 
+          clearInterval(pomoInterval); 
+          vorlesenMenschlich('Timer abgelaufen!'); 
+          return; 
+        }
         const m = Math.floor(s / 60); const sec = s % 60;
-        document.getElementById('pomoDisplay').textContent = `${m}:${sec < 10 ? '0' : ''}${sec}`; s--;
+        if(pDisp) pDisp.textContent = `${m}:${sec < 10 ? '0' : ''}${sec}`; 
+        s--;
       }, 1000);
     }
-    function pomoStoppen() { if (pomoInterval) clearInterval(pomoInterval); document.getElementById('pomoDisplay').textContent = '25:00'; }
+    function pomoStoppen() { 
+      if (pomoInterval) clearInterval(pomoInterval); 
+      const pDisp = document.getElementById('pomoDisplay');
+      if(pDisp) pDisp.textContent = '25:00'; 
+    }
 
     function lesezeichenLaden() {
-      const container = document.getElementById('bookmarksListe'); container.replaceChildren();
+      const container = document.getElementById('bookmarksListe'); 
+      if(!container) return;
+      container.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
         daten.forEach((b) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = `<a href="${b.url}" target="_blank" style="color:var(--primary);">${b.titel}</a>`; container.appendChild(div); });
       } catch (e) {}
     }
     function lesezeichenSpeichern() {
-      const titel = document.getElementById('bmTitel').value.trim(); const url = document.getElementById('bmUrl').value.trim(); if (!titel || !url) return;
+      const tEl = document.getElementById('bmTitel');
+      const uEl = document.getElementById('bmUrl');
+      if(!tEl || !uEl) return;
+      const titel = tEl.value.trim(); const url = uEl.value.trim(); if (!titel || !url) return;
       const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
-      daten.unshift({ titel, url }); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten)); lesezeichenLaden();
+      daten.unshift({ titel, url }); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten)); 
+      tEl.value = ''; uEl.value = '';
+      lesezeichenLaden();
     }
 
     function avatarSprechenlassen() {
-      const input = document.getElementById('avatarInput'); const text = input.value.trim(); if (!text) return;
-      input.value = ''; document.getElementById('avatarStatusText').textContent = text; vorlesenMenschlich(text);
+      const input = document.getElementById('avatarInput'); 
+      if(!input) return;
+      const text = input.value.trim(); if (!text) return;
+      input.value = ''; 
+      const avStat = document.getElementById('avatarStatusText');
+      if(avStat) avStat.textContent = text; 
+      vorlesenMenschlich(text);
     }
-    function codeVorschauAktualisieren() { document.getElementById('codeIframe').srcdoc = document.getElementById('codeEditor').value; }
-    function codeKopieren() { navigator.clipboard.writeText(document.getElementById('codeEditor').value); statusSetzen('Code kopiert.'); }
+    function codeVorschauAktualisieren() { 
+      const ed = document.getElementById('codeEditor');
+      const fr = document.getElementById('codeIframe');
+      if(ed && fr) fr.srcdoc = ed.value; 
+    }
+    function codeKopieren() { 
+      const ed = document.getElementById('codeEditor');
+      if(ed) {
+        navigator.clipboard.writeText(ed.value); 
+        statusSetzen('Code kopiert.');
+      }
+    }
     function canvasInitialisieren() {
-      const canvas = document.getElementById('drawingCanvas'); const ctx = canvas.getContext('2d');
+      const canvas = document.getElementById('drawingCanvas'); 
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
       canvas.width = canvas.parentElement.clientWidth - 36; canvas.height = 280;
       let zeichnet = false;
       canvas.addEventListener('pointerdown', (e) => { zeichnet = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
-      canvas.addEventListener('pointermove', (e) => { if (!zeichnet) return; ctx.strokeStyle = document.getElementById('brushColor').value; ctx.lineWidth = document.getElementById('brushSize').value; ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
+      canvas.addEventListener('pointermove', (e) => { 
+        if (!zeichnet) return; 
+        const bCol = document.getElementById('brushColor');
+        const bSz = document.getElementById('brushSize');
+        ctx.strokeStyle = bCol ? bCol.value : '#00f0ff'; 
+        ctx.lineWidth = bSz ? bSz.value : 5; 
+        ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); 
+      });
       window.addEventListener('pointerup', () => { zeichnet = false; });
     }
-    function canvasLeeren() { const canvas = document.getElementById('drawingCanvas'); canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); }
+    function canvasLeeren() { 
+      const canvas = document.getElementById('drawingCanvas'); 
+      if(canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); 
+    }
 
     function stimmenLaden() { if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de')); }
     function vorlesenMenschlich(text) {
@@ -865,20 +967,32 @@
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) { alert('Nicht unterstützt.'); return; }
       const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start(); statusSetzen('Höre zu...');
-      rec.onresult = (e) => { document.getElementById('nachrichtInput').value = e.results[0][0].transcript; nachrichtSenden(); };
+      rec.onresult = (e) => { 
+        const nInput = document.getElementById('nachrichtInput');
+        if(nInput) nInput.value = e.results[0][0].transcript; 
+        nachrichtSenden(); 
+      };
     }
 
     function notizenLaden() {
-      const liste = document.getElementById('notizenListe'); liste.replaceChildren();
+      const liste = document.getElementById('notizenListe'); 
+      if(!liste) return;
+      liste.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
         daten.forEach((n) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = `<strong>${n.titel}</strong><p style="color:var(--muted);">${n.inhalt}</p>`; liste.appendChild(div); });
       } catch (e) {}
     }
     function notizSpeichern() {
-      const titel = document.getElementById('notizTitel').value.trim(); const inhalt = document.getElementById('notizInhalt').value.trim(); if (!titel && !inhalt) return;
+      const tEl = document.getElementById('notizTitel');
+      const iEl = document.getElementById('notizInhalt');
+      if(!tEl || !iEl) return;
+      const titel = tEl.value.trim(); const inhalt = iEl.value.trim(); if (!titel && !inhalt) return;
       const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
-      daten.unshift({ titel: titel || 'Notiz', inhalt }); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); notizenLaden();
+      daten.unshift({ titel: titel || 'Notiz', inhalt }); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); 
+      tEl.value = ''; iEl.value = '';
+      notizenLaden(); 
+      statusSetzen('Notiz gespeichert.');
     }
   </script>
 </body>
