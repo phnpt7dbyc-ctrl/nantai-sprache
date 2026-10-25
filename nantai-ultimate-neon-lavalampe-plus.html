@@ -397,7 +397,7 @@ html.nantai-sparmodus .neon-hintergrund {
         tools.className = 'message-tools';
         const read = document.createElement('button');
         read.className = 'secondary'; read.textContent = '🔊 Vorlesen';
-        read.onclick = () => FF
+        read.onclick = () => 
   window.speechSynthesis.cancel();
 
   // Nur den Text für die Sprachausgabe bereinigen
@@ -450,19 +450,6 @@ stimme.onerror = event => {
 
   window.speechSynthesis.speak(stimme);
 }
-        
-  .neon-hintergrund {
-    animation: none !important;
-    filter: none !important;
-    background-size: 100% 100%;
-  }
-
-  avatar-orb {
-    animation-duration: 2s;
-  }
-}
-
-
 
 html.nantai-sparmodus #seitenleiste,
 html.nantai-sparmodus header,
@@ -568,14 +555,6 @@ function stimmenVorschau() {
   if (passendeStimme) stimme.voice = passendeStimme;
 
   speechSynthesis.speak(stimme); 
-}
-
-// window.addEventListener('DOMContentLoaded', stimmenStudioLaden);
-
-  localStorage.setItem(
-    'nantai_stimmeinstellungen_v1',
-    JSON.stringify(einstellungen)
-  );
 }
 
   </script>
