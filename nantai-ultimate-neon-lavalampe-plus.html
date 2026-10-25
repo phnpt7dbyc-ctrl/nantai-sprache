@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f4f7fc">
-  <title>NantAI</title>
+  <title>NantAI Ultimate</title>
   <style>
     :root {
       color-scheme: light;
@@ -14,11 +14,14 @@
       --primary: #0284c7;
       --primary-hover: #0369a1;
       --primary-light: #e0f2fe;
+      --accent: #38bdf8;
       --text: #0f172a;
       --muted: #64748b;
       --border: #cbd5e1;
       --good: #16a34a;
       --bad: #dc2626;
+      --anim-speed: 18s;
+      --lava-opacity: 0.65;
     }
     * { box-sizing: border-box; }
     body {
@@ -32,49 +35,47 @@
     .neon-hintergrund {
       position: fixed; inset: -18%; z-index: -3; pointer-events: none;
       background:
-        radial-gradient(ellipse at 15% 20%, #38bdf845 0%, transparent 40%),
-        radial-gradient(ellipse at 80% 25%, #0284c735 0%, transparent 42%),
-        radial-gradient(ellipse at 55% 85%, #60a5fa40 0%, transparent 45%),
+        radial-gradient(ellipse at 15% 20%, var(--accent) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 25%, var(--primary) 0%, transparent 42%),
+        radial-gradient(ellipse at 55% 85%, #60a5fa 0%, transparent 45%),
         linear-gradient(125deg, #f0f4f8, #e2e8f0, #f8fafc, #eef2f6);
       background-size: 200% 200%;
-      animation: neonFarben 18s ease-in-out infinite alternate;
+      animation: neonFarben var(--anim-speed) ease-in-out infinite alternate;
     }
     @keyframes neonFarben {
       0% { background-position: 0% 30%; filter: hue-rotate(0deg); }
       50% { background-position: 100% 65%; filter: hue-rotate(15deg); }
-      100% { background-position: 25% 100%; filter: hue-rotate(-15deg); }
+      100% { background-position: 25% 100% ; filter: hue-rotate(-15deg); }
     }
 
     /* Lava-Blasen */
     .lava-lampe {
       position: fixed; inset: 0; z-index: -2; pointer-events: none;
       overflow: hidden; filter: blur(28px);
-      opacity: 0.65; mix-blend-mode: multiply;
+      opacity: var(--lava-opacity); mix-blend-mode: multiply;
     }
     .lava-kugel {
       position: absolute; display: block; border-radius: 48% 52% 60% 40%;
-      background: linear-gradient(135deg, #38bdf899, #0284c788 48%, #60a5fa99);
+      background: linear-gradient(135deg, var(--accent), var(--primary) 48%, #60a5fa);
       animation: lavaSchweben 20s ease-in-out infinite alternate, lavaFarbwechsel 15s linear infinite;
       will-change: transform, border-radius;
     }
     .lava-kugel:nth-child(1) { width: 280px; height: 320px; left: 10%; top: 15%; animation-duration: 22s, 16s; }
     .lava-kugel:nth-child(2) { width: 340px; height: 270px; left: 55%; top: 45%; animation-duration: 26s, 18s; animation-delay: -5s; }
     .lava-kugel:nth-child(3) { width: 240px; height: 280px; left: 75%; top: 10%; animation-duration: 18s, 14s; animation-delay: -8s; }
-    .lava-kugel:nth-child(4) { width: 300px; height: 240px; left: 20%; top: 65%; animation-duration: 24s, 20s; animation-delay: -10s; }
     
     @keyframes lavaSchweben {
-      0% { transform: translate3d(-15px, 15px, 0) scale(0.9) rotate(-10deg); border-radius: 48% 52% 60% 40%; }
-      50% { transform: translate3d(35px, -35px, 0) scale(1.1) rotate(15deg); border-radius: 62% 38% 44% 56%; }
-      100% { transform: translate3d(-20px, 25px, 0) scale(0.95) rotate(30deg); border-radius: 35% 65% 55% 45%; }
+      0% { transform: translate3d(-15px, 15px, 0) scale(0.9) rotate(-10deg); }
+      50% { transform: translate3d(35px, -35px, 0) scale(1.1) rotate(15deg); }
+      100% { transform: translate3d(-20px, 25px, 0) scale(0.95) rotate(30deg); }
     }
     @keyframes lavaFarbwechsel {
       0% { filter: hue-rotate(0deg); }
       100% { filter: hue-rotate(360deg); }
     }
 
-    /* Glastransparenz für Panels */
     aside, header, .widget, .panel, .composer {
-      background-color: rgba(255, 255, 255, 0.88);
+      background-color: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
@@ -112,12 +113,11 @@
     .side-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 6px; }
 
     main { max-width: 900px; margin: 0 auto; padding: 20px; }
-    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px; border-radius: 12px; padding-left: 14px; padding-right: 14px; }
-    .logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #38bdf8); border-radius: 10px; display: grid; place-items: center; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding: 14px; border-radius: 12px; }
+    .logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: grid; place-items: center; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
     h1 { margin: 0; font-size: 1.3rem; }
     header p { margin: 2px 0 0; color: var(--muted); font-size: 0.85rem; }
 
-    /* Widgets & Panels */
     .dashboard { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 16px; }
     .widget { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
     .widget-label { color: var(--muted); font-size: 0.75rem; margin-bottom: 4px; }
@@ -134,12 +134,17 @@
     .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
     .msg-tools button { padding: 5px 10px; font-size: 0.8rem; }
 
-    /* Composer */
     .composer { position: sticky; bottom: 0; background: rgba(244, 247, 252, 0.95); padding: 12px 0; border-top: 1px solid var(--border); }
     .row { display: flex; gap: 8px; margin-top: 8px; }
     .row > * { flex: 1; }
 
     #status { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; font-weight: 500; }
+
+    /* Avatar Animation Widget */
+    .avatar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+    .avatar-face { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 40px; box-shadow: 0 0 20px rgba(2, 132, 199, 0.4); margin-bottom: 14px; transition: transform 0.3s; }
+    .avatar-pulse { animation: avPulse 2s infinite ease-in-out; }
+    @keyframes avPulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); box-shadow: 0 0 30px var(--primary); } 100% { transform: scale(1); } }
 
     @media (max-width: 768px) {
       body { padding-left: 0; }
@@ -150,10 +155,8 @@
 </head>
 <body>
 
-  <!-- Animierter Neon- & Lava-Hintergrund -->
   <div class="neon-hintergrund" aria-hidden="true"></div>
   <div class="lava-lampe" aria-hidden="true">
-    <span class="lava-kugel"></span>
     <span class="lava-kugel"></span>
     <span class="lava-kugel"></span>
     <span class="lava-kugel"></span>
@@ -161,9 +164,13 @@
 
   <aside>
     <h2>✦ NantAI</h2>
-    <p>KI-Assistenz & Tools</p>
+    <p>Ultimate Edition</p>
     <button class="nav-btn active" onclick="tabWechseln('chatTab', this)">💬 Chat & Verlauf</button>
+    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 NantAI Avatar</button>
+    <button class="nav-btn" onclick="tabWechseln('codeTab', this)">💻 Programmierstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('designTab', this)">🎨 Design & Lichter</button>
     <button class="nav-btn" onclick="tabWechseln('sprachStudioTab', this)">🗣️ Sprachstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('wetterTab', this)">🌦️ Wetter & Standort</button>
     <button class="nav-btn" onclick="tabWechseln('timerTab', this)">⏱️ Timer & Stoppuhr</button>
     <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen</button>
     <div class="side-label">Aktionen</div>
@@ -176,26 +183,26 @@
       <div class="logo">✦</div>
       <div>
         <h1>NantAI Assistant</h1>
-        <p>Helles Design & Neon-Lava Animation</p>
+        <p>Mit Avatar, Code-Studio, Design-Anpassung & Live-Wetter</p>
       </div>
     </header>
 
     <div id="status">System bereit.</div>
 
-    <!-- CHAT BEREICH -->
+    <!-- 1. CHAT TAB -->
     <section id="chatTab">
       <div class="dashboard">
         <div class="widget">
           <div class="widget-label">🕒 Uhrzeit</div>
-          <div class="widget-value" id="uhrzeitWdiget">--:--:--</div>
+          <div class="widget-value" id="uhrzeitWidget">--:--:--</div>
         </div>
         <div class="widget">
-          <div class="widget-label">💬 Aktueller Chat</div>
-          <div class="widget-value" id="chatTitelWidget">Neuer Chat</div>
+          <div class="widget-label">📍 Standort & Wetter</div>
+          <div class="widget-value" id="wetterWidgetKurz">Nicht geladen</div>
         </div>
         <div class="widget">
           <div class="widget-label">⚡ Status</div>
-          <div class="widget-value" id="verbindungsWidget">Aktiv</div>
+          <div class="widget-value">Aktiv</div>
         </div>
       </div>
 
@@ -210,25 +217,91 @@
       </div>
     </section>
 
-    <!-- SPRACHSTUDIO BEREICH -->
+    <!-- 2. AVATAR TAB -->
+    <section id="avatarTab" class="panel hidden">
+      <h3>🤖 NantAI Avatar Unterhaltung</h3>
+      <div class="avatar-container">
+        <div id="avatarFace" class="avatar-face avatar-pulse">✦</div>
+        <h4 id="avatarStatusText" style="margin: 0 0 6px;">Hallo! Ich bin dein KI-Avatar.</h4>
+        <p style="color: var(--muted); font-size: 0.85rem; max-width: 400px;">Unterhalte dich direkt mit mir. Ich antworte dir visuell und per Sprachausgabe.</p>
+      </div>
+      <textarea id="avatarInput" placeholder="Sprich mit dem Avatar..." style="margin-bottom: 8px;"></textarea>
+      <div class="row">
+        <button onclick="avatarSprechenlassen()">Mit Avatar sprechen</button>
+      </div>
+    </section>
+
+    <!-- 3. PROGRAMMIERSTUDIO TAB -->
+    <section id="codeTab" class="panel hidden">
+      <h3>💻 Programmierstudio (Code-Erstellung & Vorschau)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Schreibe HTML-, CSS- oder JS-Code und teste ihn direkt in der Live-Vorschau.</p>
+      <textarea id="codeEditor" style="font-family: monospace; min-height: 160px;" placeholder="<h1>Hallo Welt</h1><script>console.log('Test');</script>"></textarea>
+      <div class="row" style="margin-top: 8px;">
+        <button onclick="codeVorschauAktualisieren()">Live-Vorschau starten</button>
+        <button class="secondary" onclick="codeKopieren()">Code kopieren</button>
+        <button class="secondary" onclick="codeHerunterladen()">Herunterladen</button>
+      </div>
+      <div style="margin-top: 12px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff;">
+        <iframe id="codeIframe" style="width: 100%; height: 220px; border: 0;"></iframe>
+      </div>
+    </section>
+
+    <!-- 4. DESIGN & LICHTER TAB -->
+    <section id="designTab" class="panel hidden">
+      <h3>🎨 Design & Neon-Lichter anpassen</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Ändere die Farben der Benutzeroberfläche und die Intensität der Hintergrundlichter.</p>
+      
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.85rem;">Primärfarbe:</label>
+        <input type="color" id="colorPrimary" value="#0284c7" onchange="designAnwenden()" style="height: 40px; cursor: pointer;">
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.85rem;">Akzentfarbe (Neon):</label>
+        <input type="color" id="colorAccent" value="#38bdf8" onchange="designAnwenden()" style="height: 40px; cursor: pointer;">
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.85rem;">Lava-Lampen Helligkeit / Intensität:</label>
+        <select id="selectLavaOp" onchange="designAnwenden()">
+          <option value="0.85">Stark (Hell & Leuchtend)</option>
+          <option value="0.65" selected>Normal</option>
+          <option value="0.25">Dezent (Schont Akku)</option>
+          <option value="0">Aus (Keine Lava-Blasen)</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.85rem;">Animationsgeschwindigkeit der Lichter:</label>
+        <select id="selectAnimSpeed" onchange="designAnwenden()">
+          <option value="10s">Schnell</option>
+          <option value="18s" selected>Normal</option>
+          <option value="35s">Langsam (Ruhig)</option>
+          <option value="0s">Eingefroren (Aus)</option>
+        </select>
+      </div>
+      <button class="secondary" onclick="designZuruecksetzen()">Standardwerte wiederherstellen</button>
+    </section>
+
+    <!-- 5. SPRACHSTUDIO TAB -->
     <section id="sprachStudioTab" class="panel hidden">
-      <h3>🗣️ Sprachstudio (Text-to-Speech)</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Wähle eine deutsche Stimme aus und passe Sprechtempo, Tonhöhe sowie Lautstärke an.</p>
+      <h3>🗣️ Sprachstudio (Menschlicher machen & TTS)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Passe die Stimme an und aktiviere den "Menschlich-Modus" für natürlichere Pausen und Klangmodulation.</p>
+      
       <div style="margin-bottom: 10px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Stimme:</label>
+        <label style="font-size: 0.85rem; color: var(--muted);">Stimme auswählen:</label>
         <select id="stimmenSelect" style="margin-top: 4px;"></select>
       </div>
-      <div style="margin-bottom: 10px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Sprechtempo (<span id="rateVal">1.0</span>):</label>
-        <input type="range" id="speechRate" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('rateVal').textContent=this.value">
+      <div style="margin-bottom: 10px; background: var(--panel2); padding: 10px; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+          <input type="checkbox" id="menschlichModus" checked style="width: auto;"> 
+          ✨ Menschlich-Modus aktivieren (Dynamische Tonhöhen-Anpassung)
+        </label>
       </div>
       <div style="margin-bottom: 10px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Tonhöhe (<span id="pitchVal">1.0</span>):</label>
+        <label style="font-size: 0.85rem; color: var(--muted);">Sprechtempo (<span id="rateVal">0.95</span>):</label>
+        <input type="range" id="speechRate" min="0.5" max="1.5" step="0.05" value="0.95" oninput="document.getElementById('rateVal').textContent=this.value">
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label style="font-size: 0.85rem; color: var(--muted);">Basis-Tonhöhe (<span id="pitchVal">1.0</span>):</label>
         <input type="range" id="speechPitch" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('pitchVal').textContent=this.value">
-      </div>
-      <div style="margin-bottom: 15px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Lautstärke (<span id="volVal">1.0</span>):</label>
-        <input type="range" id="speechVolume" min="0.1" max="1.0" step="0.1" value="1.0" oninput="document.getElementById('volVal').textContent=this.value">
       </div>
       <div class="row">
         <button onclick="sprachVorschau()">Vorschau abspielen</button>
@@ -236,7 +309,21 @@
       </div>
     </section>
 
-    <!-- TIMER & STOPPUHR BEREICH -->
+    <!-- 6. WETTER & STANDORT TAB -->
+    <section id="wetterTab" class="panel hidden">
+      <h3>🌦️ Genauer Standort & Wetter</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Ermittle deinen präzisen GPS-Standort und lade aktuelle Wetterdaten von Open-Meteo.</p>
+      <button onclick="standortUndWetterLaden()">Standort freigeben & Wetter laden</button>
+      
+      <div id="wetterDetailsBox" style="margin-top: 14px; background: var(--panel2); padding: 12px; border-radius: 10px; display: none;">
+        <p><strong>Breitengrad:</strong> <span id="latVal">-</span></p>
+        <p><strong>Längengrad:</strong> <span id="lonVal">-</span></p>
+        <p><strong>Temperatur:</strong> <span id="tempVal">-</span></p>
+        <p><strong>Windgeschwindigkeit:</strong> <span id="windVal">-</span></p>
+      </div>
+    </section>
+
+    <!-- 7. TIMER TAB -->
     <section id="timerTab" class="panel hidden">
       <h3>⏱️ Timer & Stoppuhr</h3>
       <div style="margin-bottom: 16px;">
@@ -250,10 +337,9 @@
       </div>
     </section>
 
-    <!-- NOTIZEN BEREICH -->
+    <!-- 8. NOTIZEN TAB -->
     <section id="notizenTab" class="panel hidden">
       <h3>📝 Lokale Notizen</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Deine Notizen werden sicher und ausschließlich lokal in deinem Browser gespeichert.</p>
       <input id="notizTitel" placeholder="Titel der Notiz" style="margin-bottom: 8px;">
       <textarea id="notizInhalt" placeholder="Inhalt eingeben..." style="margin-bottom: 8px;"></textarea>
       <button onclick="notizSpeichern()">Notiz speichern</button>
@@ -264,9 +350,9 @@
 
   <script>
     const BACKEND = 'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
-    const SPEICHER_CHATS = 'nantai_chats_v2';
-    const SPEICHER_NOTIZEN = 'nantai_notizen_v2';
-    const SPEICHER_CONFIG = 'nantai_config_v2';
+    const SPEICHER_CHATS = 'nantai_chats_v3';
+    const SPEICHER_NOTIZEN = 'nantai_notizen_v3';
+    const SPEICHER_CONFIG = 'nantai_config_v3';
 
     let chats = [];
     let aktuellerChatId = null;
@@ -274,8 +360,8 @@
     let synth = window.speechSynthesis;
     let verfuegbareStimmen = [];
     let timerInterval = null;
+    let aktuellerStandort = null;
 
-    // --- INITIALISIERUNG ---
     window.addEventListener('DOMContentLoaded', () => {
       uhrAktualisieren();
       setInterval(uhrAktualisieren, 1000);
@@ -290,14 +376,13 @@
 
     function uhrAktualisieren() {
       const d = new Date();
-      document.getElementById('uhrzeitWdiget').textContent = d.toLocaleTimeString('de-DE');
+      document.getElementById('uhrzeitWidget').textContent = d.toLocaleTimeString('de-DE');
     }
 
     function statusSetzen(text) {
       document.getElementById('status').textContent = text;
     }
 
-    // --- NAVIGATION ---
     function tabWechseln(tabId, btn) {
       document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
       document.getElementById(tabId).classList.remove('hidden');
@@ -305,24 +390,20 @@
       btn.classList.add('active');
     }
 
-    // --- CHAT VERWALTUNG ---
+    // --- CHAT LOGIK ---
     function neueId() {
       return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
     }
 
     function begruessungsNachricht() {
-      return [{ text: 'Hallo! Ich bin NantAI. Wie kann ich dir heute helfen?', rolle: 'assistant' }];
+      return [{ text: 'Hallo! Ich bin NantAI Ultimate. Wie kann ich dir heute helfen?', rolle: 'assistant' }];
     }
 
     function chatVerlaufLaden() {
       try {
         const gespeichert = localStorage.getItem(SPEICHER_CHATS);
-        if (gespeichert) {
-          chats = JSON.parse(gespeichert);
-        }
-      } catch (e) {
-        console.warn('Fehler beim Laden des Chatverlaufs', e);
-      }
+        if (gespeichert) chats = JSON.parse(gespeichert);
+      } catch (e) {}
 
       if (!Array.isArray(chats) || chats.length === 0) {
         chats = [{ id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() }];
@@ -332,11 +413,7 @@
     }
 
     function chatVerlaufSpeichern() {
-      try {
-        localStorage.setItem(SPEICHER_CHATS, JSON.stringify(chats));
-      } catch (e) {
-        console.warn('Speicherlimit erreicht', e);
-      }
+      try { localStorage.setItem(SPEICHER_CHATS, JSON.stringify(chats)); } catch (e) {}
     }
 
     function aktuellerChatObjekt() {
@@ -345,13 +422,9 @@
 
     function chatAnzeigen() {
       const chat = aktuellerChatObjekt();
-      document.getElementById('chatTitelWidget').textContent = chat.titel;
       const container = document.getElementById('chat');
       container.replaceChildren();
-
-      chat.nachrichten.forEach(msg => {
-        nachrichtElementErstellen(msg.text, msg.rolle, false);
-      });
+      chat.nachrichten.forEach(msg => nachrichtElementErstellen(msg.text, msg.rolle, false));
       container.scrollTop = container.scrollHeight;
     }
 
@@ -376,25 +449,11 @@
       if (rolle === 'assistant') {
         const tools = document.createElement('div');
         tools.className = 'msg-tools';
-
         const vorlesenBtn = document.createElement('button');
         vorlesenBtn.className = 'secondary';
         vorlesenBtn.textContent = '🔊 Vorlesen';
-        vorlesenBtn.onclick = () => vorlesen(text);
+        vorlesenBtn.onclick = () => vorlesenMenschlich(text);
         tools.appendChild(vorlesenBtn);
-
-        const kopierenBtn = document.createElement('button');
-        kopierenBtn.className = 'secondary';
-        kopierenBtn.textContent = '📋 Kopieren';
-        kopierenBtn.onclick = async () => {
-          try {
-            await navigator.clipboard.writeText(text);
-            statusSetzen('Antwort in Zwischenablage kopiert.');
-          } catch (e) {
-            statusSetzen('Kopieren fehlgeschlagen.');
-          }
-        };
-        tools.appendChild(kopierenBtn);
         div.appendChild(tools);
       }
 
@@ -404,10 +463,7 @@
       if (speichern) {
         const chat = aktuellerChatObjekt();
         chat.nachrichten.push({ text, rolle });
-        if (chat.titel === 'Neuer Chat' && rolle === 'user') {
-          chat.titel = text.slice(0, 30);
-          document.getElementById('chatTitelWidget').textContent = chat.titel;
-        }
+        if (chat.titel === 'Neuer Chat' && rolle === 'user') chat.titel = text.slice(0, 30);
         chatVerlaufSpeichern();
       }
     }
@@ -419,39 +475,18 @@
       }
     }
 
-    // --- BACKEND KOMMUNIKATION (JSONP) ---
     function jsonpAnfrage(parameter) {
       return new Promise((resolve, reject) => {
         const callbackName = 'nantaiCB_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
         const script = document.createElement('script');
         const url = new URL(BACKEND);
-
-        Object.entries(parameter).forEach(([k, v]) => {
-          if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
-        });
+        Object.entries(parameter).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, String(v)); });
         url.searchParams.set('callback', callbackName);
 
-        const timer = setTimeout(() => {
-          cleanup();
-          reject(new Error('Zeitüberschreitung bei der Verbindung zum Server.'));
-        }, 45000);
-
-        function cleanup() {
-          clearTimeout(timer);
-          delete window[callbackName];
-          script.remove();
-        }
-
-        window[callbackName] = (daten) => {
-          cleanup();
-          resolve(daten);
-        };
-
-        script.onerror = () => {
-          cleanup();
-          reject(new Error('Netzwerkfehler: Verbindung zum Backend fehlgeschlagen.'));
-        };
-
+        const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 45000);
+        function cleanup() { clearTimeout(timer); delete window[callbackName]; script.remove(); }
+        window[callbackName] = (daten) => { cleanup(); resolve(daten); };
+        script.onerror = () => { cleanup(); reject(new Error('Netzwerkfehler')); };
         script.src = url.toString();
         document.head.appendChild(script);
       });
@@ -462,7 +497,6 @@
       const input = document.getElementById('nachrichtInput');
       const text = input.value.trim();
       if (!text) return;
-
       input.value = '';
       nachrichtElementErstellen(text, 'user', true);
       statusSetzen('NantAI denkt nach...');
@@ -472,25 +506,15 @@
       try {
         const chat = aktuellerChatObjekt();
         const kontext = chat.nachrichten.slice(-10).map(m => ({ rolle: m.rolle, text: m.text }));
-
-        const antwortDaten = await jsonpAnfrage({
-          aktion: 'chat',
-          nachricht: text,
-          kontext: JSON.stringify(kontext),
-          sprache: 'de'
-        });
-
-        if (!antwortDaten || !antwortDaten.erfolg) {
-          throw new Error((antwortDaten && antwortDaten.fehler) || 'Ungültige Serverantwort.');
-        }
-
-        const kiAntwort = String(antwortDaten.antwort || 'Keine Antwort erhalten.');
+        const antwortDaten = await jsonpAnfrage({ aktion: 'chat', nachricht: text, kontext: JSON.stringify(kontext), sprache: 'de' });
+        if (!antwortDaten || !antwortDaten.erfolg) throw new Error('Serverfehler');
+        const kiAntwort = String(antwortDaten.antwort || 'Keine Antwort.');
         nachrichtElementErstellen(kiAntwort, 'assistant', true);
         statusSetzen('Antwort empfangen.');
-        vorlesen(kiAntwort);
+        vorlesenMenschlich(kiAntwort);
       } catch (err) {
-        nachrichtElementErstellen('Fehler: ' + err.message, 'assistant', true);
-        statusSetzen('Verbindungsfehler aufgetreten.');
+        nachrichtElementErstellen('Fehler bei der Verbindung.', 'assistant', true);
+        statusSetzen('Verbindungsfehler.');
       } finally {
         anfrageLaeuft = false;
         document.getElementById('sendenBtn').disabled = false;
@@ -501,22 +525,72 @@
       const chat = aktuellerChatObjekt();
       const blob = new Blob([JSON.stringify(chat, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${chat.titel.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
-      a.click();
+      const a = document.createElement('a'); a.href = url; a.download = `${chat.titel}.json`; a.click();
       URL.revokeObjectURL(url);
-      statusSetzen('Chat exportiert.');
     }
 
-    // --- SPRACHSTUDIO & TTS ---
+    // --- 1. AVATAR UNTERHALTUNG ---
+    async function avatarSprechenlassen() {
+      const input = document.getElementById('avatarInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      const avatarText = document.getElementById('avatarStatusText');
+      avatarText.textContent = 'NantAI denkt nach...';
+      try {
+        const res = await jsonpAnfrage({ aktion: 'chat', nachricht: text, sprache: 'de' });
+        const antwort = res.antwort || 'Hallo!';
+        avatarText.textContent = antwort;
+        vorlesenMenschlich(antwort);
+      } catch (e) {
+        avatarText.textContent = 'Verbindungsfehler.';
+      }
+    }
+
+    // --- 2. PROGRAMMIERSTUDIO ---
+    function codeVorschauAktualisieren() {
+      const code = document.getElementById('codeEditor').value;
+      const iframe = document.getElementById('codeIframe');
+      iframe.srcdoc = code;
+    }
+    function codeKopieren() {
+      navigator.clipboard.writeText(document.getElementById('codeEditor').value);
+      statusSetzen('Code kopiert.');
+    }
+    function codeHerunterladen() {
+      const blob = new Blob([document.getElementById('codeEditor').value], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // --- 3. DESIGN & LICHTER ---
+    function designAnwenden() {
+      const p = document.getElementById('colorPrimary').value;
+      const a = document.getElementById('colorAccent').value;
+      const lavaOp = document.getElementById('selectLavaOp').value;
+      const animSpd = document.getElementById('selectAnimSpeed').value;
+
+      document.documentElement.style.setProperty('--primary', p);
+      document.documentElement.style.setProperty('--accent', a);
+      document.documentElement.style.setProperty('--lava-opacity', lavaOp);
+      document.documentElement.style.setProperty('--anim-speed', animSpd);
+    }
+    function designZuruecksetzen() {
+      document.getElementById('colorPrimary').value = '#0284c7';
+      document.getElementById('colorAccent').value = '#38bdf8';
+      document.getElementById('selectLavaOp').value = '0.65';
+      document.getElementById('selectAnimSpeed').value = '18s';
+      designAnwenden();
+    }
+
+    // --- 5. SPRACHSTUDIO (MENSCHLICHER MACHEN) ---
     function stimmenLaden() {
       if (!synth) return;
       verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de'));
       const select = document.getElementById('stimmenSelect');
       if (!select) return;
       select.replaceChildren();
-
       verfuegbareStimmen.forEach((st, idx) => {
         const opt = document.createElement('option');
         opt.value = idx;
@@ -525,32 +599,47 @@
       });
     }
 
-    function vorlesen(text) {
+    function vorlesenMenschlich(text) {
       if (!synth) return;
       synth.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      const select = document.getElementById('stimmenSelect');
-      if (select && verfuegbareStimmen[select.value]) {
-        utter.voice = verfuegbareStimmen[select.value];
-      }
-      utter.rate = parseFloat(document.getElementById('speechRate').value) || 1.0;
-      utter.pitch = parseFloat(document.getElementById('speechPitch').value) || 1.0;
-      utter.volume = parseFloat(document.getElementById('speechVolume').value) || 1.0;
-      synth.speak(utter);
+      const menschlich = document.getElementById('menschlichModus')?.checked;
+      
+      // Um die Stimme menschlicher klingen zu lassen, unterteilen wir in Sätze und variieren die Tonhöhe leicht dynamisch
+      const saetze = text.match(/[^.!?]+[.!?]+|\S+/g) || [text];
+      
+      saetze.forEach((satz, i) => {
+        const utter = new SpeechSynthesisUtterance(satz);
+        const select = document.getElementById('stimmenSelect');
+        if (select && verfuegbareStimmen[select.value]) utter.voice = verfuegbareStimmen[select.value];
+        
+        let basisRate = parseFloat(document.getElementById('speechRate').value) || 0.95;
+        let basisPitch = parseFloat(document.getElementById('speechPitch').value) || 1.0;
+
+        if (menschlich) {
+          // Natürliche Modulation: Fragezeichen erhöhen Tonhöhe leicht, Punkte senken sie minimal ab
+          if (satz.includes('?')) basisPitch += 0.15;
+          // Leichte Zufallsschwankung der Tonhöhe für lebhafteren Klang
+          basisPitch += (Math.random() * 0.08 - 0.04);
+        }
+
+        utter.rate = basisRate;
+        utter.pitch = basisPitch;
+        synth.speak(utter);
+      });
     }
 
     function sprachVorschau() {
-      vorlesen('Das ist eine Hörprobe der ausgewählten deutschen Stimme von NantAI.');
+      vorlesenMenschlich('Hallo! Das ist eine natürlichere Stimmprobe von NantAI. Klingt das gut für dich?');
     }
 
     function sprachEinstellungenSpeichern() {
-      const config = {
+      const cfg = {
         stimme: document.getElementById('stimmenSelect').value,
         rate: document.getElementById('speechRate').value,
         pitch: document.getElementById('speechPitch').value,
-        volume: document.getElementById('speechVolume').value
+        menschlich: document.getElementById('menschlichModus').checked
       };
-      localStorage.setItem(SPEICHER_CONFIG, JSON.stringify(config));
+      localStorage.setItem(SPEICHER_CONFIG, JSON.stringify(cfg));
       statusSetzen('Spracheinstellungen gespeichert.');
     }
 
@@ -560,62 +649,75 @@
         if (cfg) {
           if (cfg.rate) { document.getElementById('speechRate').value = cfg.rate; document.getElementById('rateVal').textContent = cfg.rate; }
           if (cfg.pitch) { document.getElementById('speechPitch').value = cfg.pitch; document.getElementById('pitchVal').textContent = cfg.pitch; }
-          if (cfg.volume) { document.getElementById('speechVolume').value = cfg.volume; document.getElementById('volVal').textContent = cfg.volume; }
+          if (cfg.menschlich !== undefined) document.getElementById('menschlichModus').checked = cfg.menschlich;
         }
       } catch (e) {}
     }
 
     function sprachEingabeStarten() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert('Spracherkennung wird in diesem Browser nicht unterstützt.');
-        return;
-      }
+      if (!SpeechRecognition) { alert('Nicht unterstützt.'); return; }
       const recognition = new SpeechRecognition();
       recognition.lang = 'de-DE';
       recognition.start();
       statusSetzen('Höre zu...');
-
-      recognition.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        document.getElementById('nachrichtInput').value = text;
-        statusSetzen('Sprache erkannt.');
+      recognition.onresult = (e) => {
+        document.getElementById('nachrichtInput').value = e.results[0][0].transcript;
         nachrichtSenden();
       };
-      recognition.onerror = () => statusSetzen('Spracherkennung abgebrochen oder Fehler.');
     }
 
-    // --- TIMER & STOPPUHR ---
+    // --- 4. WETTER & GENAUER STANDORT ---
+    function standortUndWetterLaden() {
+      if (!navigator.geolocation) { alert('Geolocation wird nicht unterstützt'); return; }
+      statusSetzen('Ermittle genauen Standort...');
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        document.getElementById('latVal').textContent = lat.toFixed(4);
+        document.getElementById('lonVal').textContent = lon.toFixed(4);
+        
+        try {
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+          const data = await res.json();
+          if (data && data.current_weather) {
+            const temp = data.current_weather.temperature + ' °C';
+            const wind = data.current_weather.windspeed + ' km/h';
+            document.getElementById('tempVal').textContent = temp;
+            document.getElementById('windVal').textContent = wind;
+            document.getElementById('wetterWidgetKurz').textContent = temp;
+            document.getElementById('wetterDetailsBox').style.display = 'block';
+            statusSetzen('Standort & Wetter erfolgreich geladen.');
+          }
+        } catch (e) {
+          statusSetzen('Fehler beim Laden des Wetters.');
+        }
+      }, () => { statusSetzen('Standortzugriff verweigert.'); });
+    }
+
+    // --- TIMER & NOTIZEN ---
     function timerStarten() {
-      const sekInput = parseInt(document.getElementById('timerSekundenInput').value);
-      if (isNaN(sekInput) || sekInput <= 0) return;
-      let verbleibend = sekInput;
-      const anzeige = document.getElementById('timerAnzeige');
-
+      let sek = parseInt(document.getElementById('timerSekundenInput').value);
+      if (isNaN(sek) || sek <= 0) return;
       if (timerInterval) clearInterval(timerInterval);
-
       timerInterval = setInterval(() => {
-        if (verbleibend <= 0) {
+        if (sek <= 0) {
           clearInterval(timerInterval);
-          anzeige.textContent = 'Zeit abgelaufen!';
-          vorlesen('Der Timer ist abgelaufen.');
+          document.getElementById('timerAnzeige').textContent = 'Zeit abgelaufen!';
+          vorlesenMenschlich('Der Timer ist abgelaufen.');
           return;
         }
-        const min = Math.floor(verbleibend / 60);
-        const sek = verbleibend % 60;
-        anzeige.textContent = `${min}:${sek < 10 ? '0' : ''}${sek}`;
-        verbleibend--;
+        const m = Math.floor(sek / 60); const s = sek % 60;
+        document.getElementById('timerAnzeige').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        sek--;
       }, 1000);
       statusSetzen('Timer gestartet.');
     }
-
     function timerStoppen() {
       if (timerInterval) clearInterval(timerInterval);
       document.getElementById('timerAnzeige').textContent = '00:00';
-      statusSetzen('Timer gestoppt.');
     }
 
-    // --- NOTIZEN ---
     function notizenLaden() {
       const liste = document.getElementById('notizenListe');
       liste.replaceChildren();
@@ -623,40 +725,23 @@
         const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
         daten.forEach((n, idx) => {
           const div = document.createElement('div');
-          div.className = 'panel';
-          div.style.marginBottom = '8px';
-          div.innerHTML = `<strong>${n.titel}</strong><p style="margin:6px 0 0; font-size:0.9rem;">${n.inhalt}</p>`;
-          const loeschBtn = document.createElement('button');
-          loeschBtn.className = 'danger';
-          loeschBtn.textContent = 'Löschen';
-          loeschBtn.style.marginTop = '8px';
-          loeschBtn.onclick = () => {
-            daten.splice(idx, 1);
-            localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
-            notizenLaden();
-          };
-          div.appendChild(loeschBtn);
-          liste.appendChild(div);
+          div.className = 'panel'; div.style.marginBottom = '8px';
+          div.innerHTML = `<strong>${n.titel}</strong><p>${n.inhalt}</p>`;
+          const btn = document.createElement('button'); btn.className = 'danger'; btn.textContent = 'Löschen';
+          btn.onclick = () => { daten.splice(idx, 1); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); notizenLaden(); };
+          div.appendChild(btn); liste.appendChild(div);
         });
       } catch (e) {}
     }
-
     function notizSpeichern() {
       const titel = document.getElementById('notizTitel').value.trim();
       const inhalt = document.getElementById('notizInhalt').value.trim();
       if (!titel && !inhalt) return;
-
-      try {
-        const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
-        daten.unshift({ titel: titel || 'Unbenannte Notiz', inhalt });
-        localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
-        document.getElementById('notizTitel').value = '';
-        document.getElementById('notizInhalt').value = '';
-        notizenLaden();
-        statusSetzen('Notiz gespeichert.');
-      } catch (e) {
-        statusSetzen('Fehler beim Speichern der Notiz.');
-      }
+      const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
+      daten.unshift({ titel: titel || 'Notiz', inhalt });
+      localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
+      document.getElementById('notizTitel').value = ''; document.getElementById('notizInhalt').value = '';
+      notizenLaden();
     }
   </script>
 </body>
