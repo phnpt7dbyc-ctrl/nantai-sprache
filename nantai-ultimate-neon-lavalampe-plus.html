@@ -440,23 +440,7 @@ stimme.onerror = event => {
 
   window.speechSynthesis.speak(stimme);
 }
-
-/* Leistungsoptimierung für schwächere Geräte */
-@media (max-width: 800px), (prefers-reduced-motion: reduce) {
-  .lava-lampe {
-    opacity: 0.28;
-    filter: blur(10px);
-    mix-blend-mode: normal;
-  }
-
-  .lava-kugel {
-    animation: none !important;
-    box-shadow: 0 0 24px #8250df55;
-    will-change: auto;
-  }
-}
-
-
+        
   .neon-hintergrund {
     animation: none !important;
     filter: none !important;
