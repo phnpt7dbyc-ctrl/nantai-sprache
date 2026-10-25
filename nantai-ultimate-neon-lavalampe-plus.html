@@ -440,6 +440,7 @@ stimme.onerror = event => {
 
   window.speechSynthesis.speak(stimme);
 }
+
 /* Leistungsoptimierung für schwächere Geräte */
 @media (max-width: 800px), (prefers-reduced-motion: reduce) {
   .lava-lampe {
@@ -453,6 +454,8 @@ stimme.onerror = event => {
     box-shadow: 0 0 24px #8250df55;
     will-change: auto;
   }
+}
+
 
   .neon-hintergrund {
     animation: none !important;
