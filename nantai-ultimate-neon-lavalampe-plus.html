@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#030712">
-  <title>NandoAI Ultimate Max - Cyber Hybrid Edition</title>
+  <title>NandoAI Ultimate Max - Cyber Cloud Edition</title>
   <style>
     :root {
       --bg: #030712;
@@ -164,7 +164,7 @@
 
   <aside>
     <h2>✦ NandoAI</h2>
-    <p>Cyber Hybrid Edition</p>
+    <p>Cyber Cloud Edition</p>
     <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
     <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Chat & Cloud KI</button>
     <button class="nav-btn" onclick="tabWechseln('bildTab', this)">🎨 Bildstudio (AI)</button>
@@ -197,13 +197,13 @@
         <div class="logo">✦</div>
         <div>
           <h1>NandoAI Cybernet</h1>
-          <p>Hybrid Cloud & Permanent Active</p>
+          <p>Permanent Gemini Cloud Active</p>
         </div>
       </div>
       <button class="secondary" onclick="cyberModusWechseln()">⚡ Cyber Glow</button>
     </header>
 
-    <div id="status">System online & dauerhaft im Cloud-Modus.</div>
+    <div id="status">System online. Echte Gemini Cloud-KI dauerhaft aktiv!</div>
 
     <!-- DASHBOARD -->
     <section id="dashboardTab" class="panel">
@@ -215,7 +215,7 @@
         </div>
         <div class="widget">
           <div class="widget-label">⚡ KI-Modus</div>
-          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Cloud Active (Gemini)</div>
+          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Gemini Cloud Active</div>
         </div>
         <div class="widget">
           <div class="widget-label">💡 Dev-Zitrat</div>
@@ -230,14 +230,6 @@
 
     <!-- CHAT TAB -->
     <section id="chatTab" class="hidden">
-      <!-- Dauerhafter API-Key (wird permanent gespeichert) -->
-      <div class="panel" style="margin-bottom: 14px; padding: 12px;">
-        <div style="font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em;">🔑 Google Gemini API-Key (Dauerhaft aktiv):</div>
-        <div class="row">
-          <input type="password" id="apiKeyInput" placeholder="API-Key einmalig einfügen und Enter drücken..." onkeydown="pruefeApiKeyEnter(event)">
-        </div>
-      </div>
-
       <div class="dashboard">
         <div class="widget">
           <div class="widget-label">🕒 Uhrzeit</div>
@@ -245,7 +237,7 @@
         </div>
         <div class="widget">
           <div class="widget-label">⚙️ KI-Status</div>
-          <div class="widget-value" id="kiModusAnzeige">Cloud Active</div>
+          <div class="widget-value" style="color: var(--primary);">Gemini Cloud</div>
         </div>
         <div class="widget">
           <div class="widget-label">💬 Session</div>
@@ -447,11 +439,11 @@
   </main>
 
   <script>
-    const SPEICHER_CHATS = 'nandoai_cyber_chats_v2';
-    const SPEICHER_NOTIZEN = 'nandoai_cyber_notizen_v2';
-    const SPEICHER_BOOKMARKS = 'nandoai_cyber_bookmarks_v2';
-    const SPEICHER_LERNKARTEN = 'nandoai_cyber_lernkarten_v2';
-    const SPEICHER_TODO = 'nandoai_cyber_todo_v2';
+    const SPEICHER_CHATS = 'nandoai_cyber_chats_v3';
+    const SPEICHER_NOTIZEN = 'nandoai_cyber_notizen_v3';
+    const SPEICHER_BOOKMARKS = 'nandoai_cyber_bookmarks_v3';
+    const SPEICHER_LERNKARTEN = 'nandoai_cyber_lernkarten_v3';
+    const SPEICHER_TODO = 'nandoai_cyber_todo_v3';
 
     let chats = [];
     let aktuellerChatId = null;
@@ -477,18 +469,6 @@
       stimmenLaden();
       canvasInitialisieren();
       
-      // API Key permanent laden
-      const savedKey = localStorage.getItem('nandoai_gemini_key');
-      if (savedKey) {
-        const keyInput = document.getElementById('apiKeyInput');
-        if(keyInput) keyInput.value = savedKey;
-        const statusEl1 = document.getElementById('kiModusAnzeige');
-        const statusEl2 = document.getElementById('kiStatusAnzeige');
-        if(statusEl1) statusEl1.textContent = 'Cloud Active (Gemini)';
-        if(statusEl2) statusEl2.textContent = 'Cloud Active (Gemini)';
-        statusSetzen('Gemini Cloud-KI permanent aktiv.');
-      }
-
       const zitatBox = document.getElementById('zitatBox');
       if(zitatBox) zitatBox.textContent = `"${zitate[Math.floor(Math.random() * zitate.length)]}"`;
       if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = stimmenLaden;
@@ -534,40 +514,13 @@
         .replace(/\n/g, '<br>');
     }
 
-    function pruefeApiKeyEnter(event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        apiSchlüsselSpeichern();
-      }
-    }
-
-    function apiSchlüsselSpeichern() {
-      const keyInput = document.getElementById('apiKeyInput');
-      if(!keyInput) return;
-      const key = keyInput.value.trim();
-      localStorage.setItem('nandoai_gemini_key', key);
-      const m1 = document.getElementById('kiModusAnzeige');
-      const m2 = document.getElementById('kiStatusAnzeige');
-      if (key) {
-        if(m1) m1.textContent = 'Cloud Active (Gemini)';
-        if(m2) m2.textContent = 'Cloud Active (Gemini)';
-        statusSetzen('API-Key dauerhaft gespeichert! NandoAI ist im Cloud-Modus.');
-      } else {
-        if(m1) m1.textContent = 'Offline Fallback';
-        if(m2) m2.textContent = 'Offline Fallback';
-        statusSetzen('API-Key entfernt.');
-      }
-    }
-
-    function lokaleKIAntwortGenerieren(prompt) {
-      return `Lokale Antwort für "${prompt}" (Trage deinen API-Key ein und drücke Enter für die echte Cloud-KI).`;
-    }
-
+    // ECHTE GEMINI CLOUD KI (API-Key ist hier direkt fest hinterlegt)
     async function kiAntwortHubern(prompt) {
-      // Holt den Key jedes Mal direkt aus dem dauerhaften Speicher
-      const apiKey = localStorage.getItem('nandoai_gemini_key');
-      if (!apiKey) {
-        return lokaleKIAntwortGenerieren(prompt);
+      // ➔ TRAGE HIER DEINEN ECHTEN API-KEY AUS DEM GOOGLE AI STUDIO EIN:
+      const apiKey = "AQ.Ab8RN6JNtkIpcEOCg-2l3mqEu9rGd8i4KpAH4w69brfNq_850A";
+
+      if (!apiKey || apiKey === "AQ.Ab8RN6JNtkIpcEOCg-2l3mqEu9rGd8i4KpAH4w69brfNq_850A") {
+        return "Bitte trage deinen echten Gemini API-Key im Code bei 'apiKey' ein!";
       }
 
       try {
@@ -581,16 +534,16 @@
         if (data.candidates && data.candidates[0].content.parts[0].text) {
           return data.candidates[0].content.parts[0].text;
         } else {
-          return lokaleKIAntwortGenerieren(prompt);
+          return "Fehler bei der Cloud-Antwort.";
         }
       } catch (error) {
-        return "Keine Internetverbindung. Lokaler Fallback: " + lokaleKIAntwortGenerieren(prompt);
+        return "Keine Internetverbindung zum Cloud-Server.";
       }
     }
 
     /* CHAT */
     function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
-    function begruessungsNachricht() { return [{ text: 'System online. Cloud-KI ist dauerhaft bereit!', rolle: 'assistant' }]; }
+    function begruessungsNachricht() { return [{ text: 'System online. Gemini Cloud-KI ist bereit für deine Fragen!', rolle: 'assistant' }]; }
 
     function chatVerlaufLaden() {
       try { const g = localStorage.getItem(SPEICHER_CHATS); if (g) chats = JSON.parse(g); } catch (e) {}
@@ -645,7 +598,7 @@
       if(!input) return;
       const text = input.value.trim(); if (!text) return;
       input.value = ''; nachrichtElementErstellen(text, 'user', true);
-      statusSetzen('NandoAI denkt nach...');
+      statusSetzen('Gemini KI denkt nach...');
       
       const antwort = await kiAntwortHubern(text);
       
