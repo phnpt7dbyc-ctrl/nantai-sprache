@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NandoAI Ultimate Max</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            900: '#0c4a6e'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                            '50%': { 'background-size': '200% 200%', 'background-position': 'right center' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Generator Lib -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Marked JS for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        ::-webkit-scrollbar-thumb { background: rgba(2, 132, 199, 0.4); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(2, 132, 199, 0.7); }
+        
+        /* Lavalamp Animated Background Effect */
+        .lavalamp-bg {
+            background: linear-gradient(-45deg, #0f172a, #0369a1, #1e1b4b, #0f766e);
+            background-size: 400% 400%;
+            animation: gradient-x 18s ease infinite;
+        }
+        .lavalamp-light {
+            background: linear-gradient(-45deg, #f8fafc, #e0effe, #e0f2fe, #f0f9ff);
+            background-size: 400% 400%;
+            animation: gradient-x 18s ease infinite;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .light .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        /* Theme Presets */
+        .theme-cyberpunk {
+            --brand-primary: #ec4899;
+            --brand-secondary: #8b5cf6;
+        }
+        .theme-emerald {
+            --brand-primary: #10b981;
+            --brand-secondary: #059669;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col antialiased transition-colors duration-300 lavalamp-bg" id="app-body">
+
+    <!-- Top Navigation Header -->
+    <header class="glass-card sticky top-0 z-50 px-4 py-3 flex items-center justify-between border-b border-slate-700/50">
+        <div class="flex items-center gap-3">
+            <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white p-2 rounded-lg">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('dashboard')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/30">
+                    <i class="fa-solid fa-brain text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wide bg-gradient-to-r from-sky-400 to-indigo-300 bg-clip-text text-transparent">NandoAI</h1>
+                    <span class="text-[10px] uppercase font-semibold tracking-wider text-sky-400 block -mt-1">Ultimate Max</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Status & Quick Controls -->
+        <div class="flex items-center gap-2 sm:gap-4">
+            <!-- NandoAI Voice Avatar Pulse -->
+            <div id="avatar-container" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60" title="NandoAI Status">
+                <div id="avatar-pulse" class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                <span id="avatar-status" class="text-xs font-medium text-slate-300 hidden sm:inline">NandoAI bereit</span>
+            </div>
+
+            <!-- Theme Toggle -->
+            <button onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white transition" title="Theme wechseln">
+                <i id="theme-icon" class="fa-solid fa-moon"></i>
+            </button>
+
+            <!-- Backup & Restore Quick Button -->
+            <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white transition" title="Backup & Wiederherstellung">
+                <i class="fa-solid fa-database"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 glass-card border-r border-slate-700/50 flex flex-col justify-between absolute md:relative z-40 h-[calc(100vh-65px)] transition-transform duration-300 -translate-x-full md:translate-x-0">
+            <div class="p-3 space-y-1 overflow-y-auto max-h-full">
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-2">Hauptmodule</div>
+                
+                <button onclick="switchTab('dashboard')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition active-nav" data-tab="dashboard">
+                    <i class="fa-solid fa-house w-5 text-center text-sky-400"></i>
+                    <span>Dashboard</span>
+                </button>
+
+                <button onclick="switchTab('chat')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="chat">
+                    <i class="fa-solid fa-comments w-5 text-center text-sky-400"></i>
+                    <span>KI-Chat & Assistent</span>
+                </button>
+
+                <button onclick="switchTab('image-studio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="image-studio">
+                    <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-purple-400"></i>
+                    <span>Bildstudio (Pollinations)</span>
+                </button>
+
+                <button onclick="switchTab('code-studio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="code-studio">
+                    <i class="fa-solid fa-code w-5 text-center text-emerald-400"></i>
+                    <span>Programmierstudio</span>
+                </button>
+
+                <button onclick="switchTab('markdown-studio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="markdown-studio">
+                    <i class="fa-solid fa-file-lines w-5 text-center text-amber-400"></i>
+                    <span>Markdown & Notizen</span>
+                </button>
+
+                <button onclick="switchTab('draw-studio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="draw-studio">
+                    <i class="fa-solid fa-paintbrush w-5 text-center text-rose-400"></i>
+                    <span>Zeichenstudio</span>
+                </button>
+
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-2 pt-4">Werkzeuge & Extras</div>
+
+                <button onclick="switchTab('tools')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="tools">
+                    <i class="fa-solid fa-toolbox w-5 text-center text-cyan-400"></i>
+                    <span>Erweiterungscenter</span>
+                </button>
+
+                <button onclick="switchTab('speech-studio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="speech-studio">
+                    <i class="fa-solid fa-microphone-lines w-5 text-center text-indigo-400"></i>
+                    <span>Sprachstudio</span>
+                </button>
+
+                <button onclick="switchTab('game')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="game">
+                    <i class="fa-solid fa-gamepad w-5 text-center text-lime-400"></i>
+                    <span>Snake Pause</span>
+                </button>
+
+                <button onclick="switchTab('settings')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium hover:bg-sky-600/20 hover:text-sky-400 transition text-slate-300" data-tab="settings">
+                    <i class="fa-solid fa-gears w-5 text-center text-slate-400"></i>
+                    <span>Einstellungen</span>
+                </button>
+            </div>
+
+            <div class="p-3 border-t border-slate-700/50 text-center">
+                <span class="text-xs text-slate-400">NandoAI Engine v4.2 • Chromebook Ready</span>
+            </div>
+        </aside>
+
+        <!-- Main Content View Area -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Welcome Banner -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-sky-500/20">
+                    <div class="space-y-2 text-center sm:text-left">
+                        <h2 class="text-2xl font-bold text-white">Willkommen bei <span class="text-sky-400">NandoAI Ultimate Max</span></h2>
+                        <p class="text-slate-300 text-sm max-w-xl">Deine universelle KI-Schaltzentrale für Bildgenerierung, intelligente Gespräche, Programmierung und Notizen.</p>
+                        <div class="italic text-xs text-sky-300/80 pt-2" id="daily-quote">"Lade Inspiration..."</div>
+                    </div>
+                    <div class="text-right glass-card p-4 rounded-xl border border-slate-700 min-w-[200px]">
+                        <div class="text-3xl font-extrabold text-sky-400" id="dash-clock">00:00:00</div>
+                        <div class="text-xs text-slate-400" id="dash-date">Lade Datum...</div>
+                        <div class="mt-2 pt-2 border-t border-slate-700 flex items-center justify-between text-xs">
+                            <span id="dash-weather-city"><i class="fa-solid fa-location-dot text-rose-400"></i> Standortsuche...</span>
+                            <span class="font-bold text-amber-300" id="dash-weather-temp">--°C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Action Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div onclick="switchTab('image-studio')" class="glass-card p-5 rounded-2xl cursor-pointer hover:border-purple-500/50 hover:scale-[1.01] transition space-y-3 group">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl group-hover:bg-purple-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-white">Bildstudio</h3>
+                        <p class="text-xs text-slate-400">Erstelle hochauflösende KI-Bilder mit Pollinations.ai direkt im Browser – ohne API-Key.</p>
+                    </div>
+
+                    <div onclick="switchTab('chat')" class="glass-card p-5 rounded-2xl cursor-pointer hover:border-sky-500/50 hover:scale-[1.01] transition space-y-3 group">
+                        <div class="w-12 h-12 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-2xl group-hover:bg-sky-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-white">NandoAI Chat</h3>
+                        <p class="text-xs text-slate-400">Intelligenter KI-Assistent für Fragen, Texterstellung, Recherchen und Problemlösungen.</p>
+                    </div>
+
+                    <div onclick="switchTab('code-studio')" class="glass-card p-5 rounded-2xl cursor-pointer hover:border-emerald-500/50 hover:scale-[1.01] transition space-y-3 group">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:bg-emerald-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-white">Programmierstudio</h3>
+                        <p class="text-xs text-slate-400">Schreibe HTML, CSS & JavaScript mit direkter Echtzeit-Vorschau in deiner Umgebung.</p>
+                    </div>
+                </div>
+
+                <!-- Recent Saved Images & Notes Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-card p-4 rounded-2xl space-y-3">
+                        <h4 class="font-bold text-sm text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-images text-purple-400"></i> Neueste KI-Galerie
+                        </h4>
+                        <div id="dash-gallery-preview" class="grid grid-cols-3 gap-2">
+                            <!-- Populated dynamically -->
+                            <div class="text-xs text-slate-500 col-span-3 text-center py-4">Noch keine generierten Bilder vorhanden.</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl space-y-3">
+                        <h4 class="font-bold text-sm text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-bookmark text-cyan-400"></i> Schnell-Lesezeichen & Notizen
+                        </h4>
+                        <ul id="dash-bookmarks-list" class="space-y-2 text-xs text-slate-300">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: CHAT & ARCHIV -->
+            <div id="tab-chat" class="tab-content hidden h-[calc(100vh-120px)] flex flex-col md:flex-row gap-4">
+                <!-- Chat History Sidebar -->
+                <div class="w-full md:w-64 glass-card rounded-2xl p-3 flex flex-col justify-between h-48 md:h-full border border-slate-700/50">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase text-slate-400">Chat-Archiv</span>
+                            <button onclick="startNewChat()" class="text-xs text-sky-400 hover:text-sky-300 flex items-center gap-1 font-semibold">
+                                <i class="fa-solid fa-plus"></i> Neu
+                            </button>
+                        </div>
+                        <input type="text" id="chat-search" placeholder="Chats durchsuchen..." oninput="filterChatHistory()" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div id="chat-history-list" class="flex-1 overflow-y-auto space-y-1 my-2 pr-1">
+                        <!-- Populated by JS -->
+                    </div>
+                    <button onclick="exportAllChats()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300 transition">
+                        <i class="fa-solid fa-file-export mr-1"></i> Archiv Exportieren
+                    </button>
+                </div>
+
+                <!-- Chat Main Window -->
+                <div class="flex-1 glass-card rounded-2xl flex flex-col overflow-hidden border border-slate-700/50">
+                    <!-- Chat Header -->
+                    <div class="p-3 border-b border-slate-700/50 bg-slate-800/40 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-robot text-sky-400"></i>
+                            <span id="current-chat-title" class="font-bold text-sm text-white">Neues Gespräch mit NandoAI</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="clearCurrentChat()" class="text-slate-400 hover:text-rose-400 text-xs px-2 py-1 rounded" title="Chat leeren">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Area -->
+                    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 text-sm max-w-[85%] text-slate-200">
+                                Hallo! Ich bin <b>NandoAI</b>. Wie kann ich dir heute helfen? Stelle mir Fragen, fordere Code an oder bitte mich um Unterstützung!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Box -->
+                    <div class="p-3 border-t border-slate-700/50 bg-slate-800/60 flex items-center gap-2">
+                        <button onclick="toggleVoiceInput()" id="voice-btn" class="p-2.5 rounded-xl bg-slate-700/80 hover:bg-slate-600 text-slate-300 hover:text-white transition" title="Spracheingabe">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        <input type="text" id="chat-input" placeholder="Schreibe eine Nachricht an NandoAI..." onkeypress="handleChatKeyPress(event)" class="flex-1 bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500">
+                        <button onclick="sendChatMessage()" class="p-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold transition flex items-center justify-center shadow-lg shadow-sky-600/30">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: BILDSTUDIO (POLLINATIONS INTEGRATION) -->
+            <div id="tab-image-studio" class="tab-content hidden space-y-6">
+                <div class="glass-card p-6 rounded-2xl border border-purple-500/20 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> NandoAI Bildstudio
+                            </h2>
+                            <p class="text-xs text-slate-400">Direkte, uneingeschränkte KI-Bildgenerierung über Pollinations.ai</p>
+                        </div>
+                        <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full border border-purple-500/30 font-mono">Backend-Free Direct API</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Prompt Input -->
+                        <div class="md:col-span-3 space-y-1">
+                            <label class="text-xs font-semibold text-slate-300">Bildbeschreibung (Prompt)</label>
+                            <textarea id="img-prompt" rows="3" placeholder="Ein majestätischer Fuchs im leuchtenden Zauberwald, neon Cyberpunk Stil, hochdetailliert..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+                        </div>
+
+                        <!-- Style Selection -->
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-300">Kunststil</label>
+                            <select id="img-style" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                                <option value="">Standard (Kein Zusatzstil)</option>
+                                <option value="photorealistic, 8k resolution, highly detailed, professional photography">Fotorealistisch</option>
+                                <option value="anime style, vibrant colors, detailed illustration, studio ghibli">Anime / Manga</option>
+                                <option value="3D render, pixar style, cute, octane render">3D / Pixar Render</option>
+                                <option value="cyberpunk style, neon lighting, futuristic city, dark background">Cyberpunk</option>
+                                <option value="digital art, highly detailed, trending on artstation">Digital Art</option>
+                                <option value="watercolor painting, soft artistic strokes, pastel colors">Aquarell</option>
+                                <option value="oil painting style, rich texture, dramatic lighting">Ölgemälde</option>
+                                <option value="pixel art, 16-bit retro video game style">Pixel Art</option>
+                                <option value="pencil sketch, detailed graphite drawing, monochrome">Bleistift-Skizze</option>
+                            </select>
+                        </div>
+
+                        <!-- Format / Aspect Ratio -->
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-300">Format & Seitenverhältnis</label>
+                            <select id="img-format" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                                <option value="1024x1024">Quadratisch 1:1 (1024x1024)</option>
+                                <option value="768x1344">Hochformat 9:16 (768x1344)</option>
+                                <option value="1344x768">Querformat 16:9 (1344x768)</option>
+                            </select>
+                        </div>
+
+                        <!-- Additional Switches -->
+                        <div class="space-y-1 flex flex-col justify-end">
+                            <button onclick="generateImage()" id="btn-gen-img" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30">
+                                <i class="fa-solid fa-bolt"></i> Bild Generieren
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Output & Loading Area -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden" id="img-result-container">
+                    <div id="img-placeholder" class="text-center space-y-2 text-slate-500">
+                        <i class="fa-regular fa-image text-5xl"></i>
+                        <p class="text-sm">Gib einen Prompt ein und klicke auf "Bild Generieren".</p>
+                    </div>
+
+                    <!-- Loader -->
+                    <div id="img-loader" class="hidden text-center space-y-4">
+                        <div class="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                        <p class="text-sm text-purple-300 font-medium">NandoAI malt dein Bild via Pollinations.ai...</p>
+                    </div>
+
+                    <!-- Rendered Image View -->
+                    <div id="img-view-box" class="hidden flex-col items-center space-y-4 max-w-full">
+                        <img id="img-output" src="" alt="NandoAI Generated Image" class="rounded-xl border border-slate-700 shadow-2xl max-h-[500px] object-contain">
+                        <div class="flex items-center gap-3">
+                            <button onclick="downloadGeneratedImage()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-700 transition flex items-center gap-2">
+                                <i class="fa-solid fa-download text-emerald-400"></i> Herunterladen
+                            </button>
+                            <button onclick="saveToGallery()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2">
+                                <i class="fa-solid fa-heart"></i> In Galerie speichern
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Local Saved Image Gallery -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-700/50 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-photo-film text-purple-400"></i> Lokale Galerie (Gespeicherte Bilder)
+                        </h3>
+                        <button onclick="clearLocalGallery()" class="text-xs text-rose-400 hover:underline">Galerie leeren</button>
+                    </div>
+                    <div id="gallery-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: PROGRAMMIERSTUDIO -->
+            <div id="tab-code-studio" class="tab-content hidden h-[calc(100vh-120px)] flex flex-col space-y-3">
+                <div class="flex items-center justify-between glass-card p-3 rounded-xl border border-slate-700/50">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-code text-emerald-400"></i>
+                        <span class="font-bold text-sm text-white">NandoAI Code Sandbox (Live HTML/CSS/JS)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="runCodePreview()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                            <i class="fa-solid fa-play"></i> Ausführen
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 min-h-0">
+                    <div class="glass-card rounded-xl p-2 flex flex-col border border-slate-700/50">
+                        <span class="text-xs font-mono text-slate-400 mb-1 px-2">Editor (HTML/CSS/JS)</span>
+                        <textarea id="code-editor" class="flex-1 w-full bg-slate-950 font-mono text-xs text-emerald-400 p-3 rounded-lg focus:outline-none resize-none" spellcheck="false"><!-- Beispiel-Code NandoAI -->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
+    .btn { background: #0284c7; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>NandoAI Code Studio</h1>
+  <p>Verändere diesen Code & klicke auf Ausführen!</p>
+  <button class="btn" onclick="alert('NandoAI funktioniert perfekt!')">Klick Mich</button>
+</body>
+</html></textarea>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-2 flex flex-col border border-slate-700/50">
+                        <span class="text-xs font-mono text-slate-400 mb-1 px-2">Live Vorschau</span>
+                        <iframe id="code-preview-frame" class="flex-1 w-full bg-white rounded-lg border-0"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: MARKDOWN STUDIO -->
+            <div id="tab-markdown-studio" class="tab-content hidden h-[calc(100vh-120px)] flex flex-col space-y-3">
+                <div class="flex items-center justify-between glass-card p-3 rounded-xl border border-slate-700/50">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines text-amber-400"></i>
+                        <span class="font-bold text-sm text-white">Markdown Editor & Notizen</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs text-slate-400 font-mono">
+                        <span>Wörter: <b id="md-word-count" class="text-white">0</b></span>
+                        <span>Zeichen: <b id="md-char-count" class="text-white">0</b></span>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 min-h-0">
+                    <div class="glass-card rounded-xl p-2 flex flex-col border border-slate-700/50">
+                        <textarea id="md-input" oninput="updateMarkdownPreview()" placeholder="# Meine NandoAI Notiz..." class="flex-1 w-full bg-slate-900 font-mono text-xs text-slate-200 p-3 rounded-lg focus:outline-none resize-none"></textarea>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-4 flex flex-col border border-slate-700/50 overflow-y-auto">
+                        <div id="md-preview-output" class="prose dark:prose-invert text-sm max-w-none">
+                            <span class="text-slate-500">Notiere etwas links, um die Live-Vorschau zu sehen...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: ZEICHENSTUDIO -->
+            <div id="tab-draw-studio" class="tab-content hidden space-y-4">
+                <div class="glass-card p-4 rounded-2xl border border-slate-700/50 flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <label class="text-xs text-slate-300 font-semibold">Farbe:</label>
+                        <input type="color" id="draw-color" value="#0284c7" class="w-8 h-8 rounded cursor-pointer bg-transparent border-0">
+                        
+                        <label class="text-xs text-slate-300 font-semibold">Stärke:</label>
+                        <input type="range" id="draw-size" min="1" max="30" value="5" class="w-24">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="clearCanvas()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-rose-400 rounded-lg text-xs transition">
+                            <i class="fa-solid fa-eraser"></i> Löschen
+                        </button>
+                        <button onclick="downloadCanvas()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-download"></i> Bild Speichern
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card p-2 rounded-2xl border border-slate-700/50 overflow-hidden flex justify-center bg-slate-950">
+                    <canvas id="paint-canvas" width="800" height="500" class="bg-slate-900 rounded-xl cursor-crosshair max-w-full h-auto"></canvas>
+                </div>
+            </div>
+
+            <!-- TAB 7: ERWEITERUNGSCENTER & TOOLS -->
+            <div id="tab-tools" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Calculator Module -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-700/50 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-cyan-400"></i> Taschenrechner & Umrechner
+                        </h3>
+                        <div class="space-y-3">
+                            <input type="text" id="calc-display" readonly class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-right font-mono text-xl text-white">
+                            <div class="grid grid-cols-4 gap-2 text-sm font-semibold">
+                                <button onclick="calcInput('C')" class="p-3 bg-rose-500/20 text-rose-300 rounded-xl">C</button>
+                                <button onclick="calcInput('(')" class="p-3 bg-slate-800 text-slate-300 rounded-xl">(</button>
+                                <button onclick="calcInput(')')" class="p-3 bg-slate-800 text-slate-300 rounded-xl">)</button>
+                                <button onclick="calcInput('/')" class="p-3 bg-sky-600/30 text-sky-400 rounded-xl">/</button>
+
+                                <button onclick="calcInput('7')" class="p-3 bg-slate-800 text-white rounded-xl">7</button>
+                                <button onclick="calcInput('8')" class="p-3 bg-slate-800 text-white rounded-xl">8</button>
+                                <button onclick="calcInput('9')" class="p-3 bg-slate-800 text-white rounded-xl">9</button>
+                                <button onclick="calcInput('*')" class="p-3 bg-sky-600/30 text-sky-400 rounded-xl">*</button>
+
+                                <button onclick="calcInput('4')" class="p-3 bg-slate-800 text-white rounded-xl">4</button>
+                                <button onclick="calcInput('5')" class="p-3 bg-slate-800 text-white rounded-xl">5</button>
+                                <button onclick="calcInput('6')" class="p-3 bg-slate-800 text-white rounded-xl">6</button>
+                                <button onclick="calcInput('-')" class="p-3 bg-sky-600/30 text-sky-400 rounded-xl">-</button>
+
+                                <button onclick="calcInput('1')" class="p-3 bg-slate-800 text-white rounded-xl">1</button>
+                                <button onclick="calcInput('2')" class="p-3 bg-slate-800 text-white rounded-xl">2</button>
+                                <button onclick="calcInput('3')" class="p-3 bg-slate-800 text-white rounded-xl">3</button>
+                                <button onclick="calcInput('+')" class="p-3 bg-sky-600/30 text-sky-400 rounded-xl">+</button>
+
+                                <button onclick="calcInput('0')" class="p-3 col-span-2 bg-slate-800 text-white rounded-xl">0</button>
+                                <button onclick="calcInput('.')" class="p-3 bg-slate-800 text-white rounded-xl">.</button>
+                                <button onclick="calcSolve()" class="p-3 bg-sky-600 text-white rounded-xl">=</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pomodoro Timer -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-700/50 space-y-4 text-center">
+                        <h3 class="font-bold text-white text-base flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-stopwatch text-amber-400"></i> Pomodoro Fokus Timer
+                        </h3>
+                        <div class="text-5xl font-extrabold text-amber-400 font-mono py-4" id="pomo-display">25:00</div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="startPomodoro()" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition">Start</button>
+                            <button onclick="pausePomodoro()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition">Pause</button>
+                            <button onclick="resetPomodoro()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition">Reset</button>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Generator -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-700/50 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-qrcode text-emerald-400"></i> QR-Code Generator
+                        </h3>
+                        <div class="space-y-3">
+                            <input type="text" id="qr-text-input" placeholder="Text oder URL eingeben..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none">
+                            <button onclick="generateQRCode()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition">QR-Code Erstellen</button>
+                            <div id="qr-output" class="flex justify-center p-3 bg-white rounded-xl mt-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Lesezeichen Manager -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-700/50 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-bookmark text-indigo-400"></i> Lesezeichen-Manager
+                        </h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="bm-title" placeholder="Titel" class="w-1/3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                            <input type="text" id="bm-url" placeholder="https://..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                            <button onclick="addBookmark()" class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold">+</button>
+                        </div>
+                        <ul id="bookmarks-container" class="space-y-2 max-h-40 overflow-y-auto text-xs"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 8: SPRACHSTUDIO -->
+            <div id="tab-speech-studio" class="tab-content hidden space-y-6">
+                <div class="glass-card p-6 rounded-2xl border border-indigo-500/20 space-y-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-microphone-lines text-indigo-400"></i> NandoAI Sprachstudio
+                    </h2>
+                    <p class="text-xs text-slate-300">Konfiguriere die Sprachausgabe von NandoAI (Text-to-Speech) mit bereinigter, natürlicher Aussprache.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-300">Deutsche Stimme auswählen</label>
+                            <select id="speech-voice-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none"></select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-300">Tonhöhe (Pitch)</label>
+                            <input type="range" id="speech-pitch" min="0.5" max="1.5" step="0.1" value="1.0" class="w-full">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-slate-300">Test-Text vorlesen</label>
+                        <textarea id="speech-test-text" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white">Hallo! Ich bin NandoAI. Meine Stimme filtert automatisch Regieanweisungen und Sternchen heraus.</textarea>
+                        <button onclick="speakTestText()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-2">
+                            <i class="fa-solid fa-volume-high"></i> Test Vorlesen
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 9: MINI-SPIEL (SNAKE) -->
+            <div id="tab-game" class="tab-content hidden space-y-4 text-center">
+                <div class="glass-card p-4 rounded-2xl border border-slate-700/50 max-w-md mx-auto space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-white text-sm">NandoAI Snake Game</span>
+                        <span class="text-xs text-lime-400 font-mono">Punkte: <b id="snake-score">0</b></span>
+                    </div>
+                    <canvas id="snake-canvas" width="300" height="300" class="bg-slate-950 rounded-xl mx-auto border border-slate-800"></canvas>
+                    <div class="flex justify-center gap-2">
+                        <button onclick="initSnakeGame()" class="px-4 py-2 bg-lime-600 hover:bg-lime-500 text-slate-950 font-bold text-xs rounded-xl transition">Neues Spiel</button>
+                    </div>
+                    <p class="text-[10px] text-slate-500">Nutze die Pfeiltasten deiner Tastatur zur Steuerung.</p>
+                </div>
+            </div>
+
+            <!-- TAB 10: EINSTELLUNGEN -->
+            <div id="tab-settings" class="tab-content hidden space-y-6">
+                <div class="glass-card p-6 rounded-2xl border border-slate-700/50 space-y-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-gears text-slate-400"></i> System-Einstellungen
+                    </h2>
+
+                    <div class="space-y-4 text-xs">
+                        <div class="flex items-center justify-between border-b border-slate-700/50 pb-3">
+                            <div>
+                                <div class="font-semibold text-white">Design Preset</div>
+                                <div class="text-slate-400">Wähle deinen visuellen Stil.</div>
+                            </div>
+                            <select id="theme-preset-select" onchange="changeThemePreset(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                                <option value="ocean">Ozean Blau</option>
+                                <option value="cyberpunk">Cyberpunk Neon</option>
+                                <option value="emerald">Emerald Green</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center justify-between border-b border-slate-700/50 pb-3">
+                            <div>
+                                <div class="font-semibold text-white">Google Apps Script Backend</div>
+                                <div class="text-slate-400">Chat-Schnittstellen-URL</div>
+                            </div>
+                            <input type="text" readonly value="https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec" class="w-1/2 bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-400 font-mono text-[10px]">
+                        </div>
+
+                        <div class="pt-2">
+                            <button onclick="clearAllData()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition">
+                                Alle lokalen Daten zurücksetzen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- BACKUP / RESTORE MODAL -->
+    <div id="backup-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-6 rounded-2xl border border-slate-700 space-y-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-database text-sky-400"></i> Backup & Datensicherung
+            </h3>
+            <p class="text-xs text-slate-300">Sichere alle deine Chats, Bilder-Galerien und Notizen als JSON-Datei oder stelle sie wieder her.</p>
+
+            <div class="space-y-3">
+                <button onclick="exportFullBackup()" class="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition">
+                    <i class="fa-solid fa-download mr-1"></i> Vollständiges Backup Exportieren
+                </button>
+
+                <div class="border-t border-slate-700 pt-3 space-y-2">
+                    <label class="text-xs font-semibold text-slate-300 block">Backup-Datei wiederherstellen</label>
+                    <input type="file" id="backup-file-input" accept=".json" class="text-xs text-slate-400 w-full bg-slate-900 border border-slate-700 rounded-xl p-2">
+                    <button onclick="importFullBackup()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 text-xs font-bold rounded-xl border border-slate-700 transition">
+                        <i class="fa-solid fa-upload mr-1"></i> Datei Importieren
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <button onclick="closeBackupModal()" class="px-4 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-xs">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP ENGINE -->
+    <script>
+        // --- CONSTANTS & CONFIG ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec";
+        
+        // Local Storage Keys
+        const STORAGE_KEY_CHATS = "nandoai_chats";
+        const STORAGE_KEY_GALLERY = "nandoai_gallery";
+        const STORAGE_KEY_BOOKMARKS = "nandoai_bookmarks";
+        const STORAGE_KEY_SETTINGS = "nandoai_settings";
+
+        // App State Variables
+        let chats = JSON.parse(localStorage.getItem(STORAGE_KEY_CHATS)) || [];
+        let currentChatId = null;
+        let gallery = JSON.parse(localStorage.getItem(STORAGE_KEY_GALLERY)) || [];
+        let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY_BOOKMARKS)) || [];
+        let selectedVoice = null;
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            initClockAndDate();
+            fetchWeather();
+            loadGalleryPreview();
+            loadBookmarks();
+            renderChatHistory();
+            initSpeechStudio();
+            initCanvas();
+            initSnakeGame();
+
+            // Mobile Sidebar Toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            });
+        };
+
+        // --- NAVIGATION & TABS ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-sky-600/20', 'text-sky-400'));
+
+            const targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) targetTab.classList.remove('hidden');
+
+            const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+            if(activeBtn) activeBtn.classList.add('bg-sky-600/20', 'text-sky-400');
+
+            // Close mobile menu on tab click
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+        }
+
+        // --- CLOCK & WEATHER ---
+        function initClockAndDate() {
+            const quotes = [
+                '"Kreativität ist Intelligenz, die Spaß hat." - Albert Einstein',
+                '"Die Zukunft gehört denen, die an die Schönheit ihrer Träume glauben."',
+                '"NandoAI Ultimate Max – Deine tägliche Dosis Innovation."'
+            ];
+            document.getElementById('daily-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+            function updateTime() {
+                const now = new Date();
+                document.getElementById('dash-clock').innerText = now.toLocaleTimeString('de-DE');
+                document.getElementById('dash-date').innerText = now.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        function fetchWeather() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.current_weather) {
+                                document.getElementById('dash-weather-temp').innerText = `${Math.round(data.current_weather.temperature)}°C`;
+                                document.getElementById('dash-weather-city').innerHTML = `<i class="fa-solid fa-location-dot text-rose-400"></i> Mein Standort`;
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('dash-weather-city').innerText = 'Wetter N/A';
+                        });
+                }, () => {
+                    document.getElementById('dash-weather-city').innerText = 'Standort deaktiviert';
+                });
+            }
+        }
+
+        // --- BILDSTUDIO (POLLINATIONS.AI DIRECT INTEGRATION) ---
+        function generateImage() {
+            const promptText = document.getElementById('img-prompt').value.trim();
+            if (!promptText) {
+                alert("Bitte gib eine Bildbeschreibung (Prompt) ein!");
+                return;
+            }
+
+            const style = document.getElementById('img-style').value;
+            const format = document.getElementById('img-format').value;
+            const [width, height] = format.split('x');
+
+            const fullPrompt = style ? `${promptText}, ${style}` : promptText;
+            const seed = Math.floor(Math.random() * 1000000);
+
+            // Pollinations API Direct URL
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=${width}&height=${height}&seed=${seed}&nologo=true&enhance=true`;
+
+            // UI Loading state
+            document.getElementById('img-placeholder').classList.add('hidden');
+            document.getElementById('img-view-box').classList.add('hidden');
+            document.getElementById('img-loader').classList.remove('hidden');
+
+            const tempImg = new Image();
+            tempImg.src = imageUrl;
+            tempImg.onload = function() {
+                document.getElementById('img-loader').classList.add('hidden');
+                document.getElementById('img-output').src = imageUrl;
+                document.getElementById('img-view-box').classList.remove('hidden');
+                document.getElementById('img-view-box').dataset.currentPrompt = promptText;
+                document.getElementById('img-view-box').dataset.currentUrl = imageUrl;
+            };
+            tempImg.onerror = function() {
+                document.getElementById('img-loader').classList.add('hidden');
+                document.getElementById('img-placeholder').classList.remove('hidden');
+                alert("Fehler beim Laden des Bildes. Bitte erneut versuchen.");
+            };
+        }
+
+        function downloadGeneratedImage() {
+            const url = document.getElementById('img-view-box').dataset.currentUrl;
+            if(!url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NandoAI_Bild_${Date.now()}.jpg`;
+            a.target = "_blank";
+            a.click();
+        }
+
+        function saveToGallery() {
+            const url = document.getElementById('img-view-box').dataset.currentUrl;
+            const prompt = document.getElementById('img-view-box').dataset.currentPrompt;
+            if(!url) return;
+
+            gallery.unshift({ id: Date.now(), url: url, prompt: prompt });
+            localStorage.setItem(STORAGE_KEY_GALLERY, JSON.stringify(gallery));
+            loadGalleryPreview();
+            alert("Bild erfolgreich in der NandoAI Galerie gespeichert!");
+        }
+
+        function loadGalleryPreview() {
+            const dashContainer = document.getElementById('dash-gallery-preview');
+            const mainContainer = document.getElementById('gallery-grid');
+
+            dashContainer.innerHTML = '';
+            mainContainer.innerHTML = '';
+
+            if (gallery.length === 0) {
+                dashContainer.innerHTML = `<div class="text-xs text-slate-500 col-span-3 text-center py-4">Noch keine generierten Bilder vorhanden.</div>`;
+                mainContainer.innerHTML = `<div class="text-xs text-slate-500 col-span-6 text-center py-4">Keine Bilder in der Galerie.</div>`;
+                return;
+            }
+
+            // Dashboard preview max 3
+            gallery.slice(0, 3).forEach(item => {
+                const img = document.createElement('img');
+                img.src = item.url;
+                img.className = 'w-full h-16 object-cover rounded-lg border border-slate-700 cursor-pointer';
+                img.onclick = () => switchTab('image-studio');
+                dashContainer.appendChild(img);
+            });
+
+            // Full gallery
+            gallery.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'relative group border border-slate-700 rounded-xl overflow-hidden';
+                card.innerHTML = `
+                    <img src="${item.url}" class="w-full h-24 object-cover">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
+                        <a href="${item.url}" target="_blank" class="text-white text-xs p-1 bg-slate-800 rounded"><i class="fa-solid fa-expand"></i></a>
+                    </div>
+                `;
+                mainContainer.appendChild(card);
+            });
+        }
+
+        function clearLocalGallery() {
+            if(confirm("Möchtest du wirklich alle gespeicherten Bilder löschen?")) {
+                gallery = [];
+                localStorage.setItem(STORAGE_KEY_GALLERY, JSON.stringify(gallery));
+                loadGalleryPreview();
+            }
+        }
+
+        // --- CHAT & GOOGLE APPS SCRIPT BACKEND (JSONP) ---
+        function handleChatKeyPress(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if(!message) return;
+
+            input.value = '';
+            appendChatMessage('user', message);
+
+            // NandoAI Status Avatar Pulsing
+            setAvatarStatus(true, "NandoAI denkt nach...");
+
+            // Call Backend via JSONP
+            const script = document.createElement('script');
+            const callbackName = 'nandoai_cb_' + Date.now();
+            
+            window[callbackName] = function(response) {
+                delete window[callbackName];
+                document.body.removeChild(script);
+                setAvatarStatus(false, "NandoAI bereit");
+
+                let reply = "Entschuldigung, ich konnte keine Antwort verarbeiten.";
+                if(response && response.antwort) reply = response.antwort;
+                else if(response && response.text) reply = response.text;
+
+                appendChatMessage('assistant', reply);
+                speakCleanText(reply);
+            };
+
+            script.src = `${GOOGLE_SCRIPT_URL}?aktion=chat&frage=${encodeURIComponent(message)}&callback=${callbackName}`;
+            script.onerror = function() {
+                delete window[callbackName];
+                document.body.removeChild(script);
+                setAvatarStatus(false, "NandoAI Bereit");
+                appendChatMessage('assistant', "Fehler bei der Verbindung zum Google Script Backend.");
+            };
+
+            document.body.appendChild(script);
+        }
+
+        function appendChatMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex items-start gap-3 ${role === 'user' ? 'justify-end' : ''}`;
+
+            const formattedText = marked.parse(text);
+
+            if(role === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="bg-sky-600 text-white border border-sky-500 rounded-2xl p-3 text-sm max-w-[85%]">
+                        ${text}
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 text-sm max-w-[85%] text-slate-200 prose dark:prose-invert">
+                        ${formattedText}
+                    </div>
+                `;
+            }
+
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function setAvatarStatus(isBusy, text) {
+            const pulse = document.getElementById('avatar-pulse');
+            const statusText = document.getElementById('avatar-status');
+            statusText.innerText = text;
+
+            if(isBusy) {
+                pulse.className = 'w-3 h-3 rounded-full bg-amber-500 animate-ping';
+            } else {
+                pulse.className = 'w-3 h-3 rounded-full bg-emerald-500';
+            }
+        }
+
+        function renderChatHistory() {
+            const container = document.getElementById('chat-history-list');
+            container.innerHTML = '';
+            chats.forEach(chat => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-slate-800 truncate block';
+                btn.innerText = chat.title || 'Gespräch ' + chat.id;
+                container.appendChild(btn);
+            });
+        }
+
+        function startNewChat() {
+            document.getElementById('chat-messages').innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 text-sm max-w-[85%] text-slate-200">
+                        Neuer Chat gestartet. Wie kann NandoAI dir helfen?
+                    </div>
+                </div>
+            `;
+        }
+
+        function clearCurrentChat() {
+            startNewChat();
+        }
+
+        // --- SPRACHSTUDIO & TEXT-TO-SPEECH ---
+        function initSpeechStudio() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = function() {
+                    const voices = window.speechSynthesis.getVoices();
+                    const select = document.getElementById('speech-voice-select');
+                    select.innerHTML = '';
+                    voices.filter(v => v.lang.startsWith('de')).forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v.name;
+                        opt.innerText = `${v.name} (${v.lang})`;
+                        select.appendChild(opt);
+                    });
+                };
+            }
+        }
+
+        function speakCleanText(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            // Regex clean markdown and action asterisks *lächelt*
+            let clean = text.replace(/\*.*?\*/g, '')
+                            .replace(/[#*_`~]/g, '')
+                            .trim();
+
+            if (!clean) return;
+
+            const utterance = new SpeechSynthesisUtterance(clean);
+            utterance.lang = 'de-DE';
+            
+            const pitch = parseFloat(document.getElementById('speech-pitch').value) || 1.0;
+            utterance.pitch = pitch;
+
+            const voices = window.speechSynthesis.getVoices();
+            const selectedVoiceName = document.getElementById('speech-voice-select').value;
+            const voiceObj = voices.find(v => v.name === selectedVoiceName);
+            if (voiceObj) utterance.voice = voiceObj;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakTestText() {
+            const txt = document.getElementById('speech-test-text').value;
+            speakCleanText(txt);
+        }
+
+        // --- CODE SANDBOX ---
+        function runCodePreview() {
+            const code = document.getElementById('code-editor').value;
+            const iframe = document.getElementById('code-preview-frame');
+            iframe.srcdoc = code;
+        }
+
+        // --- MARKDOWN STUDIO ---
+        function updateMarkdownPreview() {
+            const raw = document.getElementById('md-input').value;
+            document.getElementById('md-preview-output').innerHTML = marked.parse(raw);
+            document.getElementById('md-char-count').innerText = raw.length;
+            document.getElementById('md-word-count').innerText = raw.trim() ? raw.trim().split(/\s+/).length : 0;
+        }
+
+        // --- DRAW STUDIO CANVAS ---
+        let canvas, ctx, drawing = false;
+
+        function initCanvas() {
+            canvas = document.getElementById('paint-canvas');
+            ctx = canvas.getContext('2d');
+            
+            canvas.addEventListener('mousedown', () => drawing = true);
+            canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+            canvas.addEventListener('mousemove', draw);
+        }
+
+        function draw(e) {
+            if(!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineWidth = document.getElementById('draw-size').value;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = document.getElementById('draw-color').value;
+
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function downloadCanvas() {
+            const a = document.createElement('a');
+            a.href = canvas.toDataURL();
+            a.download = 'NandoAI_Zeichnung.png';
+            a.click();
+        }
+
+        // --- CALCULATOR ---
+        function calcInput(val) {
+            const disp = document.getElementById('calc-display');
+            if(val === 'C') disp.value = '';
+            else disp.value += val;
+        }
+
+        function calcSolve() {
+            const disp = document.getElementById('calc-display');
+            try { disp.value = eval(disp.value); } 
+            catch { disp.value = 'Fehler'; }
+        }
+
+        // --- POMODORO TIMER ---
+        let pomoInterval, pomoTime = 1500;
+        function startPomodoro() {
+            clearInterval(pomoInterval);
+            pomoInterval = setInterval(() => {
+                if(pomoTime <= 0) {
+                    clearInterval(pomoInterval);
+                    alert("Pomodoro Fokuszeit abgelaufen!");
+                    return;
+                }
+                pomoTime--;
+                const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+                const s = (pomoTime % 60).toString().padStart(2, '0');
+                document.getElementById('pomo-display').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+        function pausePomodoro() { clearInterval(pomoInterval); }
+        function resetPomodoro() { pausePomodoro(); pomoTime = 1500; document.getElementById('pomo-display').innerText = "25:00"; }
+
+        // --- QR CODE GENERATOR ---
+        function generateQRCode() {
+            const text = document.getElementById('qr-text-input').value;
+            const container = document.getElementById('qr-output');
+            container.innerHTML = '';
+            if(!text) return;
+            new QRCode(container, { text: text, width: 128, height: 128 });
+        }
+
+        // --- BOOKMARKS ---
+        function addBookmark() {
+            const title = document.getElementById('bm-title').value;
+            const url = document.getElementById('bm-url').value;
+            if(!title || !url) return;
+
+            bookmarks.push({ title, url });
+            localStorage.setItem(STORAGE_KEY_BOOKMARKS, JSON.stringify(bookmarks));
+            loadBookmarks();
+            document.getElementById('bm-title').value = '';
+            document.getElementById('bm-url').value = '';
+        }
+
+        function loadBookmarks() {
+            const container = document.getElementById('bookmarks-container');
+            const dashContainer = document.getElementById('dash-bookmarks-list');
+            container.innerHTML = '';
+            dashContainer.innerHTML = '';
+
+            bookmarks.forEach(bm => {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center bg-slate-900 p-2 rounded-lg';
+                li.innerHTML = `<a href="${bm.url}" target="_blank" class="text-sky-400 hover:underline truncate">${bm.title}</a>`;
+                container.appendChild(li);
+
+                const dashLi = document.createElement('li');
+                dashLi.innerHTML = `<i class="fa-solid fa-link text-slate-500 mr-2"></i><a href="${bm.url}" target="_blank" class="hover:underline">${bm.title}</a>`;
+                dashContainer.appendChild(dashLi);
+            });
+        }
+
+        // --- MINI SNAKE GAME ---
+        let snakeCanvas, snakeCtx, snake, food, dx, dy, score, snakeGameLoop;
+
+        function initSnakeGame() {
+            snakeCanvas = document.getElementById('snake-canvas');
+            if(!snakeCanvas) return;
+            snakeCtx = snakeCanvas.getContext('2d');
+            snake = [{x: 150, y: 150}, {x: 140, y: 150}, {x: 130, y: 150}];
+            food = {x: 0, y: 0};
+            dx = 10; dy = 0; score = 0;
+            document.getElementById('snake-score').innerText = score;
+            createSnakeFood();
+            
+            document.removeEventListener('keydown', changeSnakeDirection);
+            document.addEventListener('keydown', changeSnakeDirection);
+
+            clearInterval(snakeGameLoop);
+            snakeGameLoop = setInterval(stepSnake, 100);
+        }
+
+        function stepSnake() {
+            if (hasSnakeEnded()) {
+                clearInterval(snakeGameLoop);
+                alert("Game Over! Punkte: " + score);
+                return;
+            }
+
+            snakeCtx.fillStyle = '#020617';
+            snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+            // Draw Food
+            snakeCtx.fillStyle = '#84cc16';
+            snakeCtx.fillRect(food.x, food.y, 10, 10);
+
+            // Advance Snake
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            snake.unshift(head);
+
+            if (snake[0].x === food.x && snake[0].y === food.y) {
+                score += 10;
+                document.getElementById('snake-score').innerText = score;
+                createSnakeFood();
+            } else {
+                snake.pop();
+            }
+
+            // Draw Snake
+            snake.forEach((part, i) => {
+                snakeCtx.fillStyle = i === 0 ? '#38bdf8' : '#0284c7';
+                snakeCtx.fillRect(part.x, part.y, 10, 10);
+            });
+        }
+
+        function createSnakeFood() {
+            food.x = Math.floor(Math.random() * (snakeCanvas.width / 10)) * 10;
+            food.y = Math.floor(Math.random() * (snakeCanvas.height / 10)) * 10;
+        }
+
+        function changeSnakeDirection(e) {
+            if (e.key === 'ArrowLeft' && dx === 0) { dx = -10; dy = 0; }
+            if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -10; }
+            if (e.key === 'ArrowRight' && dx === 0) { dx = 10; dy = 0; }
+            if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 10; }
+        }
+
+        function hasSnakeEnded() {
+            for (let i = 4; i < snake.length; i++) {
+                if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true;
+            }
+            return snake[0].x < 0 || snake[0].x >= snakeCanvas.width || snake[0].y < 0 || snake[0].y >= snakeCanvas.height;
+        }
+
+        // --- THEME & BACKUP MODALS ---
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+        }
+
+        function openBackupModal() { document.getElementById('backup-modal').classList.remove('hidden'); }
+        function closeBackupModal() { document.getElementById('backup-modal').classList.add('hidden'); }
+
+        function exportFullBackup() {
+            const data = { gallery, bookmarks, chats };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `NandoAI_Backup_${Date.now()}.json`;
+            a.click();
+        }
+
+        function importFullBackup() {
+            const fileInput = document.getElementById('backup-file-input');
+            if(!fileInput.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if(data.gallery) localStorage.setItem(STORAGE_KEY_GALLERY, JSON.stringify(data.gallery));
+                    if(data.bookmarks) localStorage.setItem(STORAGE_KEY_BOOKMARKS, JSON.stringify(data.bookmarks));
+                    if(data.chats) localStorage.setItem(STORAGE_KEY_CHATS, JSON.stringify(data.chats));
+                    location.reload();
+                } catch { alert("Ungültiges Backup-Dateiformat."); }
+            };
+            reader.readAsText(fileInput.files[0]);
+        }
+
+        function clearAllData() {
+            if(confirm("Möchtest du wirklich ALLE Daten (Chats, Bilder, Notizen) in NandoAI löschen?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
