@@ -516,7 +516,7 @@
 
     // ⚡ GROQ CLOUD KI (Trage hier deinen echten Groq API-Key ein)
     async function kiAntwortHubern(prompt) {
-      const apiKey = "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";
+      const apiKey = "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";
 
       if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
         return "Bitte trage deinen echten Groq API-Key im Code bei 'apiKey' ein!";
@@ -912,7 +912,7 @@
       if(canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); 
     }
 
-    // Verbesserte Sprachausgabe mit robustem Laden deutscher Stimmen
+    // Sprachausgabe mit automatischer Aufteilung für lange Texte
     function stimmenLaden() { 
       if (!synth) return; 
       verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de') || v.lang.startsWith('de-DE')); 
@@ -922,21 +922,37 @@
       if (!synth) return; 
       synth.cancel();
 
-      if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) { 
+      if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key")) { 
         return; 
       }
 
       stimmenLaden();
-
       const clean = text.replace(/[*_#`~]/g, '').trim();
-      const utter = new SpeechSynthesisUtterance(clean);
-      utter.lang = 'de-DE';
 
-      if (verfuegbareStimmen.length > 0) {
-        utter.voice = verfuegbareStimmen[0];
-      }
+      // Teilt den Text anhand von Punkten/Satzzeichen in Häppchen à max 180 Zeichen auf
+      const saetze = clean.match(/[^.!?]+[.!?]+|\S+/g) || [clean];
+      let aktuelleWortGruppe = "";
+      let bluöcke = [];
 
-      synth.speak(utter);
+      saetze.forEach(teil => {
+        if ((aktuelleWortGruppe + " " + teil).length < 180) {
+          aktuelleWortGruppe += " " + teil;
+        } else {
+          bluöcke.push(aktuelleWortGruppe.trim());
+          aktuelleWortGruppe = teil;
+        }
+      });
+      if (aktuelleWortGruppe) bluöcke.push(aktuelleWortGruppe.trim());
+
+      // Spricht die Blöcke nacheinander ab
+      bluöcke.forEach(block => {
+        const utter = new SpeechSynthesisUtterance(block);
+        utter.lang = 'de-DE';
+        if (verfuegbareStimmen.length > 0) {
+          utter.voice = verfuegbareStimmen[0];
+        }
+        synth.speak(utter);
+      });
     }
 
     function sprachEingabeStarten() {
