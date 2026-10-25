@@ -197,13 +197,13 @@
         <div class="logo">✦</div>
         <div>
           <h1>NandoAI Cybernet</h1>
-          <p>Permanent Gemini Cloud Active</p>
+          <p>Groq Llama 3.1 Cloud Active</p>
         </div>
       </div>
       <button class="secondary" onclick="cyberModusWechseln()">⚡ Cyber Glow</button>
     </header>
 
-    <div id="status">System online. Echte Gemini Cloud-KI dauerhaft aktiv!</div>
+    <div id="status">System online. Echte Groq Cloud-KI dauerhaft aktiv!</div>
 
     <!-- DASHBOARD -->
     <section id="dashboardTab" class="panel">
@@ -215,10 +215,10 @@
         </div>
         <div class="widget">
           <div class="widget-label">⚡ KI-Modus</div>
-          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Gemini Cloud Active</div>
+          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Groq Llama 3.1 Active</div>
         </div>
         <div class="widget">
-          <div class="widget-label">💡 Dev-Zitrat</div>
+          <div class="widget-label">💡 Dev-Zitat</div>
           <div class="widget-value" id="zitatBox" style="font-size: 0.8rem; font-style: italic; color: var(--accent);">...</div>
         </div>
       </div>
@@ -237,7 +237,7 @@
         </div>
         <div class="widget">
           <div class="widget-label">⚙️ KI-Status</div>
-          <div class="widget-value" style="color: var(--primary);">Gemini Cloud</div>
+          <div class="widget-value" style="color: var(--primary);">Groq Cloud</div>
         </div>
         <div class="widget">
           <div class="widget-label">💬 Session</div>
@@ -512,13 +512,14 @@
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/\n/g, '<br>');
-    
-// GROQ CLOUD KI (Garantierter Standard-Name: llama-3.1-8b-instant)
+    }
+
+    // ⚡ ECHTE GROQ CLOUD KI (Super schnell mit Llama 3.1)
     async function kiAntwortHubern(prompt) {
       const apiKey = "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";
 
       if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
-        return "Bitte trage deinen Groq API-Key ein!";
+        return "Bitte trage deinen echten Groq API-Key im Code bei 'apiKey' ein!";
       }
 
       try {
@@ -547,7 +548,7 @@
 
     /* CHAT */
     function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
-    function begruessungsNachricht() { return [{ text: 'System online. Gemini Cloud-KI ist bereit für deine Fragen!', rolle: 'assistant' }]; }
+    function begruessungsNachricht() { return [{ text: 'System online. Groq Cloud-KI ist bereit für deine Fragen!', rolle: 'assistant' }]; }
 
     function chatVerlaufLaden() {
       try { const g = localStorage.getItem(SPEICHER_CHATS); if (g) chats = JSON.parse(g); } catch (e) {}
@@ -602,7 +603,7 @@
       if(!input) return;
       const text = input.value.trim(); if (!text) return;
       input.value = ''; nachrichtElementErstellen(text, 'user', true);
-      statusSetzen('Gemini KI denkt nach...');
+      statusSetzen('Groq KI denkt nach...');
       
       const antwort = await kiAntwortHubern(text);
       
@@ -914,8 +915,8 @@
     function stimmenLaden() { if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de')); }
     function vorlesenMenschlich(text) {
       if (!synth) return; synth.cancel();
-      // Schutz vor Vorlesen von API-Keys oder Systemfehlern
-      if (text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) { return; }
+      // Vorlese-Sperre für API-Keys
+      if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) { return; }
       const clean = text.replace(/[*_#`~]/g, '').trim();
       const utter = new SpeechSynthesisUtterance(clean);
       if (verfuegbareStimmen.length > 0) utter.voice = verfuegbareStimmen[0];
