@@ -197,7 +197,7 @@
         <div class="logo">✦</div>
         <div>
           <h1>NandoAI Cybernet</h1>
-          <p>Groq Llama 3.1 Cloud Active</p>
+          <p>Groq GPT-OSS Cloud Active</p>
         </div>
       </div>
       <button class="secondary" onclick="cyberModusWechseln()">⚡ Cyber Glow</button>
@@ -215,7 +215,7 @@
         </div>
         <div class="widget">
           <div class="widget-label">⚡ KI-Modus</div>
-          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Groq Llama 3.1 Active</div>
+          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Groq GPT-OSS Active</div>
         </div>
         <div class="widget">
           <div class="widget-label">💡 Dev-Zitat</div>
@@ -514,7 +514,7 @@
         .replace(/\n/g, '<br>');
     }
 
-    // ⚡ ECHTE GROQ CLOUD KI (Super schnell mit Llama 3.1)
+    // ⚡ GROQ CLOUD KI (Aktives Modell: openai/gpt-oss-20b)
     async function kiAntwortHubern(prompt) {
       const apiKey = "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";
 
@@ -530,7 +530,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama-3.1-8b-instant",
+            model: "openai/gpt-oss-20b",
             messages: [{ role: "user", content: prompt }]
           })
         });
@@ -915,8 +915,7 @@
     function stimmenLaden() { if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de')); }
     function vorlesenMenschlich(text) {
       if (!synth) return; synth.cancel();
-      // Vorlese-Sperre für API-Keys
-      if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) { return; }
+      if (text.includes("gsk_") || text.includes("API-Key") || text.length > 500) { return; }
       const clean = text.replace(/[*_#`~]/g, '').trim();
       const utter = new SpeechSynthesisUtterance(clean);
       if (verfuegbareStimmen.length > 0) utter.voice = verfuegbareStimmen[0];
