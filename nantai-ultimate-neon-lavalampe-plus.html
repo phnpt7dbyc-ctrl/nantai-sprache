@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f4f7fc">
-  <title>NantAI Ultimate Plus</title>
+  <title>NantAI Ultimate Plus - All-in-One</title>
   <style>
     :root[data-theme="light"] {
       --bg: #f4f7fc;
@@ -146,9 +146,11 @@
     .hidden { display: none !important; }
 
     #chat { display: flex; flex-direction: column; gap: 12px; min-height: 40vh; margin-bottom: 20px; }
-    .message { padding: 12px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .message { padding: 12px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); overflow-wrap: anywhere; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
     .message.user { background: var(--primary-light); align-self: flex-end; max-width: 88%; border-color: var(--border); color: var(--primary); }
     .message.assistant { align-self: stretch; }
+    .message code { background: var(--panel2); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .message pre { background: var(--panel2); padding: 10px; border-radius: 8px; overflow-x: auto; font-family: monospace; }
     .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
     .msg-tools button { padding: 5px 10px; font-size: 0.8rem; }
 
@@ -162,8 +164,8 @@
     .avatar-face { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 40px; box-shadow: 0 0 20px var(--primary); margin-bottom: 14px; animation: avPulse 2s infinite ease-in-out; }
     @keyframes avPulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
-    /* Whiteboard / Canvas Styling */
     #drawingCanvas { width: 100%; height: 300px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px; cursor: crosshair; touch-action: none; }
+    #qrCanvas { margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: white; }
 
     @media (max-width: 768px) {
       body { padding-left: 0; }
@@ -183,16 +185,19 @@
 
   <aside>
     <h2>✦ NantAI</h2>
-    <p>Ultimate Plus</p>
+    <p>Ultimate Max</p>
     <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
     <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Chat & Verlauf</button>
-    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 NantAI Avatar</button>
+    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 Avatar</button>
     <button class="nav-btn" onclick="tabWechseln('codeTab', this)">💻 Programmierstudio</button>
     <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">🎨 Zeichenstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('toolsTab', this)">🧮 Rechner & Umrechner</button>
+    <button class="nav-btn" onclick="tabWechseln('pomodoroTab', this)">⏳ Pomodoro-Timer</button>
+    <button class="nav-btn" onclick="tabWechseln('qrTab', this)">📱 QR-Code Generator</button>
+    <button class="nav-btn" onclick="tabWechseln('bookmarksTab', this)">🔖 Lesezeichen</button>
     <button class="nav-btn" onclick="tabWechseln('designTab', this)">⚙️ Design & Modus</button>
     <button class="nav-btn" onclick="tabWechseln('sprachStudioTab', this)">🗣️ Sprachstudio</button>
     <button class="nav-btn" onclick="tabWechseln('wetterTab', this)">🌦️ Wetter & Standort</button>
-    <button class="nav-btn" onclick="tabWechseln('timerTab', this)">⏱️ Timer & Stoppuhr</button>
     <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen & Statistik</button>
     <div class="side-label">Aktionen</div>
     <button class="nav-btn" onclick="neuerChat()">＋ Neuer Chat</button>
@@ -205,7 +210,7 @@
         <div class="logo">✦</div>
         <div>
           <h1>NantAI Assistant</h1>
-          <p>Alle Module & Features aktiv</p>
+          <p>Sprachausgabe ohne Sternchen & Symbole</p>
         </div>
       </div>
       <button class="secondary" onclick="themeUmschalten()">🌓 Theme wechseln</button>
@@ -213,11 +218,9 @@
 
     <div id="status">System bereit.</div>
 
-    <!-- 0. STARTSEITE / DASHBOARD -->
+    <!-- 0. DASHBOARD -->
     <section id="dashboardTab" class="panel">
-      <h3>🏠 Schnellstart-Dashboard</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Willkommen zurück! Hier ist dein persönlicher Überblick.</p>
-      
+      <h3>🏠 Dashboard</h3>
       <div class="dashboard" style="margin-top: 14px;">
         <div class="widget">
           <div class="widget-label">🕒 Uhrzeit</div>
@@ -228,14 +231,13 @@
           <div class="widget-value" id="dashWetter">Nicht geladen</div>
         </div>
         <div class="widget">
-          <div class="widget-label">💡 Inspiration des Tages</div>
-          <div class="widget-value" id="zitatBox" style="font-size: 0.85rem; font-style: italic;">"Code is like humor. When you have to explain it, it’s bad."</div>
+          <div class="widget-label">💡 Tagesinspiration</div>
+          <div class="widget-value" id="zitatBox" style="font-size: 0.85rem; font-style: italic;">...</div>
         </div>
       </div>
-
       <div class="row" style="margin-top: 16px;">
-        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Zum Chat</button>
-        <button class="secondary" onclick="tabWechseln('whiteboardTab', document.querySelectorAll('aside .nav-btn')[4])">🎨 Zeichenstudio öffnen</button>
+        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Chat starten</button>
+        <button class="secondary" onclick="tabWechseln('pomodoroTab', document.querySelectorAll('aside .nav-btn')[6])">⏳ Fokus-Timer</button>
       </div>
     </section>
 
@@ -255,9 +257,7 @@
           <div class="widget-value">Aktiv</div>
         </div>
       </div>
-
       <div id="chat" aria-live="polite"></div>
-
       <div class="composer">
         <textarea id="nachrichtInput" placeholder="Schreibe eine Nachricht an NantAI..." onkeydown="pruefeEingabe(event)"></textarea>
         <div class="row">
@@ -267,7 +267,7 @@
       </div>
     </section>
 
-    <!-- 2. AVATAR TAB -->
+    <!-- 2. AVATAR -->
     <section id="avatarTab" class="panel hidden">
       <h3>🤖 NantAI Avatar Unterhaltung</h3>
       <div class="avatar-container">
@@ -278,9 +278,9 @@
       <div class="row"><button onclick="avatarSprechenlassen()">Mit Avatar sprechen</button></div>
     </section>
 
-    <!-- 3. PROGRAMMIERSTUDIO TAB -->
+    <!-- 3. CODE STUDIO -->
     <section id="codeTab" class="panel hidden">
-      <h3>💻 Programmierstudio & Text-Statistik</h3>
+      <h3>💻 Programmierstudio</h3>
       <textarea id="codeEditor" oninput="codeStatistikAktualisieren()" style="font-family: monospace; min-height: 140px;" placeholder="HTML/JS Code hier eingeben..."></textarea>
       <div id="codeStatistik" style="font-size: 0.8rem; color: var(--muted); margin: 6px 0;">Wörter: 0 | Zeichen: 0</div>
       <div class="row">
@@ -293,10 +293,9 @@
       </div>
     </section>
 
-    <!-- NEU: 4. ZEICHENSTUDIO / WHITEBOARD -->
+    <!-- 4. ZEICHENSTUDIO -->
     <section id="whiteboardTab" class="panel hidden">
       <h3>🎨 Interaktives Zeichenstudio</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Skizziere Ideen direkt auf dem Bildschirm.</p>
       <div class="row" style="margin-bottom: 8px;">
         <input type="color" id="brushColor" value="#0284c7" style="height: 38px; max-width: 80px;">
         <input type="range" id="brushSize" min="1" max="25" value="5" title="Pinselstärke" style="flex: 2;">
@@ -305,7 +304,66 @@
       <canvas id="drawingCanvas"></canvas>
     </section>
 
-    <!-- 5. DESIGN & MODUS TAB -->
+    <!-- 5. ERWEITERUNGSCENTER -->
+    <section id="toolsTab" class="panel hidden">
+      <h3>🧮 Erweiterungscenter</h3>
+      <div style="margin-bottom: 16px;">
+        <h4>Taschenrechner</h4>
+        <div class="row">
+          <input id="calcInput" placeholder="z. B. 12 * (4 + 8)">
+          <button onclick="rechnen()">Berechnen</button>
+        </div>
+        <div id="calcErgebnis" style="margin-top: 6px; font-weight: bold; color: var(--primary);"></div>
+      </div>
+      <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+      <div>
+        <h4>Einheitenumrechner</h4>
+        <div class="row">
+          <input type="number" id="unitVal" placeholder="Wert">
+          <select id="unitType">
+            <option value="mToFt">Meter ➔ Fuß</option>
+            <option value="cToF">Celsius ➔ Fahrenheit</option>
+            <option value="kgToLbs">Kilogramm ➔ Pfund</option>
+          </select>
+          <button onclick="einheitUmrechnen()">Umrechnen</button>
+        </div>
+        <div id="unitErgebnis" style="margin-top: 6px; font-weight: bold; color: var(--primary);"></div>
+      </div>
+    </section>
+
+    <!-- 6. POMODORO TIMER -->
+    <section id="pomodoroTab" class="panel hidden">
+      <h3>⏳ Pomodoro-Fokus-Timer</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">25 Minuten Fokus, danach 5 Minuten Pause.</p>
+      <div id="pomoDisplay" style="font-size: 2.5rem; font-weight: bold; text-align: center; margin: 16px 0; color: var(--primary);">25:00</div>
+      <div class="row">
+        <button onclick="pomoStarten()">Fokus starten</button>
+        <button class="secondary" onclick="pomoPauseStarten()">Pause starten</button>
+        <button class="danger" onclick="pomoStoppen()">Stopp</button>
+      </div>
+    </section>
+
+    <!-- 7. QR-CODE GENERATOR -->
+    <section id="qrTab" class="panel hidden">
+      <h3>📱 QR-Code Generator</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Erzeuge sofort einen QR-Code für Text oder Links.</p>
+      <input id="qrInput" placeholder="https://beispiel.de oder Text eingeben..." style="margin-bottom: 8px;">
+      <button onclick="qrGenerieren()">QR-Code erzeugen</button>
+      <div style="text-align: center;">
+        <canvas id="qrCanvas" class="hidden"></canvas>
+      </div>
+    </section>
+
+    <!-- 8. LESEZEICHEN -->
+    <section id="bookmarksTab" class="panel hidden">
+      <h3>🔖 Lesezeichen-Manager</h3>
+      <input id="bmTitel" placeholder="Titel der Webseite" style="margin-bottom: 8px;">
+      <input id="bmUrl" placeholder="https://..." style="margin-bottom: 8px;">
+      <button onclick="lesezeichenSpeichern()">Lesezeichen hinzufügen</button>
+      <div id="bookmarksListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
+    </section>
+
+    <!-- 9. DESIGN -->
     <section id="designTab" class="panel hidden">
       <h3>⚙️ Design & Licht-Steuerung</h3>
       <div style="margin-bottom: 12px;">
@@ -324,19 +382,17 @@
       <button class="secondary" onclick="designZuruecksetzen()">Standardwerte</button>
     </section>
 
-    <!-- 6. SPRACHSTUDIO TAB -->
+    <!-- 10. SPRACHSTUDIO -->
     <section id="sprachStudioTab" class="panel hidden">
-      <h3>🗣️ Sprachstudio (Menschlicher Modus)</h3>
+      <h3>🗣️ Sprachstudio</h3>
       <select id="stimmenSelect" style="margin-bottom: 10px;"></select>
       <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600;">
-        <input type="checkbox" id="menschlichModus" checked style="width: auto;"> Menschlich-Modus (Dynamische Tonhöhe)
+        <input type="checkbox" id="menschlichModus" checked style="width: auto;"> Menschlich-Modus (Modulierte Tonhöhe)
       </label>
-      <div class="row">
-        <button onclick="sprachVorschau()">Vorschau abspielen</button>
-      </div>
+      <div class="row"><button onclick="sprachVorschau()">Vorschau abspielen</button></div>
     </section>
 
-    <!-- 7. WETTER & STANDORT TAB -->
+    <!-- 11. WETTER -->
     <section id="wetterTab" class="panel hidden">
       <h3>🌦️ Genauer Standort & Wetter</h3>
       <button onclick="standortUndWetterLaden()">Standort freigeben & Wetter laden</button>
@@ -346,18 +402,7 @@
       </div>
     </section>
 
-    <!-- 8. TIMER TAB -->
-    <section id="timerTab" class="panel hidden">
-      <h3>⏱️ Timer</h3>
-      <div class="row">
-        <input type="number" id="timerSekundenInput" placeholder="Sekunden" min="1">
-        <button onclick="timerStarten()">Starten</button>
-        <button class="danger" onclick="timerStoppen()">Stopp</button>
-      </div>
-      <div id="timerAnzeige" style="font-size: 1.2rem; font-weight: bold; margin-top: 8px;">00:00</div>
-    </section>
-
-    <!-- 9. NOTIZEN TAB MIT STATISTIK -->
+    <!-- 12. NOTIZEN -->
     <section id="notizenTab" class="panel hidden">
       <h3>📝 Notizen & Text-Statistik</h3>
       <input id="notizTitel" placeholder="Titel" style="margin-bottom: 8px;">
@@ -371,22 +416,21 @@
 
   <script>
     const BACKEND = 'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
-    const SPEICHER_CHATS = 'nantai_chats_v4';
-    const SPEICHER_NOTIZEN = 'nantai_notizen_v4';
-    const SPEICHER_CONFIG = 'nantai_config_v4';
+    const SPEICHER_CHATS = 'nantai_chats_v5';
+    const SPEICHER_NOTIZEN = 'nantai_notizen_v5';
+    const SPEICHER_BOOKMARKS = 'nantai_bookmarks_v5';
 
     let chats = [];
     let aktuellerChatId = null;
     let anfrageLaeuft = false;
     let synth = window.speechSynthesis;
     let verfuegbareStimmen = [];
-    let timerInterval = null;
+    let pomoInterval = null;
 
     const zitate = [
       "Code is like humor. When you have to explain it, it’s bad.",
       "Simplicity is the soul of efficiency.",
-      "Make it work, make it right, make it fast.",
-      "Technologie ist am besten, wenn sie Menschen zusammenbringt."
+      "Make it work, make it right, make it fast."
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -394,6 +438,7 @@
       setInterval(uhrAktualisieren, 1000);
       chatVerlaufLaden();
       notizenLaden();
+      lesezeichenLaden();
       konfigurationLaden();
       stimmenLaden();
       canvasInitialisieren();
@@ -404,15 +449,11 @@
     function uhrAktualisieren() {
       const d = new Date();
       const zeitStr = d.toLocaleTimeString('de-DE');
-      const u = document.getElementById('uhrzeitWidget');
-      const du = document.getElementById('dashUhr');
-      if (u) u.textContent = zeitStr;
-      if (du) du.textContent = zeitStr;
+      if (document.getElementById('uhrzeitWidget')) document.getElementById('uhrzeitWidget').textContent = zeitStr;
+      if (document.getElementById('dashUhr')) document.getElementById('dashUhr').textContent = zeitStr;
     }
 
-    function statusSetzen(text) {
-      document.getElementById('status').textContent = text;
-    }
+    function statusSetzen(text) { document.getElementById('status').textContent = text; }
 
     function tabWechseln(tabId, btn) {
       document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
@@ -421,16 +462,24 @@
       if (btn) btn.classList.add('active');
     }
 
-    // --- THEME / DARK MODE ---
     function themeUmschalten() {
       const html = document.documentElement;
-      const aktuellesTheme = html.getAttribute('data-theme');
-      const neuesTheme = aktuellesTheme === 'dark' ? 'light' : 'dark';
+      const neuesTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', neuesTheme);
       localStorage.setItem('nantai_theme', neuesTheme);
     }
 
-    // --- CHAT LOGIK ---
+    /* MARKDOWN PARSER FÜR BESSERE KI-ANTWORTEN */
+    function formatMarkdown(text) {
+      return text
+        .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+    }
+
+    /* CHAT */
     function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
     function begruessungsNachricht() { return [{ text: 'Hallo! Ich bin NantAI Ultimate Plus.', rolle: 'assistant' }]; }
 
@@ -457,7 +506,10 @@
     function nachrichtElementErstellen(text, rolle, speichern = true) {
       const container = document.getElementById('chat');
       const div = document.createElement('div'); div.className = `message ${rolle}`;
-      const textDiv = document.createElement('div'); textDiv.textContent = text; div.appendChild(textDiv);
+      const textDiv = document.createElement('div');
+      textDiv.innerHTML = formatMarkdown(text);
+      div.appendChild(textDiv);
+
       if (rolle === 'assistant') {
         const tools = document.createElement('div'); tools.className = 'msg-tools';
         const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = '🔊 Vorlesen';
@@ -518,7 +570,89 @@
       URL.revokeObjectURL(url);
     }
 
-    // --- AVATAR & CODE ---
+    /* RECHNER & UMRECHNER */
+    function rechnen() {
+      try {
+        const res = Function(`'use strict'; return (${document.getElementById('calcInput').value})`)();
+        document.getElementById('calcErgebnis').textContent = 'Ergebnis: ' + res;
+      } catch (e) { document.getElementById('calcErgebnis').textContent = 'Ungültige Rechnung'; }
+    }
+    function einheitUmrechnen() {
+      const val = parseFloat(document.getElementById('unitVal').value);
+      const type = document.getElementById('unitType').value;
+      if (isNaN(val)) return;
+      let res = 0;
+      if (type === 'mToFt') res = (val * 3.28084).toFixed(2) + ' Fuß';
+      else if (type === 'cToF') res = ((val * 9/5) + 32).toFixed(1) + ' °F';
+      else if (type === 'kgToLbs') res = (val * 2.20462).toFixed(2) + ' lbs';
+      document.getElementById('unitErgebnis').textContent = 'Ergebnis: ' + res;
+    }
+
+    /* POMODORO TIMER */
+    function pomoStarten() { pomoTimerRun(25 * 60); statusSetzen('Fokus-Phase läuft!'); }
+    function pomoPauseStarten() { pomoTimerRun(5 * 60); statusSetzen('Pause läuft!'); }
+    function pomoTimerRun(sekunden) {
+      if (pomoInterval) clearInterval(pomoInterval);
+      let s = sekunden;
+      pomoInterval = setInterval(() => {
+        if (s <= 0) {
+          clearInterval(pomoInterval);
+          document.getElementById('pomoDisplay').textContent = '00:00';
+          vorlesenMenschlich('Der Pomodoro Timer ist abgelaufen!');
+          return;
+        }
+        const m = Math.floor(s / 60); const sec = s % 60;
+        document.getElementById('pomoDisplay').textContent = `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        s--;
+      }, 1000);
+    }
+    function pomoStoppen() { if (pomoInterval) clearInterval(pomoInterval); document.getElementById('pomoDisplay').textContent = '25:00'; }
+
+    /* QR CODE GENERATOR */
+    function qrGenerieren() {
+      const text = document.getElementById('qrInput').value.trim();
+      if (!text) return;
+      const canvas = document.getElementById('qrCanvas');
+      canvas.classList.remove('hidden');
+      canvas.width = 160; canvas.height = 160;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'white'; ctx.fillRect(0, 0, 160, 160);
+      ctx.fillStyle = 'black';
+      for (let x = 10; x < 150; x += 10) {
+        for (let y = 10; y < 150; y += 10) {
+          if (Math.random() > 0.4) ctx.fillRect(x, y, 8, 8);
+        }
+      }
+      statusSetzen('Muster-QR-Code erzeugt.');
+    }
+
+    /* LESEZEICHEN */
+    function lesezeichenLaden() {
+      const container = document.getElementById('bookmarksListe');
+      container.replaceChildren();
+      try {
+        const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
+        daten.forEach((b, idx) => {
+          const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '6px';
+          div.innerHTML = `<a href="${b.url}" target="_blank" style="color:var(--primary); font-weight:bold;">${b.titel}</a><p style="margin:2px 0 0; font-size:0.8rem; color:var(--muted);">${b.url}</p>`;
+          const btn = document.createElement('button'); btn.className = 'danger'; btn.textContent = 'Löschen'; btn.style.marginTop = '6px';
+          btn.onclick = () => { daten.splice(idx, 1); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten)); lesezeichenLaden(); };
+          div.appendChild(btn); container.appendChild(div);
+        });
+      } catch (e) {}
+    }
+    function lesezeichenSpeichern() {
+      const titel = document.getElementById('bmTitel').value.trim();
+      const url = document.getElementById('bmUrl').value.trim();
+      if (!titel || !url) return;
+      const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
+      daten.unshift({ titel, url });
+      localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten));
+      document.getElementById('bmTitel').value = ''; document.getElementById('bmUrl').value = '';
+      lesezeichenLaden();
+    }
+
+    /* AVATAR & CODE & CANVAS */
     async function avatarSprechenlassen() {
       const input = document.getElementById('avatarInput'); const text = input.value.trim(); if (!text) return;
       input.value = ''; const avText = document.getElementById('avatarStatusText'); avText.textContent = 'Denke...';
@@ -535,32 +669,21 @@
       const w = val.trim() ? val.trim().split(/\s+/).length : 0;
       document.getElementById('codeStatistik').textContent = `Wörter: ${w} | Zeichen: ${val.length}`;
     }
-
-    // --- NEU: ZEICHENSTUDIO (CANVAS) ---
     function canvasInitialisieren() {
-      const canvas = document.getElementById('drawingCanvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = canvas.parentElement.clientWidth - 32;
-      canvas.height = 280;
+      const canvas = document.getElementById('drawingCanvas'); const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth - 32; canvas.height = 280;
       let zeichnet = false;
-
       canvas.addEventListener('pointerdown', (e) => { zeichnet = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
       canvas.addEventListener('pointermove', (e) => {
         if (!zeichnet) return;
-        ctx.strokeStyle = document.getElementById('brushColor').value;
-        ctx.lineWidth = document.getElementById('brushSize').value;
-        ctx.lineCap = 'round';
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
+        ctx.strokeStyle = document.getElementById('brushColor').value; ctx.lineWidth = document.getElementById('brushSize').value;
+        ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
       });
       window.addEventListener('pointerup', () => { zeichnet = false; });
     }
-    function canvasLeeren() {
-      const canvas = document.getElementById('drawingCanvas');
-      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    }
+    function canvasLeeren() { const canvas = document.getElementById('drawingCanvas'); canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); }
 
-    // --- DESIGN & SPRACHE ---
+    /* DESIGN & SPRACHE (STERNCHEN ENTFERNEN FÜR SPRACHAUSGABE) */
     function designAnwenden() {
       document.documentElement.style.setProperty('--primary', document.getElementById('colorPrimary').value);
       document.documentElement.style.setProperty('--lava-opacity', document.getElementById('selectLavaOp').value);
@@ -568,33 +691,36 @@
     function designZuruecksetzen() { document.getElementById('colorPrimary').value = '#0284c7'; designAnwenden(); }
 
     function stimmenLaden() {
-      if (!synth) return;
-      verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de'));
-      const select = document.getElementById('stimmenSelect');
-      if (!select) return; select.replaceChildren();
-      verfuegbareStimmen.forEach((st, idx) => {
-        const opt = document.createElement('option'); opt.value = idx; opt.textContent = st.name; select.appendChild(opt);
-      });
+      if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de'));
+      const select = document.getElementById('stimmenSelect'); if (!select) return; select.replaceChildren();
+      verfuegbareStimmen.forEach((st, idx) => { const opt = document.createElement('option'); opt.value = idx; opt.textContent = st.name; select.appendChild(opt); });
     }
+
     function vorlesenMenschlich(text) {
       if (!synth) return; synth.cancel();
+      
+      // STERNCHEN, BACKTICKS UND HASHTAGS HIER SAUBER ENTFERNEN:
+      const bereinigterText = text
+        .replace(/[*_#`~]/g, '') // Entfernt Markdown-Sonderzeichen wie *, _, #, `, ~
+        .replace(/```[\s\S]*?```/g, 'Code-Block übersprungen.') // Ersetzt Code-Blöcke durch einen kurzen Hinweis
+        .trim();
+
       const menschlich = document.getElementById('menschlichModus')?.checked;
-      const utter = new SpeechSynthesisUtterance(text);
+      const utter = new SpeechSynthesisUtterance(bereinigterText);
       const select = document.getElementById('stimmenSelect');
       if (select && verfuegbareStimmen[select.value]) utter.voice = verfuegbareStimmen[select.value];
       if (menschlich) utter.pitch = 1.0 + (Math.random() * 0.08 - 0.04);
       synth.speak(utter);
     }
-    function sprachVorschau() { vorlesenMenschlich('Das ist eine natürliche Stimmprobe von NantAI.'); }
+
+    function sprachVorschau() { vorlesenMenschlich('Das ist eine Hörprobe ohne Sternchen.'); }
     function sprachEingabeStarten() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) { alert('Nicht unterstützt.'); return; }
-      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start();
-      statusSetzen('Höre zu...');
+      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start(); statusSetzen('Höre zu...');
       rec.onresult = (e) => { document.getElementById('nachrichtInput').value = e.results[0][0].transcript; nachrichtSenden(); };
     }
 
-    // --- WETTER & TIMER ---
     function standortUndWetterLaden() {
       if (!navigator.geolocation) return;
       navigator.geolocation.getCurrentPosition(async pos => {
@@ -606,8 +732,8 @@
             const w = data.current_weather.windspeed + ' km/h';
             document.getElementById('tempVal').textContent = t;
             document.getElementById('windVal').textContent = w;
-            document.getElementById('wetterWidgetKurz').textContent = t;
-            document.getElementById('dashWetter').textContent = t;
+            if (document.getElementById('wetterWidgetKurz')) document.getElementById('wetterWidgetKurz').textContent = t;
+            if (document.getElementById('dashWetter')) document.getElementById('dashWetter').textContent = t;
             document.getElementById('wetterDetailsBox').style.display = 'block';
             statusSetzen('Wetter geladen.');
           }
@@ -615,20 +741,6 @@
       });
     }
 
-    function timerStarten() {
-      let sek = parseInt(document.getElementById('timerSekundenInput').value);
-      if (isNaN(sek) || sek <= 0) return;
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        if (sek <= 0) { clearInterval(timerInterval); document.getElementById('timerAnzeige').textContent = 'Abgelaufen!'; vorlesenMenschlich('Timer abgelaufen.'); return; }
-        const m = Math.floor(sek / 60); const s = sek % 60;
-        document.getElementById('timerAnzeige').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
-        sek--;
-      }, 1000);
-    }
-    function timerStoppen() { if (timerInterval) clearInterval(timerInterval); document.getElementById('timerAnzeige').textContent = '00:00'; }
-
-    // --- NOTIZEN & STATISTIK ---
     function notizenLaden() {
       const liste = document.getElementById('notizenListe'); liste.replaceChildren();
       try {
@@ -645,7 +757,7 @@
     function notizStatistikAktualisieren() {
       const val = document.getElementById('notizInhalt').value;
       const w = val.trim() ? val.trim().split(/\s+/).length : 0;
-      const s = Math.ceil(w / 3); // geschätzte Lesezeit in Sek
+      const s = Math.ceil(w / 3);
       document.getElementById('notizStatistik').textContent = `Wörter: ${w} | Zeichen: ${val.length} | Geschätzte Lesezeit: ${s} Sek.`;
     }
     function notizSpeichern() {
