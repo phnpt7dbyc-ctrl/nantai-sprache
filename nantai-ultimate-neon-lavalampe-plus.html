@@ -513,21 +513,37 @@
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/\n/g, '<br>');
     }
-// KOSTENLOSE CLOUD KI (Ohne API-Key!)
+// GROQ CLOUD KI (Super schnell mit Llama 3)
     async function kiAntwortHubern(prompt) {
+      const apiKey = "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";
+
+      if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
+        return "Bitte trage deinen Groq API-Key ein!";
+      }
+
       try {
-        const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
-        const text = await response.text();
-        if (text) {
-          return text;
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: prompt }]
+          })
+        });
+
+        const data = await response.json();
+        if (data.choices && data.choices[0].message.content) {
+          return data.choices[0].message.content;
         } else {
-          return "Fehler bei der Antwort vom Server.";
+          return "Fehler bei Groq: " + (data.error ? data.error.message : "Unbekannter Fehler");
         }
       } catch (error) {
-        return "Keine Verbindung zum KI-Server.";
+        return "Keine Verbindung zum Groq-Server.";
       }
     }
-  
 
     /* CHAT */
     function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
