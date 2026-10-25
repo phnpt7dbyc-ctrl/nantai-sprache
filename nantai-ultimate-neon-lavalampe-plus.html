@@ -199,6 +199,16 @@ body:has(#nachricht:focus) .composer {
   -webkit-backdrop-filter: none !important;
 }
 
+/* Weniger GPU- und Speicherlast bei aktivierter Sparoption */
+html.nantai-sparmodus .lava-lampe {
+  display: none;
+}
+
+html.nantai-sparmodus .neon-hintergrund {
+  animation: none;
+  filter: none;
+}
+
   </style>
 </head>
 <body>
@@ -452,15 +462,7 @@ stimme.onerror = event => {
   }
 }
 
-/* Weniger GPU- und Speicherlast bei aktivierter Sparoption */
-html.nantai-sparmodus .lava-lampe {
-  display: none;
-}
 
-html.nantai-sparmodus .neon-hintergrund {
-  animation: none;
-  filter: none;
-}
 
 html.nantai-sparmodus #seitenleiste,
 html.nantai-sparmodus header,
@@ -565,7 +567,7 @@ function stimmenVorschau() {
 
   if (passendeStimme) stimme.voice = passendeStimme;
 
-  speechSynthesis.speak(stimme);
+  speechSynthesis.speak(stimme); 
 }
 
 // window.addEventListener('DOMContentLoaded', stimmenStudioLaden);
