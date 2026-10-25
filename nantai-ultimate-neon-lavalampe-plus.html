@@ -907,8 +907,14 @@
     }
 
     function stimmenLaden() { if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de')); }
-    function vorlesenMenschlich(text) {
+   function vorlesenMenschlich(text) {
       if (!synth) return; synth.cancel();
+      
+      // Verhindert, dass API-Keys oder lange System-Tokens vorgelesen werden
+      if (text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) {
+        return; 
+      }
+
       const clean = text.replace(/[*_#`~]/g, '').trim();
       const utter = new SpeechSynthesisUtterance(clean);
       if (verfuegbareStimmen.length > 0) utter.voice = verfuegbareStimmen[0];
