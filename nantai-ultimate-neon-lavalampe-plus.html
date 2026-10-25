@@ -163,68 +163,68 @@
   </div>
 
   <aside>
-    <h2>✦ NandoAI</h2>
+    <h2>NandoAI</h2>
     <p>Cyber Cloud Edition</p>
-    <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
-    <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Chat & Cloud KI</button>
-    <button class="nav-btn" onclick="tabWechseln('bildTab', this)">🎨 Bildstudio (AI)</button>
-    <button class="nav-btn" onclick="tabWechseln('archivTab', this)">🗄️ Chat-Archiv</button>
+    <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">Dashboard</button>
+    <button class="nav-btn" onclick="tabWechseln('chatTab', this)">Chat und Cloud KI</button>
+    <button class="nav-btn" onclick="tabWechseln('bildTab', this)">Bildstudio AI</button>
+    <button class="nav-btn" onclick="tabWechseln('archivTab', this)">Chat Archiv</button>
     
-    <div class="side-label">✦ Cyber Module</div>
-    <button class="nav-btn" onclick="tabWechseln('flashcardTab', this)">📚 Lernkarten</button>
-    <button class="nav-btn" onclick="tabWechseln('rpgTab', this)">🗺️ Text-Abenteuer</button>
-    <button class="nav-btn" onclick="tabWechseln('colorTab', this)">🎨 Farb-Paletten</button>
-    <button class="nav-btn" onclick="tabWechseln('todoTab', this)">☑️ To-Do Liste</button>
+    <div class="side-label">Cyber Module</div>
+    <button class="nav-btn" onclick="tabWechseln('flashcardTab', this)">Lernkarten</button>
+    <button class="nav-btn" onclick="tabWechseln('rpgTab', this)">Text Abenteuer</button>
+    <button class="nav-btn" onclick="tabWechseln('colorTab', this)">Farb Paletten</button>
+    <button class="nav-btn" onclick="tabWechseln('todoTab', this)">To-Do Liste</button>
 
-    <div class="side-label">✦ Werkzeuge</div>
-    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 Cyber Avatar</button>
-    <button class="nav-btn" onclick="tabWechseln('codeTab', this)">💻 Programmierstudio</button>
-    <button class="nav-btn" onclick="tabWechseln('mdTab', this)">📝 Markdown Editor</button>
-    <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">🎨 Zeichenstudio</button>
-    <button class="nav-btn" onclick="tabWechseln('gameTab', this)">🎮 Snake-Spiel</button>
-    <button class="nav-btn" onclick="tabWechseln('toolsTab', this)">🧮 Rechner</button>
-    <button class="nav-btn" onclick="tabWechseln('pomodoroTab', this)">⏳ Pomodoro-Timer</button>
-    <button class="nav-btn" onclick="tabWechseln('bookmarksTab', this)">🔖 Lesezeichen</button>
-    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen</button>
-    <button class="nav-btn" onclick="tabWechseln('backupTab', this)">💾 Backup</button>
-    <div class="side-label">✦ Aktionen</div>
-    <button class="nav-btn" onclick="neuerChat()">＋ Neuer Chat</button>
+    <div class="side-label">Werkzeuge</div>
+    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">Cyber Avatar</button>
+    <button class="nav-btn" onclick="tabWechseln('codeTab', this)">Programmierstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('mdTab', this)">Markdown Editor</button>
+    <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">Zeichenstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('gameTab', this)">Snake Spiel</button>
+    <button class="nav-btn" onclick="tabWechseln('toolsTab', this)">Rechner</button>
+    <button class="nav-btn" onclick="tabWechseln('pomodoroTab', this)">Pomodoro Timer</button>
+    <button class="nav-btn" onclick="tabWechseln('bookmarksTab', this)">Lesezeichen</button>
+    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">Notizen</button>
+    <button class="nav-btn" onclick="tabWechseln('backupTab', this)">Backup</button>
+    <div class="side-label">Aktionen</div>
+    <button class="nav-btn" onclick="neuerChat()">Neuer Chat</button>
   </aside>
 
   <main>
     <header>
       <div class="header-left">
-        <div class="logo">✦</div>
+        <div class="logo">O</div>
         <div>
           <h1>NandoAI Cybernet</h1>
           <p>Groq Cloud Active</p>
         </div>
       </div>
-      <button class="secondary" onclick="cyberModusWechseln()">⚡ Cyber Glow</button>
+      <button class="secondary" onclick="cyberModusWechseln()">Cyber Glow</button>
     </header>
 
-    <div id="status">System online. Groq Cloud-KI dauerhaft aktiv!</div>
+    <div id="status">System online. Groq Cloud KI dauerhaft aktiv.</div>
 
     <!-- DASHBOARD -->
     <section id="dashboardTab" class="panel">
-      <h3>🏠 Cyber Dashboard</h3>
+      <h3>Cyber Dashboard</h3>
       <div class="dashboard" style="margin-top: 14px;">
         <div class="widget">
-          <div class="widget-label">🕒 System-Zeit</div>
+          <div class="widget-label">System Zeit</div>
           <div class="widget-value" id="dashUhr">--:--:--</div>
         </div>
         <div class="widget">
-          <div class="widget-label">⚡ KI-Modus</div>
+          <div class="widget-label">KI Modus</div>
           <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Groq GPT-OSS Active</div>
         </div>
         <div class="widget">
-          <div class="widget-label">💡 Dev-Zitat</div>
+          <div class="widget-label">Dev Zitat</div>
           <div class="widget-value" id="zitatBox" style="font-size: 0.8rem; font-style: italic; color: var(--accent);">...</div>
         </div>
       </div>
       <div class="row" style="margin-top: 16px;">
-        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Zum Chat</button>
-        <button class="secondary" onclick="tabWechseln('flashcardTab', document.querySelectorAll('aside .nav-btn')[4])">📚 Lernkarten starten</button>
+        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">Zum Chat</button>
+        <button class="secondary" onclick="tabWechseln('flashcardTab', document.querySelectorAll('aside .nav-btn')[4])">Lernkarten starten</button>
       </div>
     </section>
 
@@ -232,15 +232,15 @@
     <section id="chatTab" class="hidden">
       <div class="dashboard">
         <div class="widget">
-          <div class="widget-label">🕒 Uhrzeit</div>
+          <div class="widget-label">Uhrzeit</div>
           <div class="widget-value" id="uhrzeitWidget">--:--:--</div>
         </div>
         <div class="widget">
-          <div class="widget-label">⚙️ KI-Status</div>
+          <div class="widget-label">KI Status</div>
           <div class="widget-value" style="color: var(--primary);">Groq Cloud</div>
         </div>
         <div class="widget">
-          <div class="widget-label">💬 Session</div>
+          <div class="widget-label">Session</div>
           <div class="widget-value" id="chatTitelWidget">Neuer Chat</div>
         </div>
       </div>
@@ -248,95 +248,95 @@
       <div class="composer">
         <textarea id="nachrichtInput" placeholder="Stelle eine beliebige Frage an NandoAI..." onkeydown="pruefeEingabe(event)"></textarea>
         <div class="row">
-          <button id="sendenBtn" onclick="nachrichtSenden()">Senden ➤</button>
-          <button class="secondary" onclick="sprachEingabeStarten()">🎤 Sprechen</button>
+          <button id="sendenBtn" onclick="nachrichtSenden()">Senden</button>
+          <button class="secondary" onclick="sprachEingabeStarten()">Sprechen</button>
         </div>
       </div>
     </section>
 
     <!-- BILDSTUDIO -->
     <section id="bildTab" class="panel hidden">
-      <h3>🎨 Cyber Bildstudio (Pollinations.ai)</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Generiere hochauflösende KI-Grafiken im Neon-Stil direkt im Browser.</p>
-      <input id="bildPrompt" placeholder="z. B. Cyberpunk samurai in neon rain..." style="margin-bottom: 8px;">
+      <h3>Cyber Bildstudio</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Generiere hochaufloesende KI Grafiken im Neon Stil direkt im Browser.</p>
+      <input id="bildPrompt" placeholder="zB Cyberpunk samurai in neon rain..." style="margin-bottom: 8px;">
       <div class="row" style="margin-bottom: 8px;">
         <select id="bildStil">
           <option value="cyberpunk">Cyberpunk Neon</option>
           <option value="photorealistic">Fotorealistisch</option>
-          <option value="anime">Anime / Manga</option>
-          <option value="3d-render">3D / Sci-Fi Stil</option>
+          <option value="anime">Anime und Manga</option>
+          <option value="3d-render">3D Sci-Fi Stil</option>
           <option value="digital-art">Digital Art</option>
         </select>
         <select id="bildFormat">
-          <option value="1:1">Quadrat (1:1)</option>
-          <option value="16:9">Widescreen (16:9)</option>
-          <option value="9:16">Vertikal (9:16)</option>
+          <option value="1:1">Quadrat 1 zu 1</option>
+          <option value="16:9">Widescreen 16 zu 9</option>
+          <option value="9:16">Vertikal 9 zu 16</option>
         </select>
       </div>
-      <button onclick="bildErzeugen()">Grafik generieren ⚡</button>
+      <button onclick="bildErzeugen()">Grafik generieren</button>
       <div id="bildErgebnis" style="margin-top: 14px; text-align: center;"></div>
     </section>
 
     <!-- CHAT ARCHIV -->
     <section id="archivTab" class="panel hidden">
-      <h3>🗄️ Neural Chat-Archiv</h3>
+      <h3>Neural Chat Archiv</h3>
       <div id="archivListe" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;"></div>
     </section>
 
     <!-- LERNKARTEN -->
     <section id="flashcardTab" class="panel hidden">
-      <h3>📚 Lernkarten-Trainer</h3>
-      <input id="fcFrage" placeholder="Vorderseite / Frage" style="margin-bottom: 8px;">
-      <input id="fcAntwort" placeholder="Rückseite / Antwort" style="margin-bottom: 8px;">
+      <h3>Lernkarten Trainer</h3>
+      <input id="fcFrage" placeholder="Vorderseite und Frage" style="margin-bottom: 8px;">
+      <input id="fcAntwort" placeholder="Rueckseite und Antwort" style="margin-bottom: 8px;">
       <button onclick="lernkarteHinzufuegen()" style="margin-bottom: 14px;">Lernkarte speichern</button>
       
       <div id="lernkartenContainer" style="background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: center; min-height: 130px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; box-shadow: var(--glow);" onclick="karteUmdrehen()">
-        <div id="fcTextAnzeige" style="font-size: 1.15rem; font-weight: bold; color: var(--primary);">Keine Lernkarten vorhanden. Erstelle oben eine neue Karte!</div>
+        <div id="fcTextAnzeige" style="font-size: 1.15rem; font-weight: bold; color: var(--primary);">Keine Lernkarten vorhanden. Erstelle oben eine neue Karte.</div>
         <div style="font-size: 0.75rem; color: var(--muted); margin-top: 10px;">(Klicke zum Umdrehen)</div>
       </div>
       <div class="row" style="margin-top: 10px;">
-        <button class="secondary" onclick="naechsteLernkarte()">Nächste Karte ➔</button>
-        <button class="danger" onclick="aktuelleLernkarteLoeschen()">Karte löschen</button>
+        <button class="secondary" onclick="naechsteLernkarte()">Naechste Karte</button>
+        <button class="danger" onclick="aktuelleLernkarteLoeschen()">Karte loeschen</button>
       </div>
     </section>
 
     <!-- TEXT ABENTEUER (RPG) -->
     <section id="rpgTab" class="panel hidden">
-      <h3>🗺️ Cyber Text-Abenteuer</h3>
+      <h3>Cyber Text Abenteuer</h3>
       <div id="rpgStory" style="background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-height: 110px; margin-bottom: 12px; line-height: 1.5; box-shadow: var(--glow);">
-        Du erwachst in Sektor 7 der Megastadt Neo-Müllheim. Neonlichter flackern am Himmel, und ein geheimnisvolles Signal blinkt auf deinem Interface. Was tust du?
+        Du erwachst in Sektor 7 der Megastadt Neo Muellheim. Neonlichter flackern am Himmel und ein geheimnisvolles Signal blinkt auf deinem Interface. Was tust du?
       </div>
       <div id="rpgAktionen" class="row" style="flex-direction: column;">
-        <button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber-Ebene folgen</button>
-        <button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund-Tunnel</button>
-        <button onclick="rpgEntscheidung(3)">3. System-Interface hacken und lokal absichern</button>
+        <button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber Ebene folgen</button>
+        <button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund Tunnel</button>
+        <button onclick="rpgEntscheidung(3)">3. System Interface hacken und lokal absichern</button>
       </div>
     </section>
 
     <!-- FARB-PALETTEN -->
     <section id="colorTab" class="panel hidden">
-      <h3>🎨 Cyber Farb-Paletten & CSS</h3>
-      <button onclick="neuePaletteGenerieren()" style="margin-bottom: 12px;">Neue Neon-Palette generieren 🎲</button>
+      <h3>Cyber Farb Paletten und CSS</h3>
+      <button onclick="neuePaletteGenerieren()" style="margin-bottom: 12px;">Neue Neon Palette generieren</button>
       <div id="farbenContainer" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px;"></div>
-      <p style="font-size: 0.82rem; color: var(--muted);">Klicke auf einen Hex-Code, um ihn in die Zwischenablage zu kopieren!</p>
+      <p style="font-size: 0.82rem; color: var(--muted);">Klicke auf einen Hex Code um ihn in die Zwischenablage zu kopieren.</p>
     </section>
 
     <!-- TO-DO LISTE -->
     <section id="todoTab" class="panel hidden">
-      <h3>☑️ Cyber To-Do Checkliste</h3>
+      <h3>Cyber To-Do Checkliste</h3>
       <div class="row" style="margin-bottom: 10px;">
-        <input id="todoInput" placeholder="Neue Mission / Aufgabe..." onkeydown="if(event.key==='Enter') todoHinzufuegen()">
-        <button onclick="todoHinzufuegen()">Hinzufügen</button>
+        <input id="todoInput" placeholder="Neue Mission oder Aufgabe..." onkeydown="if(event.key==='Enter') todoHinzufuegen()">
+        <button onclick="todoHinzufuegen()">Hinzu</button>
       </div>
       <div id="todoListe" style="display: flex; flex-direction: column; gap: 6px;"></div>
     </section>
 
     <!-- AVATAR -->
     <section id="avatarTab" class="panel hidden">
-      <h3>🤖 Neural Cyber Avatar</h3>
+      <h3>Neural Cyber Avatar</h3>
       <div class="avatar-container">
-        <div id="avatarFace" class="avatar-face">✦</div>
-        <h4 id="avatarStatusText" style="margin: 0 0 6px; color: var(--primary);">System bereit für Interaktion.</h4>
+        <div id="avatarFace" class="avatar-face">O</div>
+        <h4 id="avatarStatusText" style="margin: 0 0 6px; color: var(--primary);">System bereit fuer Interaktion.</h4>
       </div>
       <textarea id="avatarInput" placeholder="Sprich mit NandoAI..." style="margin-bottom: 8px;"></textarea>
       <div class="row"><button onclick="avatarSprechenlassen()">Signal senden</button></div>
@@ -344,10 +344,10 @@
 
     <!-- CODE STUDIO -->
     <section id="codeTab" class="panel hidden">
-      <h3>💻 Cyber Programmierstudio</h3>
-      <textarea id="codeEditor" style="font-family: monospace; min-height: 140px;" placeholder="HTML/JS Code eingeben..."></textarea>
+      <h3>Cyber Programmierstudio</h3>
+      <textarea id="codeEditor" style="font-family: monospace; min-height: 140px;" placeholder="HTML oder JS Code eingeben..."></textarea>
       <div class="row" style="margin-top: 8px;">
-        <button onclick="codeVorschauAktualisieren()">Live-Vorschau starten</button>
+        <button onclick="codeVorschauAktualisieren()">Live Vorschau starten</button>
         <button class="secondary" onclick="codeKopieren()">Code kopieren</button>
       </div>
       <div style="margin-top: 10px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #000;">
@@ -357,27 +357,27 @@
 
     <!-- MARKDOWN EDITOR -->
     <section id="mdTab" class="panel hidden">
-      <h3>📝 Markdown Editor</h3>
+      <h3>Markdown Editor</h3>
       <div class="row">
-        <textarea id="mdInput" oninput="mdVorschauAktualisieren()" placeholder="# Überschrift&#10;**Fettgedruckt**" style="height: 180px; font-family: monospace;"></textarea>
+        <textarea id="mdInput" oninput="mdVorschauAktualisieren()" placeholder="Ueberschrift&#10;Fettgedruckt" style="height: 180px; font-family: monospace;"></textarea>
         <div id="mdOutput" style="height: 180px; border: 1px solid var(--border); border-radius: 10px; padding: 10px; overflow-y: auto; background: rgba(3,7,18,0.9);"></div>
       </div>
     </section>
 
     <!-- ZEICHENSTUDIO -->
     <section id="whiteboardTab" class="panel hidden">
-      <h3>🎨 Cyber Zeichenstudio</h3>
+      <h3>Cyber Zeichenstudio</h3>
       <div class="row" style="margin-bottom: 8px;">
         <input type="color" id="brushColor" value="#00f0ff" style="height: 38px; max-width: 80px; background: transparent;">
         <input type="range" id="brushSize" min="1" max="25" value="5" style="flex: 2;">
-        <button class="secondary" onclick="canvasLeeren()">Canvas löschen</button>
+        <button class="secondary" onclick="canvasLeeren()">Canvas loeschen</button>
       </div>
       <canvas id="drawingCanvas"></canvas>
     </section>
 
     <!-- SNAKE SPIEL -->
     <section id="gameTab" class="panel hidden">
-      <h3>🎮 Cyber Snake</h3>
+      <h3>Cyber Snake</h3>
       <div style="text-align: center;">
         <div style="font-weight: bold; margin-bottom: 6px; color: var(--primary);">Score: <span id="snakeScore">0</span></div>
         <canvas id="snakeCanvas" width="300" height="300"></canvas>
@@ -389,9 +389,9 @@
 
     <!-- RECHNER -->
     <section id="toolsTab" class="panel hidden">
-      <h3>🧮 Cyber Rechner</h3>
+      <h3>Cyber Rechner</h3>
       <div class="row">
-        <input id="calcInput" placeholder="z. B. 42 * 3.14">
+        <input id="calcInput" placeholder="zB 42 mal 3.14">
         <button onclick="rechnen()">Berechnen</button>
       </div>
       <div id="calcErgebnis" style="margin-top: 8px; font-weight: bold; color: var(--primary);"></div>
@@ -399,7 +399,7 @@
 
     <!-- POMODORO -->
     <section id="pomodoroTab" class="panel hidden">
-      <h3>⏳ Cyber Pomodoro Timer</h3>
+      <h3>Cyber Pomodoro Timer</h3>
       <div id="pomoDisplay" style="font-size: 2.8rem; font-weight: bold; text-align: center; margin: 16px 0; color: var(--primary); text-shadow: 0 0 20px var(--primary);">25:00</div>
       <div class="row">
         <button onclick="pomoStarten()">Fokus starten</button>
@@ -410,16 +410,16 @@
 
     <!-- LESEZEICHEN -->
     <section id="bookmarksTab" class="panel hidden">
-      <h3>🔖 Cyber Lesezeichen</h3>
+      <h3>Cyber Lesezeichen</h3>
       <input id="bmTitel" placeholder="Titel" style="margin-bottom: 8px;">
-      <input id="bmUrl" placeholder="https://..." style="margin-bottom: 8px;">
+      <input id="bmUrl" placeholder="https Schreibweise" style="margin-bottom: 8px;">
       <button onclick="lesezeichenSpeichern()">Lesezeichen speichern</button>
       <div id="bookmarksListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
     </section>
 
     <!-- BACKUP -->
     <section id="backupTab" class="panel hidden">
-      <h3>💾 System Backup & Wiederherstellung</h3>
+      <h3>System Backup und Wiederherstellung</h3>
       <div class="row">
         <button onclick="backupErstellen()">Backup herunterladen</button>
         <button class="secondary" onclick="document.getElementById('backupFileInput').click()">Backup einspielen</button>
@@ -429,7 +429,7 @@
 
     <!-- NOTIZEN -->
     <section id="notizenTab" class="panel hidden">
-      <h3>📝 Neural Notizen</h3>
+      <h3>Neural Notizen</h3>
       <input id="notizTitel" placeholder="Titel" style="margin-bottom: 8px;">
       <textarea id="notizInhalt" placeholder="Inhalt..." style="margin-bottom: 8px;"></textarea>
       <button onclick="notizSpeichern()">Notiz speichern</button>
@@ -453,8 +453,8 @@
 
     const zitate = [
       "Code ist wie Poesie in einer maschinellen Welt.",
-      "Einfachheit ist die höchste Form von Cyber-Effizienz.",
-      "Mache es zuerst funktionsfähig, dann unaufhaltsam."
+      "Einfachheit ist die hoechste Form von Cyber Effizienz.",
+      "Mache es zuerst funktionsfaehig dann unaufhaltsam."
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -470,7 +470,7 @@
       canvasInitialisieren();
       
       const zitatBox = document.getElementById('zitatBox');
-      if(zitatBox) zitatBox.textContent = `"${zitate[Math.floor(Math.random() * zitate.length)]}"`;
+      if(zitatBox) zitatBox.textContent = zitate[Math.floor(Math.random() * zitate.length)];
       if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = stimmenLaden;
     });
 
@@ -514,19 +514,18 @@
         .replace(/\n/g, '<br>');
     }
 
-    // ⚡ GROQ CLOUD KI (Trage hier deinen echten Groq API-Key ein)
     async function kiAntwortHubern(prompt) {
       const apiKey = "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";
 
       if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
-        return "Bitte trage deinen echten Groq API-Key im Code bei 'apiKey' ein!";
+        return "Bitte trage deinen echten Groq API Key im Code ein.";
       }
 
       try {
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${apiKey}`,
+            "Authorization": "Bearer " + apiKey,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
@@ -542,13 +541,12 @@
           return "Fehler bei Groq: " + (data.error ? data.error.message : "Unbekannter Fehler");
         }
       } catch (error) {
-        return "Keine Verbindung zum Groq-Server.";
+        return "Keine Verbindung zum Groq Server.";
       }
     }
 
-    /* CHAT */
     function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
-    function begruessungsNachricht() { return [{ text: 'System online. Groq Cloud-KI ist bereit für deine Fragen!', rolle: 'assistant' }]; }
+    function begruessungsNachricht() { return [{ text: 'System online. Groq Cloud KI ist bereit fuer deine Fragen.', rolle: 'assistant' }]; }
 
     function chatVerlaufLaden() {
       try { const g = localStorage.getItem(SPEICHER_CHATS); if (g) chats = JSON.parse(g); } catch (e) {}
@@ -579,11 +577,11 @@
     function nachrichtElementErstellen(text, rolle, speichern = true) {
       const container = document.getElementById('chat');
       if(!container) return;
-      const div = document.createElement('div'); div.className = `message ${rolle}`;
+      const div = document.createElement('div'); div.className = 'message ' + rolle;
       const textDiv = document.createElement('div'); textDiv.innerHTML = formatMarkdown(text); div.appendChild(textDiv);
       if (rolle === 'assistant') {
         const tools = document.createElement('div'); tools.className = 'msg-tools';
-        const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = '🔊 Vorlesen';
+        const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = 'Vorlesen';
         btn.onclick = () => vorlesenMenschlich(text);
         tools.appendChild(btn); div.appendChild(tools);
       }
@@ -612,23 +610,21 @@
       vorlesenMenschlich(antwort);
     }
 
-    /* CHAT ARCHIV */
     function archivAnzeigen() {
       const container = document.getElementById('archivListe'); 
       if(!container) return;
       container.replaceChildren();
       chats.forEach(c => {
         const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '6px';
-        div.innerHTML = `<strong>${c.titel}</strong> (${c.nachrichten.length} Nachrichten)`;
+        div.innerHTML = '<strong>' + c.titel + '</strong> (' + c.nachrichten.length + ' Nachrichten)';
         const row = document.createElement('div'); row.className = 'row'; row.style.marginTop = '6px';
-        const btnOpen = document.createElement('button'); btnOpen.textContent = 'Öffnen';
+        const btnOpen = document.createElement('button'); btnOpen.textContent = 'Oeffnen';
         btnOpen.onclick = () => { aktuellerChatId = c.id; chatAnzeigen(); tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1]); };
         row.appendChild(btnOpen);
         div.appendChild(row); container.appendChild(div);
       });
     }
 
-    /* LERNKARTEN & MODULE */
     let lernkarten = [];
     let fcIndex = 0;
     let fcZeigeAntwort = false;
@@ -655,7 +651,7 @@
       if(!el) return;
       if (lernkarten.length === 0) { el.textContent = 'Keine Lernkarten vorhanden.'; return; }
       const karte = lernkarten[fcIndex];
-      el.textContent = fcZeigeAntwort ? `Antwort: ${karte.antwort}` : `Frage: ${karte.frage}`;
+      el.textContent = fcZeigeAntwort ? 'Antwort: ' + karte.antwort : 'Frage: ' + karte.frage;
     }
     function karteUmdrehen() { if (lernkarten.length === 0) return; fcZeigeAntwort = !fcZeigeAntwort; lernkarteAktualisierenAnsicht(); }
     function naechsteLernkarte() { if (lernkarten.length === 0) return; fcIndex = (fcIndex + 1) % lernkarten.length; fcZeigeAntwort = false; lernkarteAktualisierenAnsicht(); }
@@ -671,25 +667,21 @@
       const aktionenEl = document.getElementById('rpgAktionen');
       if(!storyEl || !aktionenEl) return;
       if (wahl === 1) {
-        storyEl.innerHTML = "Du erreichst die obere Cyber-Ebene. Admin-Codes empfangen!";
-        aktionenEl.innerHTML = `<button onclick="rpgNeustart()">🔄 Neu starten</button>`;
+        storyEl.innerHTML = "Du erreichst die obere Cyber Ebene. Admin Codes empfangen.";
+        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">Neu starten</button>';
       } else if (wahl === 2) {
-        storyEl.innerHTML = "Du findest wertvolle Datenkristalle im Untergrund!";
-        aktionenEl.innerHTML = `<button onclick="rpgNeustart()">🔄 Neu starten</button>`;
+        storyEl.innerHTML = "Du findest wertvolle Datenkristalle im Untergrund.";
+        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">Neu starten</button>';
       } else {
-        storyEl.innerHTML = "Du sicherst das Interface und wirst zur Legende!";
-        aktionenEl.innerHTML = `<button onclick="rpgNeustart()">🔄 Neu starten</button>`;
+        storyEl.innerHTML = "Du sicherst das Interface und wirst zur Legende.";
+        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">Neu starten</button>';
       }
     }
     function rpgNeustart() {
       const s = document.getElementById('rpgStory');
       const a = document.getElementById('rpgAktionen');
-      if(s) s.innerHTML = "Du erwachst in Sektor 7 der Megastadt Neo-Müllheim. Neonlichter flackern...";
-      if(a) a.innerHTML = `
-        <button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber-Ebene folgen</button>
-        <button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund-Tunnel</button>
-        <button onclick="rpgEntscheidung(3)">3. System-Interface hacken und lokal absichern</button>
-      `;
+      if(s) s.innerHTML = "Du erwachst in Sektor 7 der Megastadt Neo Muellheim. Neonlichter flackern...";
+      if(a) a.innerHTML = '<button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber Ebene folgen</button><button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund Tunnel</button><button onclick="rpgEntscheidung(3)">3. System Interface hacken und lokal absichern</button>';
     }
 
     function neuePaletteGenerieren() {
@@ -703,7 +695,7 @@
         box.style.cursor = 'pointer'; box.style.display = 'grid'; box.style.placeItems = 'center';
         box.style.color = '#fff'; box.style.fontWeight = 'bold'; box.style.fontSize = '0.75rem';
         box.textContent = hex;
-        box.onclick = () => { navigator.clipboard.writeText(hex); statusSetzen(`Farbe ${hex} kopiert!`); };
+        box.onclick = () => { navigator.clipboard.writeText(hex); statusSetzen('Farbe ' + hex + ' kopiert.'); };
         container.appendChild(box);
       }
     }
@@ -723,7 +715,7 @@
           const span = document.createElement('span'); span.textContent = t.text;
           if (t.erledigt) span.style.textDecoration = 'line-through';
           label.appendChild(checkbox); label.appendChild(span);
-          const delBtn = document.createElement('button'); delBtn.className = 'danger'; delBtn.textContent = '✕'; delBtn.onclick = () => { todos.splice(idx, 1); localStorage.setItem(SPEICHER_TODO, JSON.stringify(todos)); todoLaden(); };
+          const delBtn = document.createElement('button'); delBtn.className = 'danger'; delBtn.textContent = 'X'; delBtn.onclick = () => { todos.splice(idx, 1); localStorage.setItem(SPEICHER_TODO, JSON.stringify(todos)); todoLaden(); };
           div.appendChild(label); div.appendChild(delBtn); liste.appendChild(div);
         });
       } catch(e) {}
@@ -747,12 +739,12 @@
       const format = fEl ? fEl.value : '1:1';
       let w = 768, h = 768;
       if (format === '16:9') { w = 1024; h = 576; } else if (format === '9:16') { w = 576; h = 1024; }
-      const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ', ' + stil)}?width=${w}&height=${h}&nologo=true`;
+      const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt + ', ' + stil) + '?width=' + w + '&height=' + h + '&nologo=true';
       const container = document.getElementById('bildErgebnis');
       if(!container) return;
-      container.innerHTML = `<p style="color:var(--muted);">Generiere Grafik...</p>`;
+      container.innerHTML = '<p style="color:var(--muted);">Generiere Grafik...</p>';
       const img = new Image();
-      img.onload = () => { container.innerHTML = `<img src="${url}" style="max-width:100%; border-radius:12px;"><br><a href="${url}" target="_blank" download="bild.jpg"><button style="margin-top:10px;">Herunterladen</button></a>`; };
+      img.onload = () => { container.innerHTML = '<img src="' + url + '" style="max-width:100%; border-radius:12px;"><br><a href="' + url + '" target="_blank" download="bild.jpg"><button style="margin-top:10px;">Herunterladen</button></a>'; };
       img.src = url;
     }
 
@@ -780,7 +772,7 @@
       snakeInterval = setInterval(() => {
         let hX = snake[0].x, hY = snake[0].y;
         if (dir === 'RIGHT') hX++; else if (dir === 'LEFT') hX--; else if (dir === 'UP') hY--; else if (dir === 'DOWN') hY++;
-        if (hX < 0 || hX >= 20 || hY < 0 || hY >= 20) { clearInterval(snakeInterval); alert('Game Over!'); return; }
+        if (hX < 0 || hX >= 20 || hY < 0 || hY >= 20) { clearInterval(snakeInterval); alert('Game Over.'); return; }
         if (hX === food.x && hY === food.y) { 
           score += 10; 
           if(scEl) scEl.textContent = score; 
@@ -818,7 +810,7 @@
         const cIn = document.getElementById('calcInput');
         const cOut = document.getElementById('calcErgebnis');
         if(!cIn || !cOut) return;
-        const res = Function(`'use strict'; return (${cIn.value})`)(); 
+        const res = Function("'use strict'; return (" + cIn.value + ")")(); 
         cOut.textContent = 'Ergebnis: ' + res; 
       } catch (e) { 
         const cOut = document.getElementById('calcErgebnis');
@@ -835,11 +827,11 @@
         const pDisp = document.getElementById('pomoDisplay');
         if (s <= 0) { 
           clearInterval(pomoInterval); 
-          vorlesenMenschlich('Timer abgelaufen!'); 
+          vorlesenMenschlich('Timer abgelaufen.'); 
           return; 
         }
         const m = Math.floor(s / 60); const sec = s % 60;
-        if(pDisp) pDisp.textContent = `${m}:${sec < 10 ? '0' : ''}${sec}`; 
+        if(pDisp) pDisp.textContent = m + ':' + (sec < 10 ? '0' : '') + sec; 
         s--;
       }, 1000);
     }
@@ -855,7 +847,7 @@
       container.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
-        daten.forEach((b) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = `<a href="${b.url}" target="_blank" style="color:var(--primary);">${b.titel}</a>`; container.appendChild(div); });
+        daten.forEach((b) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = '<a href="' + b.url + '" target="_blank" style="color:var(--primary);">' + b.titel + '</a>'; container.appendChild(div); });
       } catch (e) {}
     }
     function lesezeichenSpeichern() {
@@ -912,7 +904,6 @@
       if(canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); 
     }
 
-    // Sprachausgabe mit automatischer Aufteilung für lange Texte
     function stimmenLaden() { 
       if (!synth) return; 
       verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de') || v.lang.startsWith('de-DE')); 
@@ -929,23 +920,21 @@
       stimmenLaden();
       const clean = text.replace(/[*_#`~]/g, '').trim();
 
-      // Teilt den Text anhand von Punkten/Satzzeichen in Häppchen à max 180 Zeichen auf
       const saetze = clean.match(/[^.!?]+[.!?]+|\S+/g) || [clean];
       let aktuelleWortGruppe = "";
-      let bluöcke = [];
+      let blueecke = [];
 
       saetze.forEach(teil => {
         if ((aktuelleWortGruppe + " " + teil).length < 180) {
           aktuelleWortGruppe += " " + teil;
         } else {
-          bluöcke.push(aktuelleWortGruppe.trim());
+          blueecke.push(aktuelleWortGruppe.trim());
           aktuelleWortGruppe = teil;
         }
       });
-      if (aktuelleWortGruppe) bluöcke.push(aktuelleWortGruppe.trim());
+      if (aktuelleWortGruppe) blueecke.push(aktuelleWortGruppe.trim());
 
-      // Spricht die Blöcke nacheinander ab
-      bluöcke.forEach(block => {
+      blueecke.forEach(block => {
         const utter = new SpeechSynthesisUtterance(block);
         utter.lang = 'de-DE';
         if (verfuegbareStimmen.length > 0) {
@@ -957,8 +946,8 @@
 
     function sprachEingabeStarten() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) { alert('Nicht unterstützt.'); return; }
-      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start(); statusSetzen('Höre zu...');
+      if (!SpeechRecognition) { alert('Nicht unterstuetzt.'); return; }
+      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start(); statusSetzen('Hoere zu...');
       rec.onresult = (e) => { 
         const nInput = document.getElementById('nachrichtInput');
         if(nInput) nInput.value = e.results[0][0].transcript; 
@@ -972,7 +961,7 @@
       liste.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
-        daten.forEach((n) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = `<strong>${n.titel}</strong><p style="color:var(--muted);">${n.inhalt}</p>`; liste.appendChild(div); });
+        daten.forEach((n) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = '<strong>' + n.titel + '</strong><p style="color:var(--muted);">' + n.inhalt + '</p>'; liste.appendChild(div); });
       } catch (e) {}
     }
     function notizSpeichern() {
