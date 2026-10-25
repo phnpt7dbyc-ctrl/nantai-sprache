@@ -513,7 +513,7 @@
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/\n/g, '<br>');
     }
-// GROQ CLOUD KI (Super schnell mit Llama 3)
+// GROQ CLOUD KI (Aktualisiertes Modell: llama-3.1-8192)
     async function kiAntwortHubern(prompt) {
       const apiKey = "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";
 
@@ -529,7 +529,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            model: "llama-3.1-8192",
             messages: [{ role: "user", content: prompt }]
           })
         });
