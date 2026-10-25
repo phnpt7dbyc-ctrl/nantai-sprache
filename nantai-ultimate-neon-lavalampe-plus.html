@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f4f7fc">
-  <title>NantAI Ultimate</title>
+  <title>NantAI Ultimate Plus</title>
   <style>
-    :root {
-      color-scheme: light;
+    :root[data-theme="light"] {
       --bg: #f4f7fc;
       --panel: #ffffff;
       --panel2: #e9eff6;
@@ -23,12 +22,30 @@
       --anim-speed: 18s;
       --lava-opacity: 0.65;
     }
+    :root[data-theme="dark"] {
+      --bg: #0c0a12;
+      --panel: #171321;
+      --panel2: #211a30;
+      --primary: #8250df;
+      --primary-hover: #9568e8;
+      --primary-light: #302044;
+      --accent: #00e5ff;
+      --text: #f5f1ff;
+      --muted: #b9aecb;
+      --border: #30283f;
+      --good: #86efac;
+      --bad: #fca5a5;
+      --anim-speed: 18s;
+      --lava-opacity: 0.85;
+    }
+
     * { box-sizing: border-box; }
     body {
       margin: 0; padding-left: 260px; min-height: 100vh;
       background: var(--bg); color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       position: relative; isolation: isolate; overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
     /* Animierter Neon-Farbverlauf im Hintergrund */
@@ -38,14 +55,14 @@
         radial-gradient(ellipse at 15% 20%, var(--accent) 0%, transparent 40%),
         radial-gradient(ellipse at 80% 25%, var(--primary) 0%, transparent 42%),
         radial-gradient(ellipse at 55% 85%, #60a5fa 0%, transparent 45%),
-        linear-gradient(125deg, #f0f4f8, #e2e8f0, #f8fafc, #eef2f6);
+        linear-gradient(125deg, var(--bg), var(--panel2), var(--bg), var(--panel));
       background-size: 200% 200%;
       animation: neonFarben var(--anim-speed) ease-in-out infinite alternate;
     }
     @keyframes neonFarben {
       0% { background-position: 0% 30%; filter: hue-rotate(0deg); }
       50% { background-position: 100% 65%; filter: hue-rotate(15deg); }
-      100% { background-position: 25% 100% ; filter: hue-rotate(-15deg); }
+      100% { background-position: 25% 100%; filter: hue-rotate(-15deg); }
     }
 
     /* Lava-Blasen */
@@ -54,6 +71,7 @@
       overflow: hidden; filter: blur(28px);
       opacity: var(--lava-opacity); mix-blend-mode: multiply;
     }
+    :root[data-theme="dark"] .lava-lampe { mix-blend-mode: screen; }
     .lava-kugel {
       position: absolute; display: block; border-radius: 48% 52% 60% 40%;
       background: linear-gradient(135deg, var(--accent), var(--primary) 48%, #60a5fa);
@@ -75,32 +93,32 @@
     }
 
     aside, header, .widget, .panel, .composer {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: var(--panel);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
     }
 
     button, input, textarea, select { font: inherit; }
     button {
       border: 0; border-radius: 10px; padding: 10px 14px;
       background: var(--primary); color: white; cursor: pointer;
-      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.2);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       transition: background .15s, transform .1s;
     }
-    button:hover { background: var(--primary-hover); }
+    button:hover { filter: brightness(1.1); }
     button:active { transform: scale(0.98); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-    button.secondary { background: #e2e8f0; color: #334155; border: 1px solid var(--border); box-shadow: none; }
-    button.secondary:hover { background: #cbd5e1; }
+    button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
+    button.secondary:hover { filter: brightness(0.95); }
     button.danger { background: var(--bad); color: white; box-shadow: none; }
 
     input, textarea, select {
       width: 100%; border: 1px solid var(--border); border-radius: 10px;
-      background: #ffffff; color: var(--text); padding: 10px;
+      background: var(--bg); color: var(--text); padding: 10px;
     }
     textarea { min-height: 70px; resize: vertical; }
 
-    /* Layout & Sidebar */
     aside {
       position: fixed; inset: 0 auto 0 0; width: 260px; padding: 16px;
       border-right: 1px solid var(--border); overflow-y: auto; z-index: 10;
@@ -109,12 +127,13 @@
     aside p { color: var(--muted); font-size: 0.85rem; margin: 0 0 12px; }
     .nav-btn { display: block; width: 100%; text-align: left; margin-bottom: 6px; background: transparent; color: var(--text); border: 1px solid transparent; box-shadow: none; }
     .nav-btn:hover { background: var(--panel2); border-color: var(--border); }
-    .nav-btn.active { background: var(--primary-light); color: var(--primary); border-color: #bae6fd; font-weight: 600; }
+    .nav-btn.active { background: var(--primary-light); color: var(--primary); border-color: var(--border); font-weight: 600; }
     .side-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 6px; }
 
     main { max-width: 900px; margin: 0 auto; padding: 20px; }
-    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding: 14px; border-radius: 12px; }
-    .logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: grid; place-items: center; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding: 14px; border-radius: 12px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: grid; place-items: center; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     h1 { margin: 0; font-size: 1.3rem; }
     header p { margin: 2px 0 0; color: var(--muted); font-size: 0.85rem; }
 
@@ -126,25 +145,25 @@
     .panel h3 { margin-top: 0; font-size: 1.1rem; color: var(--primary); }
     .hidden { display: none !important; }
 
-    /* Chat Bereich */
     #chat { display: flex; flex-direction: column; gap: 12px; min-height: 40vh; margin-bottom: 20px; }
     .message { padding: 12px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-    .message.user { background: var(--primary-light); align-self: flex-end; max-width: 88%; border-color: #bae6fd; color: #0369a1; }
+    .message.user { background: var(--primary-light); align-self: flex-end; max-width: 88%; border-color: var(--border); color: var(--primary); }
     .message.assistant { align-self: stretch; }
     .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
     .msg-tools button { padding: 5px 10px; font-size: 0.8rem; }
 
-    .composer { position: sticky; bottom: 0; background: rgba(244, 247, 252, 0.95); padding: 12px 0; border-top: 1px solid var(--border); }
+    .composer { position: sticky; bottom: 0; background: var(--bg); padding: 12px 0; border-top: 1px solid var(--border); }
     .row { display: flex; gap: 8px; margin-top: 8px; }
     .row > * { flex: 1; }
 
     #status { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; font-weight: 500; }
 
-    /* Avatar Animation Widget */
     .avatar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-    .avatar-face { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 40px; box-shadow: 0 0 20px rgba(2, 132, 199, 0.4); margin-bottom: 14px; transition: transform 0.3s; }
-    .avatar-pulse { animation: avPulse 2s infinite ease-in-out; }
-    @keyframes avPulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); box-shadow: 0 0 30px var(--primary); } 100% { transform: scale(1); } }
+    .avatar-face { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 40px; box-shadow: 0 0 20px var(--primary); margin-bottom: 14px; animation: avPulse 2s infinite ease-in-out; }
+    @keyframes avPulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+    /* Whiteboard / Canvas Styling */
+    #drawingCanvas { width: 100%; height: 300px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px; cursor: crosshair; touch-action: none; }
 
     @media (max-width: 768px) {
       body { padding-left: 0; }
@@ -164,15 +183,17 @@
 
   <aside>
     <h2>✦ NantAI</h2>
-    <p>Ultimate Edition</p>
-    <button class="nav-btn active" onclick="tabWechseln('chatTab', this)">💬 Chat & Verlauf</button>
+    <p>Ultimate Plus</p>
+    <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
+    <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Chat & Verlauf</button>
     <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 NantAI Avatar</button>
     <button class="nav-btn" onclick="tabWechseln('codeTab', this)">💻 Programmierstudio</button>
-    <button class="nav-btn" onclick="tabWechseln('designTab', this)">🎨 Design & Lichter</button>
+    <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">🎨 Zeichenstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('designTab', this)">⚙️ Design & Modus</button>
     <button class="nav-btn" onclick="tabWechseln('sprachStudioTab', this)">🗣️ Sprachstudio</button>
     <button class="nav-btn" onclick="tabWechseln('wetterTab', this)">🌦️ Wetter & Standort</button>
     <button class="nav-btn" onclick="tabWechseln('timerTab', this)">⏱️ Timer & Stoppuhr</button>
-    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen</button>
+    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen & Statistik</button>
     <div class="side-label">Aktionen</div>
     <button class="nav-btn" onclick="neuerChat()">＋ Neuer Chat</button>
     <button class="nav-btn" onclick="chatExportieren()">⬇️ Chat exportieren</button>
@@ -180,24 +201,53 @@
 
   <main>
     <header>
-      <div class="logo">✦</div>
-      <div>
-        <h1>NantAI Assistant</h1>
-        <p>Mit Avatar, Code-Studio, Design-Anpassung & Live-Wetter</p>
+      <div class="header-left">
+        <div class="logo">✦</div>
+        <div>
+          <h1>NantAI Assistant</h1>
+          <p>Alle Module & Features aktiv</p>
+        </div>
       </div>
+      <button class="secondary" onclick="themeUmschalten()">🌓 Theme wechseln</button>
     </header>
 
     <div id="status">System bereit.</div>
 
+    <!-- 0. STARTSEITE / DASHBOARD -->
+    <section id="dashboardTab" class="panel">
+      <h3>🏠 Schnellstart-Dashboard</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Willkommen zurück! Hier ist dein persönlicher Überblick.</p>
+      
+      <div class="dashboard" style="margin-top: 14px;">
+        <div class="widget">
+          <div class="widget-label">🕒 Uhrzeit</div>
+          <div class="widget-value" id="dashUhr">--:--:--</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">🌦️ Wetter</div>
+          <div class="widget-value" id="dashWetter">Nicht geladen</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">💡 Inspiration des Tages</div>
+          <div class="widget-value" id="zitatBox" style="font-size: 0.85rem; font-style: italic;">"Code is like humor. When you have to explain it, it’s bad."</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 16px;">
+        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Zum Chat</button>
+        <button class="secondary" onclick="tabWechseln('whiteboardTab', document.querySelectorAll('aside .nav-btn')[4])">🎨 Zeichenstudio öffnen</button>
+      </div>
+    </section>
+
     <!-- 1. CHAT TAB -->
-    <section id="chatTab">
+    <section id="chatTab" class="hidden">
       <div class="dashboard">
         <div class="widget">
           <div class="widget-label">🕒 Uhrzeit</div>
           <div class="widget-value" id="uhrzeitWidget">--:--:--</div>
         </div>
         <div class="widget">
-          <div class="widget-label">📍 Standort & Wetter</div>
+          <div class="widget-label">📍 Wetter</div>
           <div class="widget-value" id="wetterWidgetKurz">Nicht geladen</div>
         </div>
         <div class="widget">
@@ -221,127 +271,98 @@
     <section id="avatarTab" class="panel hidden">
       <h3>🤖 NantAI Avatar Unterhaltung</h3>
       <div class="avatar-container">
-        <div id="avatarFace" class="avatar-face avatar-pulse">✦</div>
+        <div id="avatarFace" class="avatar-face">✦</div>
         <h4 id="avatarStatusText" style="margin: 0 0 6px;">Hallo! Ich bin dein KI-Avatar.</h4>
-        <p style="color: var(--muted); font-size: 0.85rem; max-width: 400px;">Unterhalte dich direkt mit mir. Ich antworte dir visuell und per Sprachausgabe.</p>
       </div>
       <textarea id="avatarInput" placeholder="Sprich mit dem Avatar..." style="margin-bottom: 8px;"></textarea>
-      <div class="row">
-        <button onclick="avatarSprechenlassen()">Mit Avatar sprechen</button>
-      </div>
+      <div class="row"><button onclick="avatarSprechenlassen()">Mit Avatar sprechen</button></div>
     </section>
 
     <!-- 3. PROGRAMMIERSTUDIO TAB -->
     <section id="codeTab" class="panel hidden">
-      <h3>💻 Programmierstudio (Code-Erstellung & Vorschau)</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Schreibe HTML-, CSS- oder JS-Code und teste ihn direkt in der Live-Vorschau.</p>
-      <textarea id="codeEditor" style="font-family: monospace; min-height: 160px;" placeholder="<h1>Hallo Welt</h1><script>console.log('Test');</script>"></textarea>
-      <div class="row" style="margin-top: 8px;">
-        <button onclick="codeVorschauAktualisieren()">Live-Vorschau starten</button>
-        <button class="secondary" onclick="codeKopieren()">Code kopieren</button>
+      <h3>💻 Programmierstudio & Text-Statistik</h3>
+      <textarea id="codeEditor" oninput="codeStatistikAktualisieren()" style="font-family: monospace; min-height: 140px;" placeholder="HTML/JS Code hier eingeben..."></textarea>
+      <div id="codeStatistik" style="font-size: 0.8rem; color: var(--muted); margin: 6px 0;">Wörter: 0 | Zeichen: 0</div>
+      <div class="row">
+        <button onclick="codeVorschauAktualisieren()">Live-Vorschau</button>
+        <button class="secondary" onclick="codeKopieren()">Kopieren</button>
         <button class="secondary" onclick="codeHerunterladen()">Herunterladen</button>
       </div>
-      <div style="margin-top: 12px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff;">
-        <iframe id="codeIframe" style="width: 100%; height: 220px; border: 0;"></iframe>
+      <div style="margin-top: 10px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff;">
+        <iframe id="codeIframe" style="width: 100%; height: 180px; border: 0;"></iframe>
       </div>
     </section>
 
-    <!-- 4. DESIGN & LICHTER TAB -->
+    <!-- NEU: 4. ZEICHENSTUDIO / WHITEBOARD -->
+    <section id="whiteboardTab" class="panel hidden">
+      <h3>🎨 Interaktives Zeichenstudio</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Skizziere Ideen direkt auf dem Bildschirm.</p>
+      <div class="row" style="margin-bottom: 8px;">
+        <input type="color" id="brushColor" value="#0284c7" style="height: 38px; max-width: 80px;">
+        <input type="range" id="brushSize" min="1" max="25" value="5" title="Pinselstärke" style="flex: 2;">
+        <button class="secondary" onclick="canvasLeeren()">Löschen</button>
+      </div>
+      <canvas id="drawingCanvas"></canvas>
+    </section>
+
+    <!-- 5. DESIGN & MODUS TAB -->
     <section id="designTab" class="panel hidden">
-      <h3>🎨 Design & Neon-Lichter anpassen</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Ändere die Farben der Benutzeroberfläche und die Intensität der Hintergrundlichter.</p>
-      
+      <h3>⚙️ Design & Licht-Steuerung</h3>
       <div style="margin-bottom: 12px;">
         <label style="font-size: 0.85rem;">Primärfarbe:</label>
         <input type="color" id="colorPrimary" value="#0284c7" onchange="designAnwenden()" style="height: 40px; cursor: pointer;">
       </div>
       <div style="margin-bottom: 12px;">
-        <label style="font-size: 0.85rem;">Akzentfarbe (Neon):</label>
-        <input type="color" id="colorAccent" value="#38bdf8" onchange="designAnwenden()" style="height: 40px; cursor: pointer;">
-      </div>
-      <div style="margin-bottom: 12px;">
-        <label style="font-size: 0.85rem;">Lava-Lampen Helligkeit / Intensität:</label>
+        <label style="font-size: 0.85rem;">Lava-Lampen Intensität:</label>
         <select id="selectLavaOp" onchange="designAnwenden()">
-          <option value="0.85">Stark (Hell & Leuchtend)</option>
+          <option value="0.85">Stark</option>
           <option value="0.65" selected>Normal</option>
-          <option value="0.25">Dezent (Schont Akku)</option>
-          <option value="0">Aus (Keine Lava-Blasen)</option>
+          <option value="0.25">Dezent</option>
+          <option value="0">Aus</option>
         </select>
       </div>
-      <div style="margin-bottom: 12px;">
-        <label style="font-size: 0.85rem;">Animationsgeschwindigkeit der Lichter:</label>
-        <select id="selectAnimSpeed" onchange="designAnwenden()">
-          <option value="10s">Schnell</option>
-          <option value="18s" selected>Normal</option>
-          <option value="35s">Langsam (Ruhig)</option>
-          <option value="0s">Eingefroren (Aus)</option>
-        </select>
-      </div>
-      <button class="secondary" onclick="designZuruecksetzen()">Standardwerte wiederherstellen</button>
+      <button class="secondary" onclick="designZuruecksetzen()">Standardwerte</button>
     </section>
 
-    <!-- 5. SPRACHSTUDIO TAB -->
+    <!-- 6. SPRACHSTUDIO TAB -->
     <section id="sprachStudioTab" class="panel hidden">
-      <h3>🗣️ Sprachstudio (Menschlicher machen & TTS)</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Passe die Stimme an und aktiviere den "Menschlich-Modus" für natürlichere Pausen und Klangmodulation.</p>
-      
-      <div style="margin-bottom: 10px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Stimme auswählen:</label>
-        <select id="stimmenSelect" style="margin-top: 4px;"></select>
-      </div>
-      <div style="margin-bottom: 10px; background: var(--panel2); padding: 10px; border-radius: 8px;">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
-          <input type="checkbox" id="menschlichModus" checked style="width: auto;"> 
-          ✨ Menschlich-Modus aktivieren (Dynamische Tonhöhen-Anpassung)
-        </label>
-      </div>
-      <div style="margin-bottom: 10px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Sprechtempo (<span id="rateVal">0.95</span>):</label>
-        <input type="range" id="speechRate" min="0.5" max="1.5" step="0.05" value="0.95" oninput="document.getElementById('rateVal').textContent=this.value">
-      </div>
-      <div style="margin-bottom: 10px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Basis-Tonhöhe (<span id="pitchVal">1.0</span>):</label>
-        <input type="range" id="speechPitch" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('pitchVal').textContent=this.value">
-      </div>
+      <h3>🗣️ Sprachstudio (Menschlicher Modus)</h3>
+      <select id="stimmenSelect" style="margin-bottom: 10px;"></select>
+      <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600;">
+        <input type="checkbox" id="menschlichModus" checked style="width: auto;"> Menschlich-Modus (Dynamische Tonhöhe)
+      </label>
       <div class="row">
         <button onclick="sprachVorschau()">Vorschau abspielen</button>
-        <button class="secondary" onclick="sprachEinstellungenSpeichern()">Einstellungen speichern</button>
       </div>
     </section>
 
-    <!-- 6. WETTER & STANDORT TAB -->
+    <!-- 7. WETTER & STANDORT TAB -->
     <section id="wetterTab" class="panel hidden">
       <h3>🌦️ Genauer Standort & Wetter</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Ermittle deinen präzisen GPS-Standort und lade aktuelle Wetterdaten von Open-Meteo.</p>
       <button onclick="standortUndWetterLaden()">Standort freigeben & Wetter laden</button>
-      
       <div id="wetterDetailsBox" style="margin-top: 14px; background: var(--panel2); padding: 12px; border-radius: 10px; display: none;">
-        <p><strong>Breitengrad:</strong> <span id="latVal">-</span></p>
-        <p><strong>Längengrad:</strong> <span id="lonVal">-</span></p>
         <p><strong>Temperatur:</strong> <span id="tempVal">-</span></p>
-        <p><strong>Windgeschwindigkeit:</strong> <span id="windVal">-</span></p>
+        <p><strong>Wind:</strong> <span id="windVal">-</span></p>
       </div>
     </section>
 
-    <!-- 7. TIMER TAB -->
+    <!-- 8. TIMER TAB -->
     <section id="timerTab" class="panel hidden">
-      <h3>⏱️ Timer & Stoppuhr</h3>
-      <div style="margin-bottom: 16px;">
-        <label style="font-size: 0.85rem; color: var(--muted);">Timer (Sekunden):</label>
-        <div class="row" style="margin-top: 4px;">
-          <input type="number" id="timerSekundenInput" placeholder="z. B. 60" min="1">
-          <button onclick="timerStarten()">Starten</button>
-          <button class="danger" onclick="timerStoppen()">Stopp</button>
-        </div>
-        <div id="timerAnzeige" style="font-size: 1.2rem; font-weight: bold; margin-top: 8px;">00:00</div>
+      <h3>⏱️ Timer</h3>
+      <div class="row">
+        <input type="number" id="timerSekundenInput" placeholder="Sekunden" min="1">
+        <button onclick="timerStarten()">Starten</button>
+        <button class="danger" onclick="timerStoppen()">Stopp</button>
       </div>
+      <div id="timerAnzeige" style="font-size: 1.2rem; font-weight: bold; margin-top: 8px;">00:00</div>
     </section>
 
-    <!-- 8. NOTIZEN TAB -->
+    <!-- 9. NOTIZEN TAB MIT STATISTIK -->
     <section id="notizenTab" class="panel hidden">
-      <h3>📝 Lokale Notizen</h3>
-      <input id="notizTitel" placeholder="Titel der Notiz" style="margin-bottom: 8px;">
-      <textarea id="notizInhalt" placeholder="Inhalt eingeben..." style="margin-bottom: 8px;"></textarea>
+      <h3>📝 Notizen & Text-Statistik</h3>
+      <input id="notizTitel" placeholder="Titel" style="margin-bottom: 8px;">
+      <textarea id="notizInhalt" oninput="notizStatistikAktualisieren()" placeholder="Inhalt eingeben..." style="margin-bottom: 8px;"></textarea>
+      <div id="notizStatistik" style="font-size: 0.8rem; color: var(--muted); margin-bottom: 8px;">Wörter: 0 | Zeichen: 0 | Geschätzte Lesezeit: 0 Sek.</div>
       <button onclick="notizSpeichern()">Notiz speichern</button>
       <div id="notizenListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
     </section>
@@ -350,9 +371,9 @@
 
   <script>
     const BACKEND = 'https://script.google.com/macros/s/AKfycbycGuJ6Dv6bjoRQ4gbjeHo7Kye8dG7suorRp__NZhCcnnEshFC3z7IGdIB5XKRHCI2p/exec';
-    const SPEICHER_CHATS = 'nantai_chats_v3';
-    const SPEICHER_NOTIZEN = 'nantai_notizen_v3';
-    const SPEICHER_CONFIG = 'nantai_config_v3';
+    const SPEICHER_CHATS = 'nantai_chats_v4';
+    const SPEICHER_NOTIZEN = 'nantai_notizen_v4';
+    const SPEICHER_CONFIG = 'nantai_config_v4';
 
     let chats = [];
     let aktuellerChatId = null;
@@ -360,7 +381,13 @@
     let synth = window.speechSynthesis;
     let verfuegbareStimmen = [];
     let timerInterval = null;
-    let aktuellerStandort = null;
+
+    const zitate = [
+      "Code is like humor. When you have to explain it, it’s bad.",
+      "Simplicity is the soul of efficiency.",
+      "Make it work, make it right, make it fast.",
+      "Technologie ist am besten, wenn sie Menschen zusammenbringt."
+    ];
 
     window.addEventListener('DOMContentLoaded', () => {
       uhrAktualisieren();
@@ -369,14 +396,18 @@
       notizenLaden();
       konfigurationLaden();
       stimmenLaden();
-      if (synth && synth.onvoiceschanged !== undefined) {
-        synth.onvoiceschanged = stimmenLaden;
-      }
+      canvasInitialisieren();
+      document.getElementById('zitatBox').textContent = `"${zitate[Math.floor(Math.random() * zitate.length)]}"`;
+      if (synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = stimmenLaden;
     });
 
     function uhrAktualisieren() {
       const d = new Date();
-      document.getElementById('uhrzeitWidget').textContent = d.toLocaleTimeString('de-DE');
+      const zeitStr = d.toLocaleTimeString('de-DE');
+      const u = document.getElementById('uhrzeitWidget');
+      const du = document.getElementById('dashUhr');
+      if (u) u.textContent = zeitStr;
+      if (du) du.textContent = zeitStr;
     }
 
     function statusSetzen(text) {
@@ -387,39 +418,30 @@
       document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
       document.getElementById(tabId).classList.remove('hidden');
       document.querySelectorAll('aside .nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    // --- THEME / DARK MODE ---
+    function themeUmschalten() {
+      const html = document.documentElement;
+      const aktuellesTheme = html.getAttribute('data-theme');
+      const neuesTheme = aktuellesTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', neuesTheme);
+      localStorage.setItem('nantai_theme', neuesTheme);
     }
 
     // --- CHAT LOGIK ---
-    function neueId() {
-      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-    }
-
-    function begruessungsNachricht() {
-      return [{ text: 'Hallo! Ich bin NantAI Ultimate. Wie kann ich dir heute helfen?', rolle: 'assistant' }];
-    }
+    function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
+    function begruessungsNachricht() { return [{ text: 'Hallo! Ich bin NantAI Ultimate Plus.', rolle: 'assistant' }]; }
 
     function chatVerlaufLaden() {
-      try {
-        const gespeichert = localStorage.getItem(SPEICHER_CHATS);
-        if (gespeichert) chats = JSON.parse(gespeichert);
-      } catch (e) {}
-
-      if (!Array.isArray(chats) || chats.length === 0) {
-        chats = [{ id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() }];
-      }
+      try { const g = localStorage.getItem(SPEICHER_CHATS); if (g) chats = JSON.parse(g); } catch (e) {}
+      if (!Array.isArray(chats) || chats.length === 0) chats = [{ id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() }];
       aktuellerChatId = chats[0].id;
       chatAnzeigen();
     }
-
-    function chatVerlaufSpeichern() {
-      try { localStorage.setItem(SPEICHER_CHATS, JSON.stringify(chats)); } catch (e) {}
-    }
-
-    function aktuellerChatObjekt() {
-      return chats.find(c => c.id === aktuellerChatId) || chats[0];
-    }
-
+    function chatVerlaufSpeichern() { try { localStorage.setItem(SPEICHER_CHATS, JSON.stringify(chats)); } catch (e) {} }
+    function aktuellerChatObjekt() { return chats.find(c => c.id === aktuellerChatId) || chats[0]; }
     function chatAnzeigen() {
       const chat = aktuellerChatObjekt();
       const container = document.getElementById('chat');
@@ -427,39 +449,22 @@
       chat.nachrichten.forEach(msg => nachrichtElementErstellen(msg.text, msg.rolle, false));
       container.scrollTop = container.scrollHeight;
     }
-
     function neuerChat() {
       const neuer = { id: neueId(), titel: 'Neuer Chat', nachrichten: begruessungsNachricht() };
-      chats.unshift(neuer);
-      aktuellerChatId = neuer.id;
-      chatVerlaufSpeichern();
-      chatAnzeigen();
-      statusSetzen('Neuer Chat gestartet.');
+      chats.unshift(neuer); aktuellerChatId = neuer.id;
+      chatVerlaufSpeichern(); chatAnzeigen();
     }
-
     function nachrichtElementErstellen(text, rolle, speichern = true) {
       const container = document.getElementById('chat');
-      const div = document.createElement('div');
-      div.className = `message ${rolle}`;
-      
-      const textDiv = document.createElement('div');
-      textDiv.textContent = text;
-      div.appendChild(textDiv);
-
+      const div = document.createElement('div'); div.className = `message ${rolle}`;
+      const textDiv = document.createElement('div'); textDiv.textContent = text; div.appendChild(textDiv);
       if (rolle === 'assistant') {
-        const tools = document.createElement('div');
-        tools.className = 'msg-tools';
-        const vorlesenBtn = document.createElement('button');
-        vorlesenBtn.className = 'secondary';
-        vorlesenBtn.textContent = '🔊 Vorlesen';
-        vorlesenBtn.onclick = () => vorlesenMenschlich(text);
-        tools.appendChild(vorlesenBtn);
-        div.appendChild(tools);
+        const tools = document.createElement('div'); tools.className = 'msg-tools';
+        const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = '🔊 Vorlesen';
+        btn.onclick = () => vorlesenMenschlich(text);
+        tools.appendChild(btn); div.appendChild(tools);
       }
-
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-
+      container.appendChild(div); container.scrollTop = container.scrollHeight;
       if (speichern) {
         const chat = aktuellerChatObjekt();
         chat.nachrichten.push({ text, rolle });
@@ -467,25 +472,18 @@
         chatVerlaufSpeichern();
       }
     }
-
-    function pruefeEingabe(event) {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        nachrichtSenden();
-      }
-    }
+    function pruefeEingabe(event) { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); nachrichtSenden(); } }
 
     function jsonpAnfrage(parameter) {
       return new Promise((resolve, reject) => {
-        const callbackName = 'nantaiCB_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        const callbackName = 'nantaiCB_' + Date.now();
         const script = document.createElement('script');
         const url = new URL(BACKEND);
         Object.entries(parameter).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, String(v)); });
         url.searchParams.set('callback', callbackName);
-
         const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 45000);
         function cleanup() { clearTimeout(timer); delete window[callbackName]; script.remove(); }
-        window[callbackName] = (daten) => { cleanup(); resolve(daten); };
+        window[callbackName] = (d) => { cleanup(); resolve(d); };
         script.onerror = () => { cleanup(); reject(new Error('Netzwerkfehler')); };
         script.src = url.toString();
         document.head.appendChild(script);
@@ -495,30 +493,21 @@
     async function nachrichtSenden() {
       if (anfrageLaeuft) return;
       const input = document.getElementById('nachrichtInput');
-      const text = input.value.trim();
-      if (!text) return;
-      input.value = '';
-      nachrichtElementErstellen(text, 'user', true);
-      statusSetzen('NantAI denkt nach...');
-      anfrageLaeuft = true;
-      document.getElementById('sendenBtn').disabled = true;
-
+      const text = input.value.trim(); if (!text) return;
+      input.value = ''; nachrichtElementErstellen(text, 'user', true);
+      statusSetzen('NantAI denkt nach...'); anfrageLaeuft = true;
       try {
         const chat = aktuellerChatObjekt();
         const kontext = chat.nachrichten.slice(-10).map(m => ({ rolle: m.rolle, text: m.text }));
-        const antwortDaten = await jsonpAnfrage({ aktion: 'chat', nachricht: text, kontext: JSON.stringify(kontext), sprache: 'de' });
-        if (!antwortDaten || !antwortDaten.erfolg) throw new Error('Serverfehler');
-        const kiAntwort = String(antwortDaten.antwort || 'Keine Antwort.');
+        const res = await jsonpAnfrage({ aktion: 'chat', nachricht: text, kontext: JSON.stringify(kontext), sprache: 'de' });
+        if (!res || !res.erfolg) throw new Error('Serverfehler');
+        const kiAntwort = String(res.antwort || 'Keine Antwort.');
         nachrichtElementErstellen(kiAntwort, 'assistant', true);
-        statusSetzen('Antwort empfangen.');
-        vorlesenMenschlich(kiAntwort);
-      } catch (err) {
+        statusSetzen('Antwort empfangen.'); vorlesenMenschlich(kiAntwort);
+      } catch (e) {
         nachrichtElementErstellen('Fehler bei der Verbindung.', 'assistant', true);
         statusSetzen('Verbindungsfehler.');
-      } finally {
-        anfrageLaeuft = false;
-        document.getElementById('sendenBtn').disabled = false;
-      }
+      } finally { anfrageLaeuft = false; }
     }
 
     function chatExportieren() {
@@ -529,209 +518,135 @@
       URL.revokeObjectURL(url);
     }
 
-    // --- 1. AVATAR UNTERHALTUNG ---
+    // --- AVATAR & CODE ---
     async function avatarSprechenlassen() {
-      const input = document.getElementById('avatarInput');
-      const text = input.value.trim();
-      if (!text) return;
-      input.value = '';
-      const avatarText = document.getElementById('avatarStatusText');
-      avatarText.textContent = 'NantAI denkt nach...';
-      try {
-        const res = await jsonpAnfrage({ aktion: 'chat', nachricht: text, sprache: 'de' });
-        const antwort = res.antwort || 'Hallo!';
-        avatarText.textContent = antwort;
-        vorlesenMenschlich(antwort);
-      } catch (e) {
-        avatarText.textContent = 'Verbindungsfehler.';
-      }
+      const input = document.getElementById('avatarInput'); const text = input.value.trim(); if (!text) return;
+      input.value = ''; const avText = document.getElementById('avatarStatusText'); avText.textContent = 'Denke...';
+      try { const res = await jsonpAnfrage({ aktion: 'chat', nachricht: text, sprache: 'de' }); const ant = res.antwort || 'Hallo!'; avText.textContent = ant; vorlesenMenschlich(ant); } catch (e) { avText.textContent = 'Fehler.'; }
     }
-
-    // --- 2. PROGRAMMIERSTUDIO ---
-    function codeVorschauAktualisieren() {
-      const code = document.getElementById('codeEditor').value;
-      const iframe = document.getElementById('codeIframe');
-      iframe.srcdoc = code;
-    }
-    function codeKopieren() {
-      navigator.clipboard.writeText(document.getElementById('codeEditor').value);
-      statusSetzen('Code kopiert.');
-    }
+    function codeVorschauAktualisieren() { document.getElementById('codeIframe').srcdoc = document.getElementById('codeEditor').value; }
+    function codeKopieren() { navigator.clipboard.writeText(document.getElementById('codeEditor').value); statusSetzen('Kopiert.'); }
     function codeHerunterladen() {
       const blob = new Blob([document.getElementById('codeEditor').value], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click();
-      URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click(); URL.revokeObjectURL(url);
+    }
+    function codeStatistikAktualisieren() {
+      const val = document.getElementById('codeEditor').value;
+      const w = val.trim() ? val.trim().split(/\s+/).length : 0;
+      document.getElementById('codeStatistik').textContent = `Wörter: ${w} | Zeichen: ${val.length}`;
     }
 
-    // --- 3. DESIGN & LICHTER ---
+    // --- NEU: ZEICHENSTUDIO (CANVAS) ---
+    function canvasInitialisieren() {
+      const canvas = document.getElementById('drawingCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth - 32;
+      canvas.height = 280;
+      let zeichnet = false;
+
+      canvas.addEventListener('pointerdown', (e) => { zeichnet = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!zeichnet) return;
+        ctx.strokeStyle = document.getElementById('brushColor').value;
+        ctx.lineWidth = document.getElementById('brushSize').value;
+        ctx.lineCap = 'round';
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      });
+      window.addEventListener('pointerup', () => { zeichnet = false; });
+    }
+    function canvasLeeren() {
+      const canvas = document.getElementById('drawingCanvas');
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // --- DESIGN & SPRACHE ---
     function designAnwenden() {
-      const p = document.getElementById('colorPrimary').value;
-      const a = document.getElementById('colorAccent').value;
-      const lavaOp = document.getElementById('selectLavaOp').value;
-      const animSpd = document.getElementById('selectAnimSpeed').value;
-
-      document.documentElement.style.setProperty('--primary', p);
-      document.documentElement.style.setProperty('--accent', a);
-      document.documentElement.style.setProperty('--lava-opacity', lavaOp);
-      document.documentElement.style.setProperty('--anim-speed', animSpd);
+      document.documentElement.style.setProperty('--primary', document.getElementById('colorPrimary').value);
+      document.documentElement.style.setProperty('--lava-opacity', document.getElementById('selectLavaOp').value);
     }
-    function designZuruecksetzen() {
-      document.getElementById('colorPrimary').value = '#0284c7';
-      document.getElementById('colorAccent').value = '#38bdf8';
-      document.getElementById('selectLavaOp').value = '0.65';
-      document.getElementById('selectAnimSpeed').value = '18s';
-      designAnwenden();
-    }
+    function designZuruecksetzen() { document.getElementById('colorPrimary').value = '#0284c7'; designAnwenden(); }
 
-    // --- 5. SPRACHSTUDIO (MENSCHLICHER MACHEN) ---
     function stimmenLaden() {
       if (!synth) return;
       verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de'));
       const select = document.getElementById('stimmenSelect');
-      if (!select) return;
-      select.replaceChildren();
+      if (!select) return; select.replaceChildren();
       verfuegbareStimmen.forEach((st, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        opt.textContent = `${st.name} (${st.lang})`;
-        select.appendChild(opt);
+        const opt = document.createElement('option'); opt.value = idx; opt.textContent = st.name; select.appendChild(opt);
       });
     }
-
     function vorlesenMenschlich(text) {
-      if (!synth) return;
-      synth.cancel();
+      if (!synth) return; synth.cancel();
       const menschlich = document.getElementById('menschlichModus')?.checked;
-      
-      // Um die Stimme menschlicher klingen zu lassen, unterteilen wir in Sätze und variieren die Tonhöhe leicht dynamisch
-      const saetze = text.match(/[^.!?]+[.!?]+|\S+/g) || [text];
-      
-      saetze.forEach((satz, i) => {
-        const utter = new SpeechSynthesisUtterance(satz);
-        const select = document.getElementById('stimmenSelect');
-        if (select && verfuegbareStimmen[select.value]) utter.voice = verfuegbareStimmen[select.value];
-        
-        let basisRate = parseFloat(document.getElementById('speechRate').value) || 0.95;
-        let basisPitch = parseFloat(document.getElementById('speechPitch').value) || 1.0;
-
-        if (menschlich) {
-          // Natürliche Modulation: Fragezeichen erhöhen Tonhöhe leicht, Punkte senken sie minimal ab
-          if (satz.includes('?')) basisPitch += 0.15;
-          // Leichte Zufallsschwankung der Tonhöhe für lebhafteren Klang
-          basisPitch += (Math.random() * 0.08 - 0.04);
-        }
-
-        utter.rate = basisRate;
-        utter.pitch = basisPitch;
-        synth.speak(utter);
-      });
+      const utter = new SpeechSynthesisUtterance(text);
+      const select = document.getElementById('stimmenSelect');
+      if (select && verfuegbareStimmen[select.value]) utter.voice = verfuegbareStimmen[select.value];
+      if (menschlich) utter.pitch = 1.0 + (Math.random() * 0.08 - 0.04);
+      synth.speak(utter);
     }
-
-    function sprachVorschau() {
-      vorlesenMenschlich('Hallo! Das ist eine natürlichere Stimmprobe von NantAI. Klingt das gut für dich?');
-    }
-
-    function sprachEinstellungenSpeichern() {
-      const cfg = {
-        stimme: document.getElementById('stimmenSelect').value,
-        rate: document.getElementById('speechRate').value,
-        pitch: document.getElementById('speechPitch').value,
-        menschlich: document.getElementById('menschlichModus').checked
-      };
-      localStorage.setItem(SPEICHER_CONFIG, JSON.stringify(cfg));
-      statusSetzen('Spracheinstellungen gespeichert.');
-    }
-
-    function konfigurationLaden() {
-      try {
-        const cfg = JSON.parse(localStorage.getItem(SPEICHER_CONFIG));
-        if (cfg) {
-          if (cfg.rate) { document.getElementById('speechRate').value = cfg.rate; document.getElementById('rateVal').textContent = cfg.rate; }
-          if (cfg.pitch) { document.getElementById('speechPitch').value = cfg.pitch; document.getElementById('pitchVal').textContent = cfg.pitch; }
-          if (cfg.menschlich !== undefined) document.getElementById('menschlichModus').checked = cfg.menschlich;
-        }
-      } catch (e) {}
-    }
-
+    function sprachVorschau() { vorlesenMenschlich('Das ist eine natürliche Stimmprobe von NantAI.'); }
     function sprachEingabeStarten() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) { alert('Nicht unterstützt.'); return; }
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'de-DE';
-      recognition.start();
+      const rec = new SpeechRecognition(); rec.lang = 'de-DE'; rec.start();
       statusSetzen('Höre zu...');
-      recognition.onresult = (e) => {
-        document.getElementById('nachrichtInput').value = e.results[0][0].transcript;
-        nachrichtSenden();
-      };
+      rec.onresult = (e) => { document.getElementById('nachrichtInput').value = e.results[0][0].transcript; nachrichtSenden(); };
     }
 
-    // --- 4. WETTER & GENAUER STANDORT ---
+    // --- WETTER & TIMER ---
     function standortUndWetterLaden() {
-      if (!navigator.geolocation) { alert('Geolocation wird nicht unterstützt'); return; }
-      statusSetzen('Ermittle genauen Standort...');
+      if (!navigator.geolocation) return;
       navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        document.getElementById('latVal').textContent = lat.toFixed(4);
-        document.getElementById('lonVal').textContent = lon.toFixed(4);
-        
         try {
-          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true`);
           const data = await res.json();
           if (data && data.current_weather) {
-            const temp = data.current_weather.temperature + ' °C';
-            const wind = data.current_weather.windspeed + ' km/h';
-            document.getElementById('tempVal').textContent = temp;
-            document.getElementById('windVal').textContent = wind;
-            document.getElementById('wetterWidgetKurz').textContent = temp;
+            const t = data.current_weather.temperature + ' °C';
+            const w = data.current_weather.windspeed + ' km/h';
+            document.getElementById('tempVal').textContent = t;
+            document.getElementById('windVal').textContent = w;
+            document.getElementById('wetterWidgetKurz').textContent = t;
+            document.getElementById('dashWetter').textContent = t;
             document.getElementById('wetterDetailsBox').style.display = 'block';
-            statusSetzen('Standort & Wetter erfolgreich geladen.');
+            statusSetzen('Wetter geladen.');
           }
-        } catch (e) {
-          statusSetzen('Fehler beim Laden des Wetters.');
-        }
-      }, () => { statusSetzen('Standortzugriff verweigert.'); });
+        } catch (e) { statusSetzen('Wetterfehler.'); }
+      });
     }
 
-    // --- TIMER & NOTIZEN ---
     function timerStarten() {
       let sek = parseInt(document.getElementById('timerSekundenInput').value);
       if (isNaN(sek) || sek <= 0) return;
       if (timerInterval) clearInterval(timerInterval);
       timerInterval = setInterval(() => {
-        if (sek <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('timerAnzeige').textContent = 'Zeit abgelaufen!';
-          vorlesenMenschlich('Der Timer ist abgelaufen.');
-          return;
-        }
+        if (sek <= 0) { clearInterval(timerInterval); document.getElementById('timerAnzeige').textContent = 'Abgelaufen!'; vorlesenMenschlich('Timer abgelaufen.'); return; }
         const m = Math.floor(sek / 60); const s = sek % 60;
         document.getElementById('timerAnzeige').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
         sek--;
       }, 1000);
-      statusSetzen('Timer gestartet.');
     }
-    function timerStoppen() {
-      if (timerInterval) clearInterval(timerInterval);
-      document.getElementById('timerAnzeige').textContent = '00:00';
-    }
+    function timerStoppen() { if (timerInterval) clearInterval(timerInterval); document.getElementById('timerAnzeige').textContent = '00:00'; }
 
+    // --- NOTIZEN & STATISTIK ---
     function notizenLaden() {
-      const liste = document.getElementById('notizenListe');
-      liste.replaceChildren();
+      const liste = document.getElementById('notizenListe'); liste.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
         daten.forEach((n, idx) => {
-          const div = document.createElement('div');
-          div.className = 'panel'; div.style.marginBottom = '8px';
+          const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '8px';
           div.innerHTML = `<strong>${n.titel}</strong><p>${n.inhalt}</p>`;
           const btn = document.createElement('button'); btn.className = 'danger'; btn.textContent = 'Löschen';
           btn.onclick = () => { daten.splice(idx, 1); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); notizenLaden(); };
           div.appendChild(btn); liste.appendChild(div);
         });
       } catch (e) {}
+    }
+    function notizStatistikAktualisieren() {
+      const val = document.getElementById('notizInhalt').value;
+      const w = val.trim() ? val.trim().split(/\s+/).length : 0;
+      const s = Math.ceil(w / 3); // geschätzte Lesezeit in Sek
+      document.getElementById('notizStatistik').textContent = `Wörter: ${w} | Zeichen: ${val.length} | Geschätzte Lesezeit: ${s} Sek.`;
     }
     function notizSpeichern() {
       const titel = document.getElementById('notizTitel').value.trim();
@@ -741,7 +656,12 @@
       daten.unshift({ titel: titel || 'Notiz', inhalt });
       localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten));
       document.getElementById('notizTitel').value = ''; document.getElementById('notizInhalt').value = '';
-      notizenLaden();
+      notizenLaden(); statusSetzen('Notiz gespeichert.');
+    }
+
+    function konfigurationLaden() {
+      const savedTheme = localStorage.getItem('nantai_theme');
+      if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
     }
   </script>
 </body>
