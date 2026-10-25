@@ -514,9 +514,8 @@
         .replace(/\n/g, '<br>');
     }
 
-   // ECHTE GEMINI CLOUD KI (Sauber hinterlegt)
+    // ECHTE GEMINI CLOUD KI (Trage deinen Key hier zwischen die Anführungszeichen ein)
     async function kiAntwortHubern(prompt) {
-      // Trage deinen Key hier genau einmal ein:
       const apiKey = "AQ.Ab8RN6JNtkIpcEOCg-2l3mqEu9rGd8i4KpAH4w69brfNq_850A";
 
       if (!apiKey || apiKey === "DEIN_ECHTER_GEMINI_API_KEY_HIER") {
@@ -529,17 +528,6 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
-
-        const data = await response.json();
-        if (data.candidates && data.candidates[0].content.parts[0].text) {
-          return data.candidates[0].content.parts[0].text;
-        } else {
-          return "Fehler bei der Cloud-Antwort.";
-        }
-      } catch (error) {
-        return "Keine Internetverbindung zum Cloud-Server.";
-      }
-    }
 
         const data = await response.json();
         if (data.candidates && data.candidates[0].content.parts[0].text) {
@@ -919,14 +907,9 @@
     }
 
     function stimmenLaden() { if (!synth) return; verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de')); }
-   function vorlesenMenschlich(text) {
+    function vorlesenMenschlich(text) {
       if (!synth) return; synth.cancel();
-      
-      // Verhindert, dass API-Keys oder lange System-Tokens vorgelesen werden
-      if (text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) {
-        return; 
-      }
-
+      if (text.includes("AIzaSy") || text.includes("API-Key") || text.length > 500) { return; }
       const clean = text.replace(/[*_#`~]/g, '').trim();
       const utter = new SpeechSynthesisUtterance(clean);
       if (verfuegbareStimmen.length > 0) utter.voice = verfuegbareStimmen[0];
