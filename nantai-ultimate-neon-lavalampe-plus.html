@@ -397,7 +397,7 @@ html.nantai-sparmodus .neon-hintergrund {
         tools.className = 'message-tools';
         const read = document.createElement('button');
         read.className = 'secondary'; read.textContent = '🔊 Vorlesen';
-        read.onclick = () => 
+read.onclick = () => vorlesen(text);
   window.speechSynthesis.cancel();
 
   // Nur den Text für die Sprachausgabe bereinigen
