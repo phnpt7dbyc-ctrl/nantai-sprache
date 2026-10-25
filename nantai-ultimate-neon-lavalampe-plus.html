@@ -398,17 +398,19 @@ html.nantai-sparmodus .neon-hintergrund {
         const read = document.createElement('button');
         read.className = 'secondary'; read.textContent = '🔊 Vorlesen';
 read.onclick = () => vorlesen(text);
+tools.appendChild(read);
+element.appendChild(tools);
+
+
+function vorlesen(text) {
   window.speechSynthesis.cancel();
 
-  // Nur den Text für die Sprachausgabe bereinigen
-  let sprechText = String(text ?? '')
+  const sprechText = String(text ?? '')
     .replace(/```[\s\S]*?```/g, ' Codeblock ')
     .replace(/`([^`]+)`/g, '$1')
     .replace(/\*\*(.*?)\*\*/g, '$1')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
     .replace(/https?:\/\/\S+/gi, ' ')
-    .replace(/[<>{}\[\]_*#|\\~=^]/g, ' ')
-    .replace(/\p{Extended_Pictographic}/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -417,41 +419,24 @@ read.onclick = () => vorlesen(text);
     return;
   }
 
-
-const stimme = new SpeechSynthesisUtterance(sprechText);
-stimme.lang = 'de-DE';
-
-// Gespeicherte Stimmeinstellungen laden
-let einstellungen = {};
-try {
-  einstellungen = JSON.parse(
+  const einstellungen = JSON.parse(
     localStorage.getItem('nantai_stimmeinstellungen_v1') || '{}'
   );
-} catch (e) {
-  einstellungen = {};
-}
 
-stimme.rate = Math.min(2, Math.max(0.5, Number(einstellungen.rate) || 1));
-stimme.pitch = Math.min(2, Math.max(0, Number(einstellungen.pitch) || 1));
-stimme.volume = Math.min(1, Math.max(0, Number(einstellungen.volume ?? 1)));
+  const stimme = new SpeechSynthesisUtterance(sprechText);
+  stimme.lang = 'de-DE';
+  stimme.rate = Math.min(2, Math.max(0.5, Number(einstellungen.rate) || 1));
+  stimme.pitch = Math.min(2, Math.max(0, Number(einstellungen.pitch) || 1));
+  stimme.volume = Math.min(1, Math.max(0, Number(einstellungen.volume ?? 1));
 
-if (einstellungen.voiceName && speechSynthesis.getVoices().length) {
   const passendeStimme = speechSynthesis.getVoices().find(
     v => v.name === einstellungen.voiceName
   );
   if (passendeStimme) stimme.voice = passendeStimme;
+
+  speechSynthesis.speak(stimme);
 }
 
-stimme.onerror = event => {
-  console.error('NantAI Vorlesefehler:', event.error);
-  statusSetzen('Vorlesen fehlgeschlagen: ' + event.error, 'status-bad');
-};
-
-
-  window.speechSynthesis.speak(stimme);
-}
-
-    
 
 function stimmenSpeichern() {
   const einstellungen = {
