@@ -151,7 +151,7 @@
     <p>Quantum Hologram OS</p>
     <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
     <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Chat & Cloud KI</button>
-    <button class="nav-btn" onclick="tabWechseln('einstellungenTab', this)">⚙️ Vorlese & Leuchten</button>
+    <button class="nav-btn" onclick="tabWechseln('einstellungenTab', this)">⚙️ Vorlese, Gedächtnis & Glow</button>
     <button class="nav-btn" onclick="tabWechseln('bildTab', this)">🎨 Bildstudio (AI)</button>
     <button class="nav-btn" onclick="tabWechseln('archivTab', this)">🗄️ Chat-Archiv</button>
     
@@ -218,7 +218,7 @@
       </div>
       <div class="row" style="margin-top: 16px;">
         <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Zum Chat</button>
-        <button class="secondary" onclick="tabWechseln('einstellungenTab', document.querySelectorAll('aside .nav-btn')[2])">⚙️ Vorlese & Leuchten</button>
+        <button class="secondary" onclick="tabWechseln('einstellungenTab', document.querySelectorAll('aside .nav-btn')[2])">⚙️ Vorlese & Gedächtnis</button>
       </div>
     </section>
 
@@ -248,10 +248,21 @@
       </div>
     </section>
 
-    <!-- EINSTELLUNGEN: VORLESE & LEUCHTEN -->
+    <!-- EINSTELLUNGEN: VORLESE, GEDÄCHTNIS & LEUCHTEN -->
     <section id="einstellungenTab" class="panel hidden">
-      <h3>⚙️ Vorlese- & Leuchten-Einstellungen</h3>
-      
+      <h3>⚙️ Einstellungen & Dauerhaftes Gedächtnis</h3>
+
+      <!-- USER PROFIL / GEDÄCHTNIS -->
+      <div style="margin-bottom: 22px; background: var(--panel2); padding: 14px; border-radius: 12px; border: 1px solid var(--border);">
+        <h4 style="margin: 0 0 10px; color: var(--primary);">👤 Dein Profil & Dauerhaftes Gedächtnis</h4>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 10px;">Alles was du hier eingibst, merkt sich NandoAI auch in allen neuen Chats automatisch!</p>
+        <label style="display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 4px;">Dein Name:</label>
+        <input id="profilNameInput" placeholder="z. B. Nando" style="margin-bottom: 10px;">
+        <label style="display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 4px;">Infos über dich (Projekte, Wohnort, Hobbies, Wünsche...):</label>
+        <textarea id="profilInfoInput" placeholder="z. B. Ich baue Papiermodelle, erstelle Apps auf meinem Chromebook und wohne in Müllheim..." style="margin-bottom: 10px;"></textarea>
+        <button onclick="profilSpeichern()">Gedächtnis speichern 💾</button>
+      </div>
+
       <div style="margin-bottom: 18px;">
         <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Vorlese-Stimme auswählen:</label>
         <select id="stimmenSelect" onchange="einstellungenSpeichern()" style="margin-bottom: 12px;"></select>
@@ -280,7 +291,7 @@
       </div>
     </section>
 
-    <!-- 1. CYBER MEMORY -->
+    <!-- CYBER MEMORY -->
     <section id="memoryTab" class="panel hidden">
       <h3>🧠 Cyber Memory (Neuraler Wissensspeicher)</h3>
       <p style="color: var(--muted); font-size: 0.85rem;">Speichere Ideen und wende KI-Synthese auf deine gesammelten Gedanken an.</p>
@@ -293,7 +304,7 @@
       <div id="memoryListe" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </section>
 
-    <!-- 2. CYBER SNIPPETS -->
+    <!-- CYBER SNIPPETS -->
     <section id="snippetsTab" class="panel hidden">
       <h3>⚡ Cyber Snippets (Prompt-Bibliothek)</h3>
       <input id="snipTitel" placeholder="Snippet Titel (z. B. Code korrigieren)..." style="margin-bottom: 8px;">
@@ -302,7 +313,7 @@
       <div id="snippetsListe" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </section>
 
-    <!-- 3. NEURAL READER -->
+    <!-- NEURAL READER -->
     <section id="readerTab" class="panel hidden">
       <h3>🎙️ Neural Reader (Hörbuch-Studio)</h3>
       <textarea id="readerText" placeholder="Füge hier einen beliebigen langen Text oder Artikel ein..." style="height: 140px; margin-bottom: 10px;"></textarea>
@@ -315,7 +326,7 @@
       </div>
     </section>
 
-    <!-- 4. CYBER ATMOS -->
+    <!-- CYBER ATMOS -->
     <section id="atmosTab" class="panel hidden">
       <h3>🔊 Cyber Atmos (Soundboard)</h3>
       <p style="color: var(--muted); font-size: 0.85rem;">Synthetische Hintergrund-Audio-Atmosphäre direkt aus der Web Audio API.</p>
@@ -327,7 +338,7 @@
       </div>
     </section>
 
-    <!-- 5. LIVE STATISTIKEN -->
+    <!-- LIVE STATISTIKEN -->
     <section id="statsTab" class="panel hidden">
       <h3>📊 Live-Statistik Dashboard</h3>
       <div class="dashboard" style="margin-top: 14px;">
@@ -478,7 +489,7 @@
       </div>
     </section>
 
-    <!-- 6. CYBER PONG -->
+    <!-- CYBER PONG -->
     <section id="pongTab" class="panel hidden">
       <h3>🕹️ Cyber Pong Minispiel</h3>
       <div style="text-align: center;">
@@ -550,6 +561,7 @@
     const SPEICHER_CONFIG = 'nandoai_cyber_config_v4';
     const SPEICHER_MEMORY = 'nandoai_cyber_memory_v4';
     const SPEICHER_SNIPPETS = 'nandoai_cyber_snippets_v4';
+    const SPEICHER_PROFIL = 'nandoai_cyber_profil_v4';
 
     let chats = [];
     let aktuellerChatId = null;
@@ -575,6 +587,7 @@
       todoLaden();
       memoryLaden();
       snippetsLaden();
+      profilLaden();
       neuePaletteGenerieren();
       canvasInitialisieren();
       
@@ -589,6 +602,36 @@
       const zitatBox = document.getElementById('zitatBox');
       if(zitatBox) zitatBox.textContent = zitate[Math.floor(Math.random() * zitate.length)];
     });
+
+    /* USER PROFIL / GEDÄCHTNIS SPEICHERN & LADEN */
+    function profilLaden() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(SPEICHER_PROFIL));
+        if (saved) {
+          const nInput = document.getElementById('profilNameInput');
+          const iInput = document.getElementById('profilInfoInput');
+          if(nInput) nInput.value = saved.name || '';
+          if(iInput) iInput.value = saved.info || '';
+        }
+      } catch(e) {}
+    }
+
+    function profilSpeichern() {
+      const name = document.getElementById('profilNameInput').value.trim();
+      const info = document.getElementById('profilInfoInput').value.trim();
+      localStorage.setItem(SPEICHER_PROFIL, JSON.stringify({ name, info }));
+      statusSetzen('Gedächtnis im Profil gespeichert!');
+    }
+
+    function holeProfilKontext() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(SPEICHER_PROFIL));
+        if (!saved || (!saved.name && !saved.info)) return "";
+        return `[System-Hinweis: Du sprichst mit ${saved.name || 'dem Nutzer'}. Wichtiges Wissen über ihn: ${saved.info || 'Keine Angabe'}. Nutze dieses Wissen natürlich in deinen Antworten.]\n\n`;
+      } catch(e) {
+        return "";
+      }
+    }
 
     /* PARTIKEL CANVAS HINTERGRUND */
     function particleBgInit() {
@@ -729,14 +772,18 @@
         .replace(/\n/g, '<br>');
     }
 
-    // ⚡ GROQ CLOUD KI ANBINDUNG
+    /* ⚡ GROQ CLOUD KI ANBINDUNG WITH GEDÄCHTNIS CONTEXT */
     async function kiAntwortHubern(prompt) {
       // ⚠️ TRAGE HIER DEINEN GROQ API-KEY EIN:
-      const apiKey = "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";
+      const apiKey = "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";
 
       if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
         return "Bitte trage deinen echten Groq API-Key im Code bei 'apiKey' ein!";
       }
+
+      // Holt das Profil-Gedächtnis und schickt es im Hintergrund mit
+      const profilKontext = holeProfilKontext();
+      const vollerPrompt = profilKontext + prompt;
 
       try {
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -747,7 +794,7 @@
           },
           body: JSON.stringify({
             model: "openai/gpt-oss-20b",
-            messages: [{ role: "user", content: prompt }]
+            messages: [{ role: "user", content: vollerPrompt }]
           })
         });
 
@@ -1123,10 +1170,8 @@
         bX += vx; bY += vy;
         if(bY <= 0 || bY >= 230) vy *= -1;
         
-        // KI Bewegung
         if(aiY + 25 < bY) aiY += 2; else aiY -= 2;
 
-        // Kollisionen
         if(bX <= 15 && bY >= pY && bY <= pY + 50) vx *= -1;
         if(bX >= 320 && bY >= aiY && bY <= aiY + 50) vx *= -1;
 
@@ -1137,9 +1182,9 @@
         document.getElementById('pongAiScore').textContent = aiScore;
 
         ctx.fillStyle = '#02040a'; ctx.fillRect(0, 0, 340, 240);
-        ctx.fillStyle = '#00f0ff'; ctx.fillRect(5, pY, 10, 50); // Spieler
-        ctx.fillStyle = '#ff007f'; ctx.fillRect(325, aiY, 10, 50); // KI
-        ctx.fillStyle = '#ffffff'; ctx.fillRect(bX, bY, 8, 8); // Ball
+        ctx.fillStyle = '#00f0ff'; ctx.fillRect(5, pY, 10, 50);
+        ctx.fillStyle = '#ff007f'; ctx.fillRect(325, aiY, 10, 50);
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(bX, bY, 8, 8);
       }, 1000/60);
     }
 
@@ -1251,7 +1296,6 @@
 
       if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key")) return; 
 
-      // Ausführlicher Filter für <<, >>, ----, Sternchen und Sonderzeichen
       const clean = text
         .replace(/<<|>>/g, '')
         .replace(/[-_]{2,}/g, '')
@@ -1264,7 +1308,6 @@
       const tempoVal = parseFloat(document.getElementById('tempoRange').value) || 1.0;
       const stimmeIdx = parseInt(document.getElementById('stimmenSelect').value) || 0;
 
-      // Zählen für Statistik
       totalGesprocheneWoerter += clean.split(' ').length;
       statsAktualisieren();
 
@@ -1325,7 +1368,7 @@
       liste.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
-        daten.forEach((n) => { const div = document.createElement('div'); div.className = 'panel'; div.innerHTML = '<strong>' + n.titel + '</strong><p style="color:var(--muted);">' + n.inhalt + '</p>'; liste.appendChild(div); });
+        daten.forEach((n) => { const div = document.className = 'panel'; div.innerHTML = '<strong>' + n.titel + '</strong><p style="color:var(--muted);">' + n.inhalt + '</p>'; liste.appendChild(div); });
       } catch (e) {}
     }
     function notizSpeichern() {
