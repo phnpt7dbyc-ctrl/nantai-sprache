@@ -1,101 +1,84 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="cyber">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#030712">
-  <title>NandoAI Ultimate Max - Cyber Cloud Edition</title>
+  <title>NandoAI Ultimate Max - Quantum Hologram Edition</title>
   <style>
     :root {
-      --bg: #030712;
-      --panel: rgba(13, 19, 33, 0.75);
-      --panel2: rgba(20, 29, 49, 0.85);
+      --bg: #02040a;
+      --panel: rgba(8, 15, 30, 0.75);
+      --panel2: rgba(13, 24, 48, 0.85);
       --primary: #00f0ff;
-      --primary-hover: #38bdf8;
-      --primary-light: rgba(0, 240, 255, 0.12);
       --accent: #ff007f;
-      --text: #f8fafc;
-      --muted: #94a3b8;
+      --text: #f0f6fc;
+      --muted: #8b949e;
       --border: rgba(0, 240, 255, 0.4);
-      --good: #22c55e;
-      --bad: #ef4444;
-      --glow-color: rgba(0, 240, 255, 0.6);
-      --glow: 0 0 25px var(--glow-color), inset 0 0 10px rgba(0, 240, 255, 0.15);
-      --glow-accent: 0 0 25px rgba(255, 0, 127, 0.6);
+      --glow-color: rgba(0, 240, 255, 0.7);
+      --glow-size: 25px;
+      --glow: 0 0 var(--glow-size) var(--glow-color), inset 0 0 15px rgba(0, 240, 255, 0.2);
+      --glow-accent: 0 0 25px rgba(255, 0, 127, 0.7);
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0; padding-left: 270px; min-height: 100vh;
       background: var(--bg); color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      position: relative; isolation: isolate; overflow-x: hidden;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      position: relative; overflow-x: hidden;
     }
 
-    .neon-hintergrund {
-      position: fixed; inset: -20%; z-index: -3; pointer-events: none;
-      background:
-        radial-gradient(ellipse at 10% 20%, rgba(255, 0, 127, 0.22) 0%, transparent 45%),
-        radial-gradient(ellipse at 90% 30%, rgba(0, 240, 255, 0.25) 0%, transparent 45%),
-        radial-gradient(ellipse at 50% 90%, rgba(130, 80, 223, 0.2) 0%, transparent 50%),
-        linear-gradient(135deg, #030712, #0a0f1d, #030712);
-      background-size: 200% 200%;
-      animation: cyberBg 20s ease-in-out infinite alternate;
-    }
-    @keyframes cyberBg {
-      0% { background-position: 0% 0%; filter: hue-rotate(0deg); }
-      100% { background-position: 100% 100%; filter: hue-rotate(20deg); }
-    }
-
-    .lava-lampe {
+    /* Partikel Canvas Hintergrund */
+    #particleCanvas {
       position: fixed; inset: 0; z-index: -2; pointer-events: none;
-      overflow: hidden; filter: blur(45px); opacity: 0.6; mix-blend-mode: screen;
     }
-    .lava-kugel {
-      position: absolute; display: block; border-radius: 40% 60% 70% 30%;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      animation: cyberSchweben 18s ease-in-out infinite alternate;
-    }
-    .lava-kugel:nth-child(1) { width: 350px; height: 350px; left: 5%; top: 10%; animation-duration: 22s; }
-    .lava-kugel:nth-child(2) { width: 400px; height: 300px; right: 10%; top: 50%; animation-duration: 25s; animation-delay: -4s; }
-    .lava-kugel:nth-child(3) { width: 300px; height: 350px; left: 40%; bottom: 5%; animation-duration: 20s; animation-delay: -8s; }
 
-    @keyframes cyberSchweben {
-      0% { transform: translate3d(-30px, 20px, 0) scale(0.9) rotate(0deg); }
-      100% { transform: translate3d(40px, -40px, 0) scale(1.15) rotate(20deg); }
+    /* Scanline Effekt */
+    .scanlines {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px; opacity: 0.6;
     }
 
     aside, header, .widget, .panel, .composer {
-      background-color: var(--panel);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       box-shadow: var(--glow);
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    /* Holografische Kanten-Lichter */
+    aside::after, .panel::after, .widget::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0.8;
     }
 
     button, input, textarea, select { font: inherit; }
     button {
       border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px;
-      background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05));
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.05));
       color: var(--primary); cursor: pointer; font-weight: 600;
-      box-shadow: var(--glow);
+      box-shadow: var(--glow); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.8rem;
       transition: all 0.2s ease;
     }
-    button:hover { background: var(--primary); color: #030712; box-shadow: 0 0 30px var(--primary); transform: translateY(-1px); }
-    button:active { transform: scale(0.98); }
+    button:hover { background: var(--primary); color: #02040a; box-shadow: 0 0 30px var(--primary); transform: translateY(-2px); }
+    button:active { transform: scale(0.97); }
     button.secondary { background: var(--panel2); color: var(--text); border-color: rgba(255,255,255,0.2); box-shadow: none; }
     button.secondary:hover { background: rgba(255,255,255,0.15); color: var(--primary); border-color: var(--border); }
     button.danger { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border-color: rgba(239, 68, 68, 0.5); box-shadow: var(--glow-accent); }
-    button.danger:hover { background: var(--bad); color: white; }
+    button.danger:hover { background: #ef4444; color: white; }
 
     input, textarea, select {
       width: 100%; border: 1px solid var(--border); border-radius: 10px;
-      background: rgba(3, 7, 18, 0.85); color: var(--text); padding: 10px;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+      background: rgba(2, 4, 10, 0.85); color: var(--text); padding: 10px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
     }
     input:focus, textarea:focus, select:focus {
-      outline: none; border-color: var(--primary); box-shadow: inset 0 2px 5px rgba(0,0,0,0.6), var(--glow);
+      outline: none; border-color: var(--primary); box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), var(--glow);
     }
     textarea { min-height: 70px; resize: vertical; }
 
@@ -103,50 +86,53 @@
       position: fixed; inset: 0 auto 0 0; width: 270px; padding: 16px;
       border-right: 1px solid var(--border); overflow-y: auto; z-index: 10;
     }
-    aside h2 { color: var(--primary); font-size: 1.25rem; margin: 0 0 2px; text-shadow: 0 0 12px var(--primary); }
-    aside p { color: var(--muted); font-size: 0.8rem; margin: 0 0 14px; text-transform: uppercase; letter-spacing: 0.08em; }
+    aside h2 { color: var(--primary); font-size: 1.3rem; margin: 0 0 2px; text-shadow: 0 0 15px var(--primary); letter-spacing: 0.1em; }
+    aside p { color: var(--muted); font-size: 0.75rem; margin: 0 0 14px; text-transform: uppercase; letter-spacing: 0.12em; }
     .nav-btn { display: block; width: 100%; text-align: left; margin-bottom: 6px; background: transparent; color: var(--text); border: 1px solid transparent; box-shadow: none; }
-    .nav-btn:hover { background: var(--primary-light); border-color: var(--border); color: var(--primary); }
-    .nav-btn.active { background: linear-gradient(135deg, rgba(0,240,255,0.25), rgba(0,240,255,0.05)); color: var(--primary); border-color: var(--primary); font-weight: 600; box-shadow: var(--glow); }
-    .side-label { color: var(--accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 18px 0 6px; text-shadow: var(--glow-accent); font-weight: bold; }
+    .nav-btn:hover { background: rgba(0,240,255,0.1); border-color: var(--border); color: var(--primary); }
+    .nav-btn.active { background: linear-gradient(135deg, rgba(0,240,255,0.3), rgba(0,240,255,0.05)); color: var(--primary); border-color: var(--primary); font-weight: 700; box-shadow: var(--glow); }
+    .side-label { color: var(--accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; margin: 18px 0 6px; text-shadow: var(--glow-accent); font-weight: bold; }
 
-    main { max-width: 920px; margin: 0 auto; padding: 20px; }
+    main { max-width: 940px; margin: 0 auto; padding: 20px; }
     header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding: 14px 18px; border-radius: 14px; }
     .header-left { display: flex; align-items: center; gap: 14px; }
-    .logo { width: 42px; height: 42px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 12px; display: grid; place-items: center; color: #030712; font-size: 22px; font-weight: bold; box-shadow: 0 0 25px var(--primary); }
-    h1 { margin: 0; font-size: 1.35rem; letter-spacing: 0.03em; text-shadow: 0 0 12px var(--primary); }
+    .logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 12px; display: grid; place-items: center; color: #02040a; font-size: 24px; font-weight: bold; box-shadow: 0 0 30px var(--primary); }
+    h1 { margin: 0; font-size: 1.4rem; letter-spacing: 0.05em; text-shadow: 0 0 15px var(--primary); }
     header p { margin: 2px 0 0; color: var(--muted); font-size: 0.8rem; }
 
     .dashboard { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
     .widget { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: var(--glow); }
-    .widget-label { color: var(--muted); font-size: 0.72rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .widget-value { font-weight: 600; font-size: 1rem; overflow-wrap: anywhere; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .widget-label { color: var(--muted); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .widget-value { font-weight: 700; font-size: 1.05rem; overflow-wrap: anywhere; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
     
-    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; box-shadow: var(--glow); }
-    .panel h3 { margin-top: 0; font-size: 1.15rem; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: var(--glow); }
+    .panel h3 { margin-top: 0; font-size: 1.2rem; color: var(--primary); text-shadow: 0 0 15px var(--primary); letter-spacing: 0.05em; }
     .hidden { display: none !important; }
 
-    #chat { display: flex; flex-direction: column; gap: 12px; min-height: 40vh; margin-bottom: 20px; }
-    .message { padding: 12px 16px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--border); overflow-wrap: anywhere; line-height: 1.5; box-shadow: var(--glow); }
-    .message.user { background: rgba(0, 240, 255, 0.12); align-self: flex-end; max-width: 88%; border-color: var(--primary); color: var(--primary); }
+    #chat { display: flex; flex-direction: column; gap: 14px; min-height: 42vh; margin-bottom: 20px; }
+    .message { padding: 14px 18px; border-radius: 14px; background: var(--panel2); border: 1px solid var(--border); overflow-wrap: anywhere; line-height: 1.6; box-shadow: var(--glow); }
+    .message.user { background: rgba(0, 240, 255, 0.15); align-self: flex-end; max-width: 85%; border-color: var(--primary); color: #ffffff; }
     .message.assistant { align-self: stretch; }
-    .message code { background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: var(--accent); }
-    .message pre { background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; overflow-x: auto; font-family: monospace; border: 1px solid var(--border); }
-    .msg-tools { display: flex; gap: 6px; margin-top: 8px; }
-    .msg-tools button { padding: 5px 10px; font-size: 0.75rem; }
+    .message code { background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: var(--accent); }
+    .message pre { background: rgba(0,0,0,0.7); padding: 12px; border-radius: 10px; overflow-x: auto; font-family: monospace; border: 1px solid var(--border); }
+    .msg-tools { display: flex; gap: 6px; margin-top: 10px; }
+    .msg-tools button { padding: 4px 10px; font-size: 0.72rem; }
 
-    .composer { position: sticky; bottom: 0; background: rgba(3, 7, 18, 0.92); padding: 14px 0; border-top: 1px solid var(--border); backdrop-filter: blur(16px); }
+    .composer { position: sticky; bottom: 0; background: rgba(2, 4, 10, 0.95); padding: 14px 0; border-top: 1px solid var(--border); backdrop-filter: blur(20px); }
     .row { display: flex; gap: 8px; margin-top: 8px; }
     .row > * { flex: 1; }
 
-    #status { font-size: 0.82rem; color: var(--accent); margin-bottom: 10px; font-weight: 600; text-shadow: var(--glow-accent); }
+    #status { font-size: 0.85rem; color: var(--accent); margin-bottom: 10px; font-weight: 600; text-shadow: var(--glow-accent); letter-spacing: 0.05em; }
 
     .avatar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-    .avatar-face { width: 95px; height: 95px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 42px; box-shadow: 0 0 35px var(--primary); margin-bottom: 14px; animation: avPulse 2.5s infinite ease-in-out; color: #030712; }
-    @keyframes avPulse { 0% { transform: scale(1); box-shadow: 0 0 25px var(--primary); } 50% { transform: scale(1.06); box-shadow: 0 0 40px var(--accent); } 100% { transform: scale(1); box-shadow: 0 0 25px var(--primary); } }
+    .avatar-face { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; font-size: 45px; box-shadow: 0 0 40px var(--primary); margin-bottom: 14px; animation: avPulse 2.5s infinite ease-in-out; color: #02040a; }
+    @keyframes avPulse { 0% { transform: scale(1); box-shadow: 0 0 30px var(--primary); } 50% { transform: scale(1.08); box-shadow: 0 0 50px var(--accent); } 100% { transform: scale(1); box-shadow: 0 0 30px var(--primary); } }
 
-    #drawingCanvas { width: 100%; height: 280px; background: rgba(3, 7, 18, 0.9); border: 1px solid var(--border); border-radius: 10px; cursor: crosshair; touch-action: none; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
-    #snakeCanvas { background: rgba(3, 7, 18, 0.9); border: 1px solid var(--border); border-radius: 10px; display: block; margin: 10px auto; box-shadow: var(--glow); }
+    #drawingCanvas { width: 100%; height: 280px; background: rgba(2, 4, 10, 0.9); border: 1px solid var(--border); border-radius: 10px; cursor: crosshair; touch-action: none; box-shadow: inset 0 0 20px rgba(0,0,0,0.9); }
+    #snakeCanvas, #pongCanvas { background: rgba(2, 4, 10, 0.95); border: 1px solid var(--border); border-radius: 10px; display: block; margin: 10px auto; box-shadow: var(--glow); }
+
+    .wave-bar { display: inline-block; width: 4px; height: 20px; background: var(--primary); margin: 0 2px; border-radius: 2px; animation: wave 1s infinite ease-in-out; }
+    @keyframes wave { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
 
     @media (max-width: 768px) {
       body { padding-left: 0; }
@@ -157,77 +143,82 @@
 </head>
 <body>
 
-  <div class="neon-hintergrund" aria-hidden="true"></div>
-  <div class="lava-lampe" aria-hidden="true">
-    <span class="lava-kugel"></span>
-    <span class="lava-kugel"></span>
-    <span class="lava-kugel"></span>
-  </div>
+  <canvas id="particleCanvas"></canvas>
+  <div class="scanlines"></div>
 
   <aside>
-    <h2>NandoAI</h2>
-    <p>Cyber Cloud Edition</p>
-    <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">Dashboard</button>
-    <button class="nav-btn" onclick="tabWechseln('chatTab', this)">Chat und Cloud KI</button>
-    <button class="nav-btn" onclick="tabWechseln('einstellungenTab', this)">Vorlese & Leuchten</button>
-    <button class="nav-btn" onclick="tabWechseln('bildTab', this)">Bildstudio AI</button>
-    <button class="nav-btn" onclick="tabWechseln('archivTab', this)">Chat Archiv</button>
+    <h2>✦ NANDO AI</h2>
+    <p>Quantum Hologram OS</p>
+    <button class="nav-btn active" onclick="tabWechseln('dashboardTab', this)">🏠 Dashboard</button>
+    <button class="nav-btn" onclick="tabWechseln('chatTab', this)">💬 Chat & Cloud KI</button>
+    <button class="nav-btn" onclick="tabWechseln('einstellungenTab', this)">⚙️ Vorlese & Leuchten</button>
+    <button class="nav-btn" onclick="tabWechseln('bildTab', this)">🎨 Bildstudio (AI)</button>
+    <button class="nav-btn" onclick="tabWechseln('archivTab', this)">🗄️ Chat-Archiv</button>
     
-    <div class="side-label">Cyber Module</div>
-    <button class="nav-btn" onclick="tabWechseln('flashcardTab', this)">Lernkarten</button>
-    <button class="nav-btn" onclick="tabWechseln('rpgTab', this)">Text Abenteuer</button>
-    <button class="nav-btn" onclick="tabWechseln('colorTab', this)">Farb Paletten</button>
-    <button class="nav-btn" onclick="tabWechseln('todoTab', this)">To-Do Liste</button>
+    <div class="side-label">✦ Quantum Module</div>
+    <button class="nav-btn" onclick="tabWechseln('memoryTab', this)">🧠 Cyber Memory</button>
+    <button class="nav-btn" onclick="tabWechseln('snippetsTab', this)">⚡ Cyber Snippets</button>
+    <button class="nav-btn" onclick="tabWechseln('readerTab', this)">🎙️ Neural Reader</button>
+    <button class="nav-btn" onclick="tabWechseln('atmosTab', this)">🔊 Cyber Atmos</button>
+    <button class="nav-btn" onclick="tabWechseln('statsTab', this)">📊 Live-Statistik</button>
 
-    <div class="side-label">Werkzeuge</div>
-    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">Cyber Avatar</button>
-    <button class="nav-btn" onclick="tabWechseln('codeTab', this)">Programmierstudio</button>
-    <button class="nav-btn" onclick="tabWechseln('mdTab', this)">Markdown Editor</button>
-    <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">Zeichenstudio</button>
-    <button class="nav-btn" onclick="tabWechseln('gameTab', this)">Snake Spiel</button>
-    <button class="nav-btn" onclick="tabWechseln('toolsTab', this)">Rechner</button>
-    <button class="nav-btn" onclick="tabWechseln('pomodoroTab', this)">Pomodoro Timer</button>
-    <button class="nav-btn" onclick="tabWechseln('bookmarksTab', this)">Lesezeichen</button>
-    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">Notizen</button>
-    <button class="nav-btn" onclick="tabWechseln('backupTab', this)">Backup</button>
-    <div class="side-label">Aktionen</div>
-    <button class="nav-btn" onclick="neuerChat()">Neuer Chat</button>
+    <div class="side-label">✦ Klassik Module</div>
+    <button class="nav-btn" onclick="tabWechseln('flashcardTab', this)">📚 Lernkarten</button>
+    <button class="nav-btn" onclick="tabWechseln('rpgTab', this)">🗺️ Text-Abenteuer</button>
+    <button class="nav-btn" onclick="tabWechseln('colorTab', this)">🎨 Farb-Paletten</button>
+    <button class="nav-btn" onclick="tabWechseln('todoTab', this)">☑️ To-Do Liste</button>
+
+    <div class="side-label">✦ Werkzeuge & Spiele</div>
+    <button class="nav-btn" onclick="tabWechseln('avatarTab', this)">🤖 Cyber Avatar</button>
+    <button class="nav-btn" onclick="tabWechseln('codeTab', this)">💻 Programmierstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('mdTab', this)">📝 Markdown Editor</button>
+    <button class="nav-btn" onclick="tabWechseln('whiteboardTab', this)">🎨 Zeichenstudio</button>
+    <button class="nav-btn" onclick="tabWechseln('gameTab', this)">🎮 Snake-Spiel</button>
+    <button class="nav-btn" onclick="tabWechseln('pongTab', this)">🕹️ Cyber Pong</button>
+    <button class="nav-btn" onclick="tabWechseln('toolsTab', this)">🧮 Rechner</button>
+    <button class="nav-btn" onclick="tabWechseln('pomodoroTab', this)">⏳ Pomodoro-Timer</button>
+    <button class="nav-btn" onclick="tabWechseln('bookmarksTab', this)">🔖 Lesezeichen</button>
+    <button class="nav-btn" onclick="tabWechseln('notizenTab', this)">📝 Notizen</button>
+    <button class="nav-btn" onclick="tabWechseln('backupTab', this)">💾 Backup</button>
+    
+    <div class="side-label">✦ Aktionen</div>
+    <button class="nav-btn" onclick="neuerChat()">＋ Neuer Chat</button>
   </aside>
 
   <main>
     <header>
       <div class="header-left">
-        <div class="logo">O</div>
+        <div class="logo">✦</div>
         <div>
-          <h1>NandoAI Cybernet</h1>
-          <p>Groq Cloud Active</p>
+          <h1>NandoAI Quantum</h1>
+          <p>Groq Cloud Active • gpt-oss-20b</p>
         </div>
       </div>
-      <button class="secondary" onclick="cyberModusWechseln()">Cyber Glow</button>
+      <button class="secondary" onclick="cyberModusWechseln()">⚡ Quantum Glow</button>
     </header>
 
-    <div id="status">System online. Groq Cloud KI dauerhaft aktiv.</div>
+    <div id="status">System online. Quanten-Interface geladen.</div>
 
     <!-- DASHBOARD -->
     <section id="dashboardTab" class="panel">
-      <h3>Cyber Dashboard</h3>
+      <h3>🏠 Cyber Dashboard</h3>
       <div class="dashboard" style="margin-top: 14px;">
         <div class="widget">
-          <div class="widget-label">System Zeit</div>
+          <div class="widget-label">🕒 System-Zeit</div>
           <div class="widget-value" id="dashUhr">--:--:--</div>
         </div>
         <div class="widget">
-          <div class="widget-label">KI Modus</div>
-          <div class="widget-value" id="kiStatusAnzeige" style="color: var(--primary);">Groq GPT-OSS Active</div>
+          <div class="widget-label">⚡ KI-Modell</div>
+          <div class="widget-value" id="kiStatusAnzeige">Groq GPT-OSS Active</div>
         </div>
         <div class="widget">
-          <div class="widget-label">Dev Zitat</div>
+          <div class="widget-label">💡 Dev-Zitat</div>
           <div class="widget-value" id="zitatBox" style="font-size: 0.8rem; font-style: italic; color: var(--accent);">...</div>
         </div>
       </div>
       <div class="row" style="margin-top: 16px;">
-        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">Zum Chat</button>
-        <button class="secondary" onclick="tabWechseln('einstellungenTab', document.querySelectorAll('aside .nav-btn')[2])">Einstellungen & Leuchten</button>
+        <button onclick="tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1])">💬 Zum Chat</button>
+        <button class="secondary" onclick="tabWechseln('einstellungenTab', document.querySelectorAll('aside .nav-btn')[2])">⚙️ Vorlese & Leuchten</button>
       </div>
     </section>
 
@@ -235,15 +226,15 @@
     <section id="chatTab" class="hidden">
       <div class="dashboard">
         <div class="widget">
-          <div class="widget-label">Uhrzeit</div>
+          <div class="widget-label">🕒 Uhrzeit</div>
           <div class="widget-value" id="uhrzeitWidget">--:--:--</div>
         </div>
         <div class="widget">
-          <div class="widget-label">KI Status</div>
-          <div class="widget-value" style="color: var(--primary);">Groq Cloud</div>
+          <div class="widget-label">⚙️ KI-Status</div>
+          <div class="widget-value">Groq Cloud Active</div>
         </div>
         <div class="widget">
-          <div class="widget-label">Session</div>
+          <div class="widget-label">💬 Session</div>
           <div class="widget-value" id="chatTitelWidget">Neuer Chat</div>
         </div>
       </div>
@@ -251,127 +242,192 @@
       <div class="composer">
         <textarea id="nachrichtInput" placeholder="Stelle eine beliebige Frage an NandoAI..." onkeydown="pruefeEingabe(event)"></textarea>
         <div class="row">
-          <button id="sendenBtn" onclick="nachrichtSenden()">Senden</button>
-          <button class="secondary" onclick="sprachEingabeStarten()">Sprechen in Eingabe</button>
+          <button id="sendenBtn" onclick="nachrichtSenden()">Senden ➤</button>
+          <button class="secondary" onclick="sprachEingabeStarten()">🎤 Sprechen in Eingabe</button>
         </div>
       </div>
     </section>
 
     <!-- EINSTELLUNGEN: VORLESE & LEUCHTEN -->
     <section id="einstellungenTab" class="panel hidden">
-      <h3>Vorlese & Leuchten Einstellungen</h3>
+      <h3>⚙️ Vorlese- & Leuchten-Einstellungen</h3>
       
       <div style="margin-bottom: 18px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Stimme auswählen:</label>
-        <select id="stimmenSelect" onchange="einstellungenSpeichern()" style="margin-bottom: 10px;"></select>
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Vorlese-Stimme auswählen:</label>
+        <select id="stimmenSelect" onchange="einstellungenSpeichern()" style="margin-bottom: 12px;"></select>
         
-        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Vorlese Tempo (<span id="tempoWert">1.0</span>x):</label>
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--primary);">Vorlese-Tempo (<span id="tempoWert">1.0</span>x):</label>
         <input type="range" id="tempoRange" min="0.5" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('tempoWert').textContent=this.value; einstellungenSpeichern()" style="margin-bottom: 14px;">
       </div>
 
-      <hr style="border-color: var(--border); margin: 18px 0;">
+      <hr style="border-color: var(--border); margin: 20px 0;">
 
       <div>
-        <label style="display: block; font-weight: bold; margin-bottom: 6px; color: var(--accent);">Kachel Leuchten (Glow):</label>
-        <div class="row" style="margin-bottom: 10px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: var(--accent);">Kachel-Leuchten (Glow Engine):</label>
+        <div class="row" style="margin-bottom: 12px;">
           <button onclick="leuchtenAnAus(true)">Leuchten AN</button>
           <button class="danger" onclick="leuchtenAnAus(false)">Leuchten AUS</button>
         </div>
 
-        <label style="display: block; font-size: 0.85rem; margin-top: 10px; margin-bottom: 4px;">Leuchtstärke (Intensität):</label>
-        <input type="range" id="glowIntensitaet" min="0" max="50" value="25" oninput="einstellungenSpeichern()" style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 0.85rem; margin-top: 10px; margin-bottom: 4px;">Leuchtstärke (Glow Intensität):</label>
+        <input type="range" id="glowIntensitaet" min="0" max="60" value="30" oninput="einstellungenSpeichern()" style="margin-bottom: 14px;">
 
         <label style="display: block; font-size: 0.85rem; margin-bottom: 4px;">Leuchtfarbe wählen:</label>
         <div class="row">
-          <input type="color" id="glowFarbePicker" value="#00f0ff" onchange="einstellungenSpeichern()" style="height: 40px; background: transparent;">
+          <input type="color" id="glowFarbePicker" value="#00f0ff" onchange="einstellungenSpeichern()" style="height: 42px; background: transparent;">
           <button class="secondary" onclick="farbeZuruecksetzen()">Standard Cyan</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. CYBER MEMORY -->
+    <section id="memoryTab" class="panel hidden">
+      <h3>🧠 Cyber Memory (Neuraler Wissensspeicher)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Speichere Ideen und wende KI-Synthese auf deine gesammelten Gedanken an.</p>
+      <input id="memTitel" placeholder="Wissens-Titel..." style="margin-bottom: 8px;">
+      <textarea id="memInhalt" placeholder="Gedanken, Fakten oder Notizen..." style="margin-bottom: 8px;"></textarea>
+      <div class="row" style="margin-bottom: 14px;">
+        <button onclick="memorySpeichern()">Speichern</button>
+        <button class="secondary" onclick="memoryKiSynthese()">🧠 KI-Zusammenfassung</button>
+      </div>
+      <div id="memoryListe" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </section>
+
+    <!-- 2. CYBER SNIPPETS -->
+    <section id="snippetsTab" class="panel hidden">
+      <h3>⚡ Cyber Snippets (Prompt-Bibliothek)</h3>
+      <input id="snipTitel" placeholder="Snippet Titel (z. B. Code korrigieren)..." style="margin-bottom: 8px;">
+      <textarea id="snipText" placeholder="Prompt-Text..." style="margin-bottom: 8px;"></textarea>
+      <button onclick="snippetSpeichern()" style="margin-bottom: 14px;">Snippet speichern</button>
+      <div id="snippetsListe" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </section>
+
+    <!-- 3. NEURAL READER -->
+    <section id="readerTab" class="panel hidden">
+      <h3>🎙️ Neural Reader (Hörbuch-Studio)</h3>
+      <textarea id="readerText" placeholder="Füge hier einen beliebigen langen Text oder Artikel ein..." style="height: 140px; margin-bottom: 10px;"></textarea>
+      <div class="row" style="margin-bottom: 14px;">
+        <button onclick="readerVorlesen()">▶ Vorlesen starten</button>
+        <button class="danger" onclick="synth.cancel()">⏹ Stoppen</button>
+      </div>
+      <div id="waveVisualizer" style="text-align: center; height: 30px; display: none;">
+        <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+      </div>
+    </section>
+
+    <!-- 4. CYBER ATMOS -->
+    <section id="atmosTab" class="panel hidden">
+      <h3>🔊 Cyber Atmos (Soundboard)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Synthetische Hintergrund-Audio-Atmosphäre direkt aus der Web Audio API.</p>
+      <div class="row">
+        <button onclick="playCyberSound('drone')">🛸 Cyber Drone</button>
+        <button onclick="playCyberSound('rain')">🌧️ Neon Rain</button>
+        <button onclick="playCyberSound('click')">⌨️ Tastatur-Klick</button>
+        <button class="danger" onclick="stopCyberSound()">⏹ Stoppen</button>
+      </div>
+    </section>
+
+    <!-- 5. LIVE STATISTIKEN -->
+    <section id="statsTab" class="panel hidden">
+      <h3>📊 Live-Statistik Dashboard</h3>
+      <div class="dashboard" style="margin-top: 14px;">
+        <div class="widget">
+          <div class="widget-label">💬 Nachrichten</div>
+          <div class="widget-value" id="statMsgCount">0</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">🗣️ Wörter gesprochen</div>
+          <div class="widget-value" id="statWordCount">0</div>
+        </div>
+        <div class="widget">
+          <div class="widget-label">📝 Notizen / Memory</div>
+          <div class="widget-value" id="statMemCount">0</div>
         </div>
       </div>
     </section>
 
     <!-- BILDSTUDIO -->
     <section id="bildTab" class="panel hidden">
-      <h3>Cyber Bildstudio</h3>
-      <p style="color: var(--muted); font-size: 0.85rem;">Generiere hochaufloesende KI Grafiken im Neon Stil direkt im Browser.</p>
-      <input id="bildPrompt" placeholder="zB Cyberpunk samurai in neon rain..." style="margin-bottom: 8px;">
+      <h3>🎨 Cyber Bildstudio (Pollinations.ai)</h3>
+      <p style="color: var(--muted); font-size: 0.85rem;">Generiere hochauflösende KI-Grafiken direkt im Browser.</p>
+      <input id="bildPrompt" placeholder="z. B. Cyberpunk samurai in neon rain..." style="margin-bottom: 8px;">
       <div class="row" style="margin-bottom: 8px;">
         <select id="bildStil">
           <option value="cyberpunk">Cyberpunk Neon</option>
           <option value="photorealistic">Fotorealistisch</option>
-          <option value="anime">Anime und Manga</option>
+          <option value="anime">Anime / Manga</option>
           <option value="3d-render">3D Sci-Fi Stil</option>
-          <option value="digital-art">Digital Art</option>
         </select>
         <select id="bildFormat">
-          <option value="1:1">Quadrat 1 zu 1</option>
-          <option value="16:9">Widescreen 16 zu 9</option>
-          <option value="9:16">Vertikal 9 zu 16</option>
+          <option value="1:1">Quadrat (1:1)</option>
+          <option value="16:9">Widescreen (16:9)</option>
+          <option value="9:16">Vertikal (9:16)</option>
         </select>
       </div>
-      <button onclick="bildErzeugen()">Grafik generieren</button>
+      <button onclick="bildErzeugen()">Grafik generieren ⚡</button>
       <div id="bildErgebnis" style="margin-top: 14px; text-align: center;"></div>
     </section>
 
     <!-- CHAT ARCHIV -->
     <section id="archivTab" class="panel hidden">
-      <h3>Neural Chat Archiv</h3>
+      <h3>🗄️ Neural Chat-Archiv</h3>
       <div id="archivListe" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;"></div>
     </section>
 
     <!-- LERNKARTEN -->
     <section id="flashcardTab" class="panel hidden">
-      <h3>Lernkarten Trainer</h3>
-      <input id="fcFrage" placeholder="Vorderseite und Frage" style="margin-bottom: 8px;">
-      <input id="fcAntwort" placeholder="Rueckseite und Antwort" style="margin-bottom: 8px;">
+      <h3>📚 Lernkarten-Trainer</h3>
+      <input id="fcFrage" placeholder="Vorderseite / Frage" style="margin-bottom: 8px;">
+      <input id="fcAntwort" placeholder="Rückseite / Antwort" style="margin-bottom: 8px;">
       <button onclick="lernkarteHinzufuegen()" style="margin-bottom: 14px;">Lernkarte speichern</button>
       
       <div id="lernkartenContainer" style="background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: center; min-height: 130px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; box-shadow: var(--glow);" onclick="karteUmdrehen()">
-        <div id="fcTextAnzeige" style="font-size: 1.15rem; font-weight: bold; color: var(--primary);">Keine Lernkarten vorhanden. Erstelle oben eine neue Karte.</div>
+        <div id="fcTextAnzeige" style="font-size: 1.15rem; font-weight: bold; color: var(--primary);">Keine Lernkarten vorhanden. Erstelle oben eine neue Karte!</div>
         <div style="font-size: 0.75rem; color: var(--muted); margin-top: 10px;">(Klicke zum Umdrehen)</div>
       </div>
       <div class="row" style="margin-top: 10px;">
-        <button class="secondary" onclick="naechsteLernkarte()">Naechste Karte</button>
-        <button class="danger" onclick="aktuelleLernkarteLoeschen()">Karte loeschen</button>
+        <button class="secondary" onclick="naechsteLernkarte()">Nächste Karte ➔</button>
+        <button class="danger" onclick="aktuelleLernkarteLoeschen()">Karte löschen</button>
       </div>
     </section>
 
     <!-- TEXT ABENTEUER (RPG) -->
     <section id="rpgTab" class="panel hidden">
-      <h3>Cyber Text Abenteuer</h3>
+      <h3>🗺️ Cyber Text-Abenteuer</h3>
       <div id="rpgStory" style="background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-height: 110px; margin-bottom: 12px; line-height: 1.5; box-shadow: var(--glow);">
-        Du erwachst in Sektor 7 der Megastadt Neo Muellheim. Neonlichter flackern am Himmel und ein geheimnisvolles Signal blinkt auf deinem Interface. Was tust du?
+        Du erwachst in Sektor 7 der Megastadt Neo-Müllheim. Neonlichter flackern am Himmel und ein geheimnisvolles Signal blinkt auf deinem Interface. Was tust du?
       </div>
       <div id="rpgAktionen" class="row" style="flex-direction: column;">
-        <button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber Ebene folgen</button>
-        <button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund Tunnel</button>
-        <button onclick="rpgEntscheidung(3)">3. System Interface hacken und lokal absichern</button>
+        <button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber-Ebene folgen</button>
+        <button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund-Tunnel</button>
+        <button onclick="rpgEntscheidung(3)">3. System-Interface hacken und lokal absichern</button>
       </div>
     </section>
 
     <!-- FARB-PALETTEN -->
     <section id="colorTab" class="panel hidden">
-      <h3>Cyber Farb Paletten und CSS</h3>
-      <button onclick="neuePaletteGenerieren()" style="margin-bottom: 12px;">Neue Neon Palette generieren</button>
+      <h3>🎨 Cyber Farb-Paletten & CSS</h3>
+      <button onclick="neuePaletteGenerieren()" style="margin-bottom: 12px;">Neue Neon-Palette generieren 🎲</button>
       <div id="farbenContainer" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px;"></div>
-      <p style="font-size: 0.82rem; color: var(--muted);">Klicke auf einen Hex Code um ihn in die Zwischenablage zu kopieren.</p>
+      <p style="font-size: 0.82rem; color: var(--muted);">Klicke auf einen Hex-Code, um ihn in die Zwischenablage zu kopieren.</p>
     </section>
 
     <!-- TO-DO LISTE -->
     <section id="todoTab" class="panel hidden">
-      <h3>Cyber To-Do Checkliste</h3>
+      <h3>☑️ Cyber To-Do Checkliste</h3>
       <div class="row" style="margin-bottom: 10px;">
-        <input id="todoInput" placeholder="Neue Mission oder Aufgabe..." onkeydown="if(event.key==='Enter') todoHinzufuegen()">
-        <button onclick="todoHinzufuegen()">Hinzu</button>
+        <input id="todoInput" placeholder="Neue Mission / Aufgabe..." onkeydown="if(event.key==='Enter') todoHinzufuegen()">
+        <button onclick="todoHinzufuegen()">Hinzufügen</button>
       </div>
       <div id="todoListe" style="display: flex; flex-direction: column; gap: 6px;"></div>
     </section>
 
     <!-- AVATAR -->
     <section id="avatarTab" class="panel hidden">
-      <h3>Neural Cyber Avatar</h3>
+      <h3>🤖 Neural Cyber Avatar</h3>
       <div class="avatar-container">
-        <div id="avatarFace" class="avatar-face">O</div>
-        <h4 id="avatarStatusText" style="margin: 0 0 6px; color: var(--primary);">System bereit fuer Interaktion.</h4>
+        <div id="avatarFace" class="avatar-face">✦</div>
+        <h4 id="avatarStatusText" style="margin: 0 0 6px; color: var(--primary);">System bereit für Interaktion.</h4>
       </div>
       <textarea id="avatarInput" placeholder="Sprich mit NandoAI..." style="margin-bottom: 8px;"></textarea>
       <div class="row"><button onclick="avatarSprechenlassen()">Signal senden</button></div>
@@ -379,10 +435,10 @@
 
     <!-- CODE STUDIO -->
     <section id="codeTab" class="panel hidden">
-      <h3>Cyber Programmierstudio</h3>
+      <h3>💻 Cyber Programmierstudio</h3>
       <textarea id="codeEditor" style="font-family: monospace; min-height: 140px;" placeholder="HTML oder JS Code eingeben..."></textarea>
       <div class="row" style="margin-top: 8px;">
-        <button onclick="codeVorschauAktualisieren()">Live Vorschau starten</button>
+        <button onclick="codeVorschauAktualisieren()">Live-Vorschau starten</button>
         <button class="secondary" onclick="codeKopieren()">Code kopieren</button>
       </div>
       <div style="margin-top: 10px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #000;">
@@ -392,27 +448,27 @@
 
     <!-- MARKDOWN EDITOR -->
     <section id="mdTab" class="panel hidden">
-      <h3>Markdown Editor</h3>
+      <h3>📝 Markdown Editor</h3>
       <div class="row">
-        <textarea id="mdInput" oninput="mdVorschauAktualisieren()" placeholder="Ueberschrift&#10;Fettgedruckt" style="height: 180px; font-family: monospace;"></textarea>
-        <div id="mdOutput" style="height: 180px; border: 1px solid var(--border); border-radius: 10px; padding: 10px; overflow-y: auto; background: rgba(3,7,18,0.9);"></div>
+        <textarea id="mdInput" oninput="mdVorschauAktualisieren()" placeholder="# Überschrift&#10;**Fettgedruckt**" style="height: 180px; font-family: monospace;"></textarea>
+        <div id="mdOutput" style="height: 180px; border: 1px solid var(--border); border-radius: 10px; padding: 10px; overflow-y: auto; background: rgba(2,4,10,0.9);"></div>
       </div>
     </section>
 
     <!-- ZEICHENSTUDIO -->
     <section id="whiteboardTab" class="panel hidden">
-      <h3>Cyber Zeichenstudio</h3>
+      <h3>🎨 Cyber Zeichenstudio</h3>
       <div class="row" style="margin-bottom: 8px;">
         <input type="color" id="brushColor" value="#00f0ff" style="height: 38px; max-width: 80px; background: transparent;">
         <input type="range" id="brushSize" min="1" max="25" value="5" style="flex: 2;">
-        <button class="secondary" onclick="canvasLeeren()">Canvas loeschen</button>
+        <button class="secondary" onclick="canvasLeeren()">Canvas löschen</button>
       </div>
       <canvas id="drawingCanvas"></canvas>
     </section>
 
     <!-- SNAKE SPIEL -->
     <section id="gameTab" class="panel hidden">
-      <h3>Cyber Snake</h3>
+      <h3>🎮 Cyber Snake</h3>
       <div style="text-align: center;">
         <div style="font-weight: bold; margin-bottom: 6px; color: var(--primary);">Score: <span id="snakeScore">0</span></div>
         <canvas id="snakeCanvas" width="300" height="300"></canvas>
@@ -422,11 +478,23 @@
       </div>
     </section>
 
+    <!-- 6. CYBER PONG -->
+    <section id="pongTab" class="panel hidden">
+      <h3>🕹️ Cyber Pong Minispiel</h3>
+      <div style="text-align: center;">
+        <div style="font-weight: bold; margin-bottom: 6px; color: var(--primary);">Spieler: <span id="pongPlayerScore">0</span> | KI: <span id="pongAiScore">0</span></div>
+        <canvas id="pongCanvas" width="340" height="240"></canvas>
+        <div class="row" style="max-width: 200px; margin: 10px auto;">
+          <button onclick="pongStarten()">Match starten</button>
+        </div>
+      </div>
+    </section>
+
     <!-- RECHNER -->
     <section id="toolsTab" class="panel hidden">
-      <h3>Cyber Rechner</h3>
+      <h3>🧮 Cyber Rechner</h3>
       <div class="row">
-        <input id="calcInput" placeholder="zB 42 mal 3.14">
+        <input id="calcInput" placeholder="z. B. 42 * 3.14">
         <button onclick="rechnen()">Berechnen</button>
       </div>
       <div id="calcErgebnis" style="margin-top: 8px; font-weight: bold; color: var(--primary);"></div>
@@ -434,7 +502,7 @@
 
     <!-- POMODORO -->
     <section id="pomodoroTab" class="panel hidden">
-      <h3>Cyber Pomodoro Timer</h3>
+      <h3>⏳ Cyber Pomodoro Timer</h3>
       <div id="pomoDisplay" style="font-size: 2.8rem; font-weight: bold; text-align: center; margin: 16px 0; color: var(--primary); text-shadow: 0 0 20px var(--primary);">25:00</div>
       <div class="row">
         <button onclick="pomoStarten()">Fokus starten</button>
@@ -445,16 +513,16 @@
 
     <!-- LESEZEICHEN -->
     <section id="bookmarksTab" class="panel hidden">
-      <h3>Cyber Lesezeichen</h3>
+      <h3>🔖 Cyber Lesezeichen</h3>
       <input id="bmTitel" placeholder="Titel" style="margin-bottom: 8px;">
-      <input id="bmUrl" placeholder="https Schreibweise" style="margin-bottom: 8px;">
+      <input id="bmUrl" placeholder="https://..." style="margin-bottom: 8px;">
       <button onclick="lesezeichenSpeichern()">Lesezeichen speichern</button>
       <div id="bookmarksListe" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
     </section>
 
     <!-- BACKUP -->
     <section id="backupTab" class="panel hidden">
-      <h3>System Backup und Wiederherstellung</h3>
+      <h3>💾 System Backup & Wiederherstellung</h3>
       <div class="row">
         <button onclick="backupErstellen()">Backup herunterladen</button>
         <button class="secondary" onclick="document.getElementById('backupFileInput').click()">Backup einspielen</button>
@@ -464,7 +532,7 @@
 
     <!-- NOTIZEN -->
     <section id="notizenTab" class="panel hidden">
-      <h3>Neural Notizen</h3>
+      <h3>📝 Neural Notizen</h3>
       <input id="notizTitel" placeholder="Titel" style="margin-bottom: 8px;">
       <textarea id="notizInhalt" placeholder="Inhalt..." style="margin-bottom: 8px;"></textarea>
       <button onclick="notizSpeichern()">Notiz speichern</button>
@@ -474,26 +542,30 @@
   </main>
 
   <script>
-    const SPEICHER_CHATS = 'nandoai_cyber_chats_v3';
-    const SPEICHER_NOTIZEN = 'nandoai_cyber_notizen_v3';
-    const SPEICHER_BOOKMARKS = 'nandoai_cyber_bookmarks_v3';
-    const SPEICHER_LERNKARTEN = 'nandoai_cyber_lernkarten_v3';
-    const SPEICHER_TODO = 'nandoai_cyber_todo_v3';
-    const SPEICHER_CONFIG = 'nandoai_cyber_config_v3';
+    const SPEICHER_CHATS = 'nandoai_cyber_chats_v4';
+    const SPEICHER_NOTIZEN = 'nandoai_cyber_notizen_v4';
+    const SPEICHER_BOOKMARKS = 'nandoai_cyber_bookmarks_v4';
+    const SPEICHER_LERNKARTEN = 'nandoai_cyber_lernkarten_v4';
+    const SPEICHER_TODO = 'nandoai_cyber_todo_v4';
+    const SPEICHER_CONFIG = 'nandoai_cyber_config_v4';
+    const SPEICHER_MEMORY = 'nandoai_cyber_memory_v4';
+    const SPEICHER_SNIPPETS = 'nandoai_cyber_snippets_v4';
 
     let chats = [];
     let aktuellerChatId = null;
     let synth = window.speechSynthesis;
     let verfuegbareStimmen = [];
     let pomoInterval = null;
+    let totalGesprocheneWoerter = 0;
 
     const zitate = [
       "Code ist wie Poesie in einer maschinellen Welt.",
-      "Einfachheit ist die hoechste Form von Cyber Effizienz.",
-      "Mache es zuerst funktionsfaehig dann unaufhaltsam."
+      "Einfachheit ist die höchste Form von Cyber-Effizienz.",
+      "Mache es zuerst funktionsfähig, dann unaufhaltsam."
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
+      particleBgInit();
       uhrAktualisieren();
       setInterval(uhrAktualisieren, 1000);
       chatVerlaufLaden();
@@ -501,6 +573,8 @@
       lesezeichenLaden();
       lernkartenLaden();
       todoLaden();
+      memoryLaden();
+      snippetsLaden();
       neuePaletteGenerieren();
       canvasInitialisieren();
       
@@ -510,10 +584,52 @@
       }
 
       configLaden();
+      statsAktualisieren();
 
       const zitatBox = document.getElementById('zitatBox');
       if(zitatBox) zitatBox.textContent = zitate[Math.floor(Math.random() * zitate.length)];
     });
+
+    /* PARTIKEL CANVAS HINTERGRUND */
+    function particleBgInit() {
+      const cvs = document.getElementById('particleCanvas');
+      if(!cvs) return;
+      const ctx = cvs.getContext('2d');
+      let w = cvs.width = window.innerWidth;
+      let h = cvs.height = window.innerHeight;
+      
+      window.addEventListener('resize', () => { w = cvs.width = window.innerWidth; h = cvs.height = window.innerHeight; });
+
+      const pts = Array.from({length: 45}, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.6, vy: (Math.random() - 0.5) * 0.6,
+        r: Math.random() * 2 + 1
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+
+        pts.forEach((p, i) => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+
+          for (let j = i + 1; j < pts.length; j++) {
+            const p2 = pts[j];
+            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (dist < 130) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            }
+          }
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
 
     function uhrAktualisieren() {
       const d = new Date();
@@ -536,16 +652,16 @@
       document.querySelectorAll('aside .nav-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       if (tabId === 'archivTab') archivAnzeigen();
+      statsAktualisieren();
     }
 
     let glowAn = true;
     function cyberModusWechseln() {
       glowAn = !glowAn;
-      document.documentElement.style.setProperty('--glow', glowAn ? '0 0 25px var(--glow-color), inset 0 0 10px rgba(0,240,255,0.15)' : 'none');
-      statusSetzen(glowAn ? 'Cyber Glow aktiviert.' : 'Cyber Glow gedimmt.');
+      configAnwenden();
+      statusSetzen(glowAn ? 'Quantum Glow aktiviert.' : 'Quantum Glow gedimmt.');
     }
 
-    // Leuchten & Konfiguration verwalten
     function einstellungenSpeichern() {
       const stimmeIdx = document.getElementById('stimmenSelect').value;
       const tempo = document.getElementById('tempoRange').value;
@@ -578,16 +694,16 @@
       const intensitaet = document.getElementById('glowIntensitaet').value;
       const farbe = document.getElementById('glowFarbePicker').value;
 
-      // Hex zu rgba konvertieren für kräftigen Glow
-      let r = parseInt(farbe.slice(1,3), 16);
-      let g = parseInt(farbe.slice(3,5), 16);
-      let b = parseInt(farbe.slice(5,7), 16);
+      let r = parseInt(farbe.slice(1,3), 16) || 0;
+      let g = parseInt(farbe.slice(3,5), 16) || 240;
+      let b = parseInt(farbe.slice(5,7), 16) || 255;
       const glowRgba = `rgba(${r}, ${g}, ${b}, ${intensitaet / 50})`;
       const insetRgba = `rgba(${r}, ${g}, ${b}, ${intensitaet / 100})`;
 
       document.documentElement.style.setProperty('--primary', farbe);
       document.documentElement.style.setProperty('--glow-color', glowRgba);
-      document.documentElement.style.setProperty('--glow', glowAn ? `0 0 ${intensitaet}px ${glowRgba}, inset 0 0 12px ${insetRgba}` : 'none');
+      document.documentElement.style.setProperty('--glow-size', `${intensitaet}px`);
+      document.documentElement.style.setProperty('--glow', glowAn ? `0 0 ${intensitaet}px ${glowRgba}, inset 0 0 15px ${insetRgba}` : 'none');
       document.documentElement.style.setProperty('--border', glowAn ? `rgba(${r}, ${g}, ${b}, 0.5)` : 'rgba(255,255,255,0.1)');
     }
 
@@ -599,7 +715,7 @@
 
     function farbeZuruecksetzen() {
       document.getElementById('glowFarbePicker').value = '#00f0ff';
-      document.getElementById('glowIntensitaet').value = 25;
+      document.getElementById('glowIntensitaet').value = 30;
       einstellungenSpeichern();
     }
 
@@ -613,11 +729,13 @@
         .replace(/\n/g, '<br>');
     }
 
+    // ⚡ GROQ CLOUD KI ANBINDUNG
     async function kiAntwortHubern(prompt) {
-      const apiKey = "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";
+      // ⚠️ TRAGE HIER DEINEN GROQ API-KEY EIN:
+      const apiKey = "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";
 
       if (!apiKey || apiKey === "DEIN_GROQ_API_KEY_HIER") {
-        return "Bitte trage deinen echten Groq API Key im Code ein.";
+        return "Bitte trage deinen echten Groq API-Key im Code bei 'apiKey' ein!";
       }
 
       try {
@@ -640,12 +758,12 @@
           return "Fehler bei Groq: " + (data.error ? data.error.message : "Unbekannter Fehler");
         }
       } catch (error) {
-        return "Keine Verbindung zum Groq Server.";
+        return "Keine Verbindung zum Groq-Server.";
       }
     }
 
     function neueId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
-    function begruessungsNachricht() { return [{ text: 'System online. Groq Cloud KI ist bereit fuer deine Fragen.', rolle: 'assistant' }]; }
+    function begruessungsNachricht() { return [{ text: 'System online. Groq Cloud KI ist bereit für deine Fragen.', rolle: 'assistant' }]; }
 
     function chatVerlaufLaden() {
       try { const g = localStorage.getItem(SPEICHER_CHATS); if (g) chats = JSON.parse(g); } catch (e) {}
@@ -680,7 +798,7 @@
       const textDiv = document.createElement('div'); textDiv.innerHTML = formatMarkdown(text); div.appendChild(textDiv);
       if (rolle === 'assistant') {
         const tools = document.createElement('div'); tools.className = 'msg-tools';
-        const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = 'Vorlesen';
+        const btn = document.createElement('button'); btn.className = 'secondary'; btn.textContent = '🔊 Vorlesen';
         btn.onclick = () => vorlesenMenschlich(text);
         tools.appendChild(btn); div.appendChild(tools);
       }
@@ -690,6 +808,7 @@
         chat.nachrichten.push({ text, rolle });
         if (chat.titel === 'Neuer Chat' && rolle === 'user') chat.titel = text.slice(0, 28);
         chatVerlaufSpeichern();
+        statsAktualisieren();
       }
     }
 
@@ -717,37 +836,150 @@
         const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '6px';
         div.innerHTML = '<strong>' + c.titel + '</strong> (' + c.nachrichten.length + ' Nachrichten)';
         const row = document.createElement('div'); row.className = 'row'; row.style.marginTop = '6px';
-        const btnOpen = document.createElement('button'); btnOpen.textContent = 'Oeffnen';
+        const btnOpen = document.createElement('button'); btnOpen.textContent = 'Öffnen';
         btnOpen.onclick = () => { aktuellerChatId = c.id; chatAnzeigen(); tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1]); };
         row.appendChild(btnOpen);
         div.appendChild(row); container.appendChild(div);
       });
     }
 
+    /* 🧠 CYBER MEMORY & ⚡ SNIPPETS */
+    function memoryLaden() {
+      const liste = document.getElementById('memoryListe'); if(!liste) return;
+      liste.replaceChildren();
+      try {
+        const mems = JSON.parse(localStorage.getItem(SPEICHER_MEMORY) || '[]');
+        mems.forEach(m => {
+          const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '4px';
+          div.innerHTML = `<strong>${m.titel}</strong><p style="color:var(--muted); margin:4px 0 0;">${m.inhalt}</p>`;
+          liste.appendChild(div);
+        });
+      } catch(e) {}
+    }
+    function memorySpeichern() {
+      const t = document.getElementById('memTitel').value.trim();
+      const i = document.getElementById('memInhalt').value.trim();
+      if(!t || !i) return;
+      const mems = JSON.parse(localStorage.getItem(SPEICHER_MEMORY) || '[]');
+      mems.unshift({ titel: t, inhalt: i });
+      localStorage.setItem(SPEICHER_MEMORY, JSON.stringify(mems));
+      document.getElementById('memTitel').value = ''; document.getElementById('memInhalt').value = '';
+      memoryLaden(); statusSetzen('Wissen gespeichert.');
+    }
+    async function memoryKiSynthese() {
+      const mems = JSON.parse(localStorage.getItem(SPEICHER_MEMORY) || '[]');
+      if(mems.length === 0) { alert('Keine Eintrags-Daten vorhanden.'); return; }
+      statusSetzen('Synthetisiere Wissen mit Groq...');
+      const text = mems.map(m => m.titel + ": " + m.inhalt).join("\n");
+      const res = await kiAntwortHubern("Fasse diese Wissenseinträge kurz und prägnant zusammen:\n" + text);
+      alert("🧠 KI-Zusammenfassung:\n\n" + res);
+      statusSetzen('Bereit.');
+    }
+
+    function snippetsLaden() {
+      const liste = document.getElementById('snippetsListe'); if(!liste) return;
+      liste.replaceChildren();
+      try {
+        const snips = JSON.parse(localStorage.getItem(SPEICHER_SNIPPETS) || '[]');
+        snips.forEach(s => {
+          const div = document.createElement('div'); div.className = 'panel'; div.style.marginBottom = '4px';
+          div.innerHTML = `<strong>${s.titel}</strong><br><small style="color:var(--muted);">${s.text}</small>`;
+          const btn = document.createElement('button'); btn.textContent = 'In Chat einfügen'; btn.style.marginTop = '6px';
+          btn.onclick = () => {
+            const input = document.getElementById('nachrichtInput');
+            if(input) input.value = s.text;
+            tabWechseln('chatTab', document.querySelectorAll('aside .nav-btn')[1]);
+          };
+          div.appendChild(btn); liste.appendChild(div);
+        });
+      } catch(e) {}
+    }
+    function snippetSpeichern() {
+      const t = document.getElementById('snipTitel').value.trim();
+      const txt = document.getElementById('snipText').value.trim();
+      if(!t || !txt) return;
+      const snips = JSON.parse(localStorage.getItem(SPEICHER_SNIPPETS) || '[]');
+      snips.unshift({ titel: t, text: txt });
+      localStorage.setItem(SPEICHER_SNIPPETS, JSON.stringify(snips));
+      document.getElementById('snipTitel').value = ''; document.getElementById('snipText').value = '';
+      snippetsLaden(); statusSetzen('Snippet gespeichert.');
+    }
+
+    /* 🎙️ NEURAL READER & 🔊 CYBER ATMOS */
+    function readerVorlesen() {
+      const text = document.getElementById('readerText').value.trim();
+      if(!text) return;
+      document.getElementById('waveVisualizer').style.display = 'block';
+      vorlesenMenschlich(text);
+    }
+
+    let audioCtx = null, oscNode = null;
+    function playCyberSound(type) {
+      stopCyberSound();
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(type === 'drone') {
+        oscNode = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        oscNode.type = 'sawtooth'; oscNode.frequency.setValueAtTime(65, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        oscNode.connect(gain); gain.connect(audioCtx.destination);
+        oscNode.start();
+      } else if(type === 'rain') {
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer; whiteNoise.loop = true;
+        const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+        whiteNoise.connect(gain); gain.connect(audioCtx.destination);
+        whiteNoise.start(); oscNode = whiteNoise;
+      } else if(type === 'click') {
+        oscNode = audioCtx.createOscillator();
+        oscNode.frequency.setValueAtTime(800, audioCtx.currentTime);
+        oscNode.connect(audioCtx.destination);
+        oscNode.start(); oscNode.stop(audioCtx.currentTime + 0.03);
+      }
+    }
+    function stopCyberSound() {
+      if(oscNode) { try { oscNode.stop(); } catch(e){} oscNode = null; }
+      if(audioCtx) { try { audioCtx.close(); } catch(e){} audioCtx = null; }
+    }
+
+    /* 📊 STATISTIKEN */
+    function statsAktualisieren() {
+      let msgCnt = 0;
+      chats.forEach(c => msgCnt += c.nachrichten.length);
+      const mCountEl = document.getElementById('statMsgCount');
+      if(mCountEl) mCountEl.textContent = msgCnt;
+
+      const wCountEl = document.getElementById('statWordCount');
+      if(wCountEl) wCountEl.textContent = totalGesprocheneWoerter;
+
+      const mems = JSON.parse(localStorage.getItem(SPEICHER_MEMORY) || '[]');
+      const memCountEl = document.getElementById('statMemCount');
+      if(memCountEl) memCountEl.textContent = mems.length;
+    }
+
+    /* LERNKARTEN & ANDERE MODULE */
     let lernkarten = [];
-    let fcIndex = 0;
-    let fcZeigeAntwort = false;
+    let fcIndex = 0, fcZeigeAntwort = false;
 
     function lernkartenLaden() {
       try { lernkarten = JSON.parse(localStorage.getItem(SPEICHER_LERNKARTEN) || '[]'); } catch(e) { lernkarten = []; }
       fcIndex = 0; fcZeigeAntwort = false; lernkarteAktualisierenAnsicht();
     }
     function lernkarteHinzufuegen() {
-      const fEl = document.getElementById('fcFrage');
-      const aEl = document.getElementById('fcAntwort');
-      if(!fEl || !aEl) return;
-      const f = fEl.value.trim();
-      const a = aEl.value.trim();
+      const f = document.getElementById('fcFrage').value.trim();
+      const a = document.getElementById('fcAntwort').value.trim();
       if (!f || !a) return;
       lernkarten.push({ frage: f, antwort: a });
       localStorage.setItem(SPEICHER_LERNKARTEN, JSON.stringify(lernkarten));
-      fEl.value = ''; aEl.value = '';
-      lernkarteAktualisierenAnsicht();
-      statusSetzen('Lernkarte gespeichert.');
+      document.getElementById('fcFrage').value = ''; document.getElementById('fcAntwort').value = '';
+      lernkarteAktualisierenAnsicht(); statusSetzen('Lernkarte gespeichert.');
     }
     function lernkarteAktualisierenAnsicht() {
-      const el = document.getElementById('fcTextAnzeige');
-      if(!el) return;
+      const el = document.getElementById('fcTextAnzeige'); if(!el) return;
       if (lernkarten.length === 0) { el.textContent = 'Keine Lernkarten vorhanden.'; return; }
       const karte = lernkarten[fcIndex];
       el.textContent = fcZeigeAntwort ? 'Antwort: ' + karte.antwort : 'Frage: ' + karte.frage;
@@ -766,26 +998,25 @@
       const aktionenEl = document.getElementById('rpgAktionen');
       if(!storyEl || !aktionenEl) return;
       if (wahl === 1) {
-        storyEl.innerHTML = "Du erreichst die obere Cyber Ebene. Admin Codes empfangen.";
-        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">Neu starten</button>';
+        storyEl.innerHTML = "Du erreichst die obere Cyber-Ebene. Admin-Codes empfangen.";
+        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">🔄 Neu starten</button>';
       } else if (wahl === 2) {
         storyEl.innerHTML = "Du findest wertvolle Datenkristalle im Untergrund.";
-        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">Neu starten</button>';
+        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">🔄 Neu starten</button>';
       } else {
         storyEl.innerHTML = "Du sicherst das Interface und wirst zur Legende.";
-        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">Neu starten</button>';
+        aktionenEl.innerHTML = '<button onclick="rpgNeustart()">🔄 Neu starten</button>';
       }
     }
     function rpgNeustart() {
       const s = document.getElementById('rpgStory');
       const a = document.getElementById('rpgAktionen');
-      if(s) s.innerHTML = "Du erwachst in Sektor 7 der Megastadt Neo Muellheim. Neonlichter flackern...";
-      if(a) a.innerHTML = '<button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber Ebene folgen</button><button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund Tunnel</button><button onclick="rpgEntscheidung(3)">3. System Interface hacken und lokal absichern</button>';
+      if(s) s.innerHTML = "Du erwachst in Sektor 7 der Megastadt Neo-Müllheim. Neonlichter flackern...";
+      if(a) a.innerHTML = '<button onclick="rpgEntscheidung(1)">1. Dem Signal in die obere Cyber-Ebene folgen</button><button onclick="rpgEntscheidung(2)">2. Hinabsteigen in die dunklen Untergrund-Tunnel</button><button onclick="rpgEntscheidung(3)">3. System-Interface hacken und lokal absichern</button>';
     }
 
     function neuePaletteGenerieren() {
-      const container = document.getElementById('farbenContainer'); 
-      if(!container) return;
+      const container = document.getElementById('farbenContainer'); if(!container) return;
       container.replaceChildren();
       for (let i = 0; i < 5; i++) {
         const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
@@ -800,8 +1031,7 @@
     }
 
     function todoLaden() {
-      const liste = document.getElementById('todoListe'); 
-      if(!liste) return;
+      const liste = document.getElementById('todoListe'); if(!liste) return;
       liste.replaceChildren();
       try {
         const todos = JSON.parse(localStorage.getItem(SPEICHER_TODO) || '[]');
@@ -814,14 +1044,13 @@
           const span = document.createElement('span'); span.textContent = t.text;
           if (t.erledigt) span.style.textDecoration = 'line-through';
           label.appendChild(checkbox); label.appendChild(span);
-          const delBtn = document.createElement('button'); delBtn.className = 'danger'; delBtn.textContent = 'X'; delBtn.onclick = () => { todos.splice(idx, 1); localStorage.setItem(SPEICHER_TODO, JSON.stringify(todos)); todoLaden(); };
+          const delBtn = document.createElement('button'); delBtn.className = 'danger'; delBtn.textContent = '✕'; delBtn.onclick = () => { todos.splice(idx, 1); localStorage.setItem(SPEICHER_TODO, JSON.stringify(todos)); todoLaden(); };
           div.appendChild(label); div.appendChild(delBtn); liste.appendChild(div);
         });
       } catch(e) {}
     }
     function todoHinzufuegen() {
-      const input = document.getElementById('todoInput'); 
-      if(!input) return;
+      const input = document.getElementById('todoInput'); if(!input) return;
       const text = input.value.trim(); if (!text) return;
       const todos = JSON.parse(localStorage.getItem(SPEICHER_TODO) || '[]');
       todos.push({ text, erledigt: false }); localStorage.setItem(SPEICHER_TODO, JSON.stringify(todos));
@@ -829,18 +1058,13 @@
     }
 
     function bildErzeugen() {
-      const pEl = document.getElementById('bildPrompt');
-      const sEl = document.getElementById('bildStil');
-      const fEl = document.getElementById('bildFormat');
-      if(!pEl) return;
-      const prompt = pEl.value.trim(); if (!prompt) return;
-      const stil = sEl ? sEl.value : 'cyberpunk';
-      const format = fEl ? fEl.value : '1:1';
+      const prompt = document.getElementById('bildPrompt').value.trim(); if (!prompt) return;
+      const stil = document.getElementById('bildStil').value;
+      const format = document.getElementById('bildFormat').value;
       let w = 768, h = 768;
       if (format === '16:9') { w = 1024; h = 576; } else if (format === '9:16') { w = 576; h = 1024; }
       const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt + ', ' + stil) + '?width=' + w + '&height=' + h + '&nologo=true';
-      const container = document.getElementById('bildErgebnis');
-      if(!container) return;
+      const container = document.getElementById('bildErgebnis'); if(!container) return;
       container.innerHTML = '<p style="color:var(--muted);">Generiere Grafik...</p>';
       const img = new Image();
       img.onload = () => { container.innerHTML = '<img src="' + url + '" style="max-width:100%; border-radius:12px;"><br><a href="' + url + '" target="_blank" download="bild.jpg"><button style="margin-top:10px;">Herunterladen</button></a>'; };
@@ -853,14 +1077,13 @@
       if(mdIn && mdOut) mdOut.innerHTML = formatMarkdown(mdIn.value); 
     }
 
+    /* SNAKE & PONG MINISPIELE */
     let snakeInterval = null, snake = [], food = {}, dir = 'RIGHT', score = 0;
     function snakeStarten() {
-      const canvas = document.getElementById('snakeCanvas'); 
-      if(!canvas) return;
+      const canvas = document.getElementById('snakeCanvas'); if(!canvas) return;
       const ctx = canvas.getContext('2d');
       snake = [{x: 10, y: 10}]; food = {x: 15, y: 15}; dir = 'RIGHT'; score = 0;
-      const scEl = document.getElementById('snakeScore');
-      if(scEl) scEl.textContent = score;
+      document.getElementById('snakeScore').textContent = score;
       if (snakeInterval) clearInterval(snakeInterval);
       document.onkeydown = (e) => {
         if (e.key === 'ArrowUp' && dir !== 'DOWN') dir = 'UP';
@@ -873,15 +1096,51 @@
         if (dir === 'RIGHT') hX++; else if (dir === 'LEFT') hX--; else if (dir === 'UP') hY--; else if (dir === 'DOWN') hY++;
         if (hX < 0 || hX >= 20 || hY < 0 || hY >= 20) { clearInterval(snakeInterval); alert('Game Over.'); return; }
         if (hX === food.x && hY === food.y) { 
-          score += 10; 
-          if(scEl) scEl.textContent = score; 
+          score += 10; document.getElementById('snakeScore').textContent = score; 
           food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)}; 
         } else snake.pop();
         snake.unshift({x: hX, y: hY});
-        ctx.fillStyle = '#030712'; ctx.fillRect(0, 0, 300, 300);
+        ctx.fillStyle = '#02040a'; ctx.fillRect(0, 0, 300, 300);
         ctx.fillStyle = '#00f0ff'; snake.forEach(s => ctx.fillRect(s.x*15, s.y*15, 14, 14));
         ctx.fillStyle = '#ff007f'; ctx.fillRect(food.x*15, food.y*15, 14, 14);
       }, 120);
+    }
+
+    let pongInterval = null;
+    function pongStarten() {
+      const cvs = document.getElementById('pongCanvas'); if(!cvs) return;
+      const ctx = cvs.getContext('2d');
+      let pY = 90, aiY = 90, bX = 170, bY = 120, vx = 3, vy = 3;
+      let pScore = 0, aiScore = 0;
+
+      cvs.onmousemove = (e) => {
+        const rect = cvs.getBoundingClientRect();
+        pY = e.clientY - rect.top - 25;
+      };
+
+      if(pongInterval) clearInterval(pongInterval);
+      pongInterval = setInterval(() => {
+        bX += vx; bY += vy;
+        if(bY <= 0 || bY >= 230) vy *= -1;
+        
+        // KI Bewegung
+        if(aiY + 25 < bY) aiY += 2; else aiY -= 2;
+
+        // Kollisionen
+        if(bX <= 15 && bY >= pY && bY <= pY + 50) vx *= -1;
+        if(bX >= 320 && bY >= aiY && bY <= aiY + 50) vx *= -1;
+
+        if(bX < 0) { aiScore++; bX=170; bY=120; }
+        if(bX > 340) { pScore++; bX=170; bY=120; }
+
+        document.getElementById('pongPlayerScore').textContent = pScore;
+        document.getElementById('pongAiScore').textContent = aiScore;
+
+        ctx.fillStyle = '#02040a'; ctx.fillRect(0, 0, 340, 240);
+        ctx.fillStyle = '#00f0ff'; ctx.fillRect(5, pY, 10, 50); // Spieler
+        ctx.fillStyle = '#ff007f'; ctx.fillRect(325, aiY, 10, 50); // KI
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(bX, bY, 8, 8); // Ball
+      }, 1000/60);
     }
 
     function backupErstellen() {
@@ -890,8 +1149,7 @@
       const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nandoai_backup.json'; a.click();
     }
     function backupEinspielen(event) {
-      const file = event.target.files[0];
-      if(!file) return;
+      const file = event.target.files[0]; if(!file) return;
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -906,15 +1164,10 @@
 
     function rechnen() {
       try { 
-        const cIn = document.getElementById('calcInput');
-        const cOut = document.getElementById('calcErgebnis');
-        if(!cIn || !cOut) return;
-        const res = Function("'use strict'; return (" + cIn.value + ")")(); 
-        cOut.textContent = 'Ergebnis: ' + res; 
-      } catch (e) { 
-        const cOut = document.getElementById('calcErgebnis');
-        if(cOut) cOut.textContent = 'Fehler'; 
-      }
+        const cIn = document.getElementById('calcInput').value;
+        const res = Function("'use strict'; return (" + cIn + ")")(); 
+        document.getElementById('calcErgebnis').textContent = 'Ergebnis: ' + res; 
+      } catch (e) { document.getElementById('calcErgebnis').textContent = 'Fehler'; }
     }
 
     function pomoStarten() { pomoTimerRun(25 * 60); }
@@ -923,26 +1176,16 @@
       if (pomoInterval) clearInterval(pomoInterval);
       let s = sekunden;
       pomoInterval = setInterval(() => {
-        const pDisp = document.getElementById('pomoDisplay');
-        if (s <= 0) { 
-          clearInterval(pomoInterval); 
-          vorlesenMenschlich('Timer abgelaufen.'); 
-          return; 
-        }
+        if (s <= 0) { clearInterval(pomoInterval); vorlesenMenschlich('Timer abgelaufen.'); return; }
         const m = Math.floor(s / 60); const sec = s % 60;
-        if(pDisp) pDisp.textContent = m + ':' + (sec < 10 ? '0' : '') + sec; 
+        document.getElementById('pomoDisplay').textContent = m + ':' + (sec < 10 ? '0' : '') + sec; 
         s--;
       }, 1000);
     }
-    function pomoStoppen() { 
-      if (pomoInterval) clearInterval(pomoInterval); 
-      const pDisp = document.getElementById('pomoDisplay');
-      if(pDisp) pDisp.textContent = '25:00'; 
-    }
+    function pomoStoppen() { if (pomoInterval) clearInterval(pomoInterval); document.getElementById('pomoDisplay').textContent = '25:00'; }
 
     function lesezeichenLaden() {
-      const container = document.getElementById('bookmarksListe'); 
-      if(!container) return;
+      const container = document.getElementById('bookmarksListe'); if(!container) return;
       container.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
@@ -950,59 +1193,40 @@
       } catch (e) {}
     }
     function lesezeichenSpeichern() {
-      const tEl = document.getElementById('bmTitel');
-      const uEl = document.getElementById('bmUrl');
-      if(!tEl || !uEl) return;
-      const titel = tEl.value.trim(); const url = uEl.value.trim(); if (!titel || !url) return;
+      const t = document.getElementById('bmTitel').value.trim();
+      const u = document.getElementById('bmUrl').value.trim(); if (!t || !u) return;
       const daten = JSON.parse(localStorage.getItem(SPEICHER_BOOKMARKS) || '[]');
-      daten.unshift({ titel, url }); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten)); 
-      tEl.value = ''; uEl.value = '';
+      daten.unshift({ titel: t, url: u }); localStorage.setItem(SPEICHER_BOOKMARKS, JSON.stringify(daten)); 
+      document.getElementById('bmTitel').value = ''; document.getElementById('bmUrl').value = '';
       lesezeichenLaden();
     }
 
     function avatarSprechenlassen() {
-      const input = document.getElementById('avatarInput'); 
-      if(!input) return;
-      const text = input.value.trim(); if (!text) return;
-      input.value = ''; 
-      const avStat = document.getElementById('avatarStatusText');
-      if(avStat) avStat.textContent = text; 
+      const text = document.getElementById('avatarInput').value.trim(); if (!text) return;
+      document.getElementById('avatarInput').value = ''; 
+      document.getElementById('avatarStatusText').textContent = text; 
       vorlesenMenschlich(text);
     }
-    function codeVorschauAktualisieren() { 
-      const ed = document.getElementById('codeEditor');
-      const fr = document.getElementById('codeIframe');
-      if(ed && fr) fr.srcdoc = ed.value; 
-    }
-    function codeKopieren() { 
-      const ed = document.getElementById('codeEditor');
-      if(ed) {
-        navigator.clipboard.writeText(ed.value); 
-        statusSetzen('Code kopiert.');
-      }
-    }
+    function codeVorschauAktualisieren() { document.getElementById('codeIframe').srcdoc = document.getElementById('codeEditor').value; }
+    function codeKopieren() { navigator.clipboard.writeText(document.getElementById('codeEditor').value); statusSetzen('Code kopiert.'); }
+    
     function canvasInitialisieren() {
-      const canvas = document.getElementById('drawingCanvas'); 
-      if(!canvas) return;
+      const canvas = document.getElementById('drawingCanvas'); if(!canvas) return;
       const ctx = canvas.getContext('2d');
-      canvas.width = canvas.parentElement.clientWidth - 36; canvas.height = 280;
+      canvas.width = canvas.parentElement.clientWidth - 40; canvas.height = 280;
       let zeichnet = false;
       canvas.addEventListener('pointerdown', (e) => { zeichnet = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
       canvas.addEventListener('pointermove', (e) => { 
         if (!zeichnet) return; 
-        const bCol = document.getElementById('brushColor');
-        const bSz = document.getElementById('brushSize');
-        ctx.strokeStyle = bCol ? bCol.value : '#00f0ff'; 
-        ctx.lineWidth = bSz ? bSz.value : 5; 
+        ctx.strokeStyle = document.getElementById('brushColor').value; 
+        ctx.lineWidth = document.getElementById('brushSize').value; 
         ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); 
       });
       window.addEventListener('pointerup', () => { zeichnet = false; });
     }
-    function canvasLeeren() { 
-      const canvas = document.getElementById('drawingCanvas'); 
-      if(canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); 
-    }
+    function canvasLeeren() { const canvas = document.getElementById('drawingCanvas'); if(canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); }
 
+    /* VORLESE-FUNKTION (OHNE SONDERZEICHEN & CHUNKING) */
     function stimmenLaden() { 
       if (!synth) return; 
       verfuegbareStimmen = synth.getVoices().filter(v => v.lang.startsWith('de') || v.lang.startsWith('de-DE') || v.lang.startsWith('en')); 
@@ -1025,10 +1249,9 @@
       if (!synth) return; 
       synth.cancel();
 
-      if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key")) { 
-        return; 
-      }
+      if (text.includes("gsk_") || text.includes("AIzaSy") || text.includes("API-Key")) return; 
 
+      // Ausführlicher Filter für <<, >>, ----, Sternchen und Sonderzeichen
       const clean = text
         .replace(/<<|>>/g, '')
         .replace(/[-_]{2,}/g, '')
@@ -1040,6 +1263,10 @@
 
       const tempoVal = parseFloat(document.getElementById('tempoRange').value) || 1.0;
       const stimmeIdx = parseInt(document.getElementById('stimmenSelect').value) || 0;
+
+      // Zählen für Statistik
+      totalGesprocheneWoerter += clean.split(' ').length;
+      statsAktualisieren();
 
       const saetze = clean.match(/[^.!?]+[.!?]+|\S+/g) || [clean];
       let aktuelleWortGruppe = "";
@@ -1055,43 +1282,46 @@
       });
       if (aktuelleWortGruppe) blueecke.push(aktuelleWortGruppe.trim());
 
-      blueecke.forEach(block => {
+      blueecke.forEach((block, index) => {
         const utter = new SpeechSynthesisUtterance(block);
         utter.lang = 'de-DE';
         utter.rate = tempoVal;
         if (verfuegbareStimmen.length > 0 && verfuegbareStimmen[stimmeIdx]) {
           utter.voice = verfuegbareStimmen[stimmeIdx];
         }
+        if (index === blueecke.length - 1) {
+          utter.onend = () => {
+            const vis = document.getElementById('waveVisualizer');
+            if(vis) vis.style.display = 'none';
+          };
+        }
         synth.speak(utter);
       });
     }
 
-    // Sprach-Eingabe (wandert direkt ins Chat-Eingabefeld, wird erst beim Absenden gesendet)
+    /* SPRACHEINGABE IN EINGABEFELD */
     function sprachEingabeStarten() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) { alert('Spracherkennung wird von deinem Browser nicht unterstuetzt.'); return; }
+      if (!SpeechRecognition) { alert('Spracherkennung wird von deinem Browser nicht unterstützt.'); return; }
       
       const rec = new SpeechRecognition(); 
       rec.lang = 'de-DE'; 
       rec.start(); 
-      statusSetzen('Hoere zu (Sprache wird in Eingabe geschrieben)...');
+      statusSetzen('Höre zu (Text wird ins Eingabefeld geschrieben)...');
 
       rec.onresult = (e) => { 
         const nInput = document.getElementById('nachrichtInput');
         if(nInput) {
           nInput.value = (nInput.value ? nInput.value + ' ' : '') + e.results[0][0].transcript;
         }
-        statusSetzen('Sprache erfasst. Du kannst sie jetzt abschicken.');
+        statusSetzen('Sprache erfasst. Du kannst den Text jetzt manuell abschicken.');
       };
 
-      rec.onerror = () => {
-        statusSetzen('Fehler bei der Spracherkennung.');
-      };
+      rec.onerror = () => { statusSetzen('Fehler bei der Spracherkennung.'); };
     }
 
     function notizenLaden() {
-      const liste = document.getElementById('notizenListe'); 
-      if(!liste) return;
+      const liste = document.getElementById('notizenListe'); if(!liste) return;
       liste.replaceChildren();
       try {
         const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
@@ -1099,15 +1329,12 @@
       } catch (e) {}
     }
     function notizSpeichern() {
-      const tEl = document.getElementById('notizTitel');
-      const iEl = document.getElementById('notizInhalt');
-      if(!tEl || !iEl) return;
-      const titel = tEl.value.trim(); const inhalt = iEl.value.trim(); if (!titel && !inhalt) return;
+      const t = document.getElementById('notizTitel').value.trim();
+      const i = document.getElementById('notizInhalt').value.trim(); if (!t && !i) return;
       const daten = JSON.parse(localStorage.getItem(SPEICHER_NOTIZEN) || '[]');
-      daten.unshift({ titel: titel || 'Notiz', inhalt }); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); 
-      tEl.value = ''; iEl.value = '';
-      notizenLaden(); 
-      statusSetzen('Notiz gespeichert.');
+      daten.unshift({ titel: t || 'Notiz', inhalt: i }); localStorage.setItem(SPEICHER_NOTIZEN, JSON.stringify(daten)); 
+      document.getElementById('notizTitel').value = ''; document.getElementById('notizInhalt').value = '';
+      notizenLaden(); statusSetzen('Notiz gespeichert.');
     }
   </script>
 </body>
